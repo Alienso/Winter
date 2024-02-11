@@ -60,7 +60,7 @@ int processFile(const std::filesystem::directory_entry &entry) {
     }
 
     string currentFileName = entry.path().string();
-    if (endsWith(currentFileName, ".h") || endsWith(currentFileName, ".hpp")) {
+    if (StringUtils::endsWith(currentFileName, ".h") || StringUtils::endsWith(currentFileName, ".hpp")) {
         preProcessor.process(inputFile, outputFile);
     }else{
         copyFileContents(inputFile, outputFile);

@@ -61,7 +61,7 @@ void HttpRequest::parseRequestLine(HttpRequest &request, string_view line) {
     endIndex = line.find('\n', endIndex + 1); //sizeof('\n')
     wtLogTrace("StartIndex: %d, EndIndex: %d", startIndex, endIndex);
     string_view version(&(line[startIndex]), endIndex - startIndex);
-    version = rtrim(version);
+    version = StringUtils::rtrim(version);
     request.httpVersion = HttpVersion::getFromString(version.data(), version.size());
     wtLogTrace("HttpVersion is %d", request.httpVersion);
 }

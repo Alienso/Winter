@@ -38,7 +38,10 @@ set(SOURCES main.cpp source/Winter.cpp source/Winter.h
         source/Router.cpp source/Router.h
         source/PreProcessor.cpp source/PreProcessor.h
         source/app/controller/MyController.cpp source/app/controller/MyController.h
-        source/app/service/MyService.cpp source/app/service/MyService.h source/reflect/Reflect.cpp source/reflect/Reflect.h source/reflect/Field.cpp source/reflect/Field.h source/reflect/Method.cpp source/reflect/Method.h)
+        source/app/service/MyService.cpp source/app/service/MyService.h
+        source/reflect/Reflect.cpp source/reflect/Reflect.h
+        source/reflect/Field.cpp source/reflect/Field.h
+        source/reflect/Method.cpp source/reflect/Method.h)
 
 add_executable(Winter ${SOURCES})
 

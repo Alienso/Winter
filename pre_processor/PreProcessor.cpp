@@ -57,7 +57,7 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile) 
         }
 
         //If we are not in a function body
-        if (bracketCounter == 1 && !declaringClass && hasSpace && trim(line).size() > 2){
+        if (bracketCounter == 1 && !declaringClass && hasSpace && StringUtils::trim(line).size() > 2){
             //declaring a method
             if (declaringMethod){
                 //multiline declaration
@@ -87,9 +87,9 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile) 
                         blank++;
                     blank++;
                     std::string name = line.substr(blank, line.size() - blank - 1);
-                    name = trim(name);
+                    name = StringUtils::trim(name);
                     std::string type = line.substr(0, blank);
-                    type = stripBlankCharacters(type);
+                    type = StringUtils::stripBlankCharacters(type);
                     Field f(name, type, className, 0);
                     fields.push_back(f);
                 }
