@@ -19,21 +19,33 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile) 
     std::vector<Method> methods;
     std::string className;
 
+    bool shouldAddReflection = false;
+
     while (std::getline(inputFile, line)) {
 
         declaringMethod = false;
         declaringClass = false;
         hasSpace = false;
 
+        //We are outside class
         if (bracketCounter == 0){
             int index = line.find("class");
             if (index != std::string::npos){
                 index += 6; //to offset the "class" + 1
                 int indexLast = line.find(' ', index);
                 className = line.substr(index, indexLast - index);
+
+                //Check if we need to add reflection or not
+                int semicolonIndex = line.find(':');
+                if (semicolonIndex != string::npos){
+                    int reflectIndex = line.find("Reflect", semicolonIndex);
+                    if (reflectIndex != string::npos)
+                        shouldAddReflection = true;
+                }
             }
         }
 
+        //Bracket counters
         for (char c : line){
             if (c == '{') {
                 if (bracketCounter == 0)
@@ -41,8 +53,14 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile) 
                 bracketCounter++;
             }
             else if (c == '}') {
+                //We finished reading a class, so we write the data and reset everything
                 if (bracketCounter == 1){
-                    insertFieldsAndMethods(outputFile, fields, methods);
+                    if (shouldAddReflection) {
+                        shouldAddReflection = false;
+                        insertFieldsAndMethods(outputFile, fields, methods);
+                    }
+                    fields.resize(0);
+                    methods.resize(0);
                 }
                 bracketCounter--;
             }
@@ -55,6 +73,9 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile) 
             else if (c == ' ')
                 hasSpace = true;
         }
+
+        if (!shouldAddReflection)
+            goto end; //just copy input line to output file
 
         //If we are not in a function body
         if (bracketCounter == 1 && !declaringClass && hasSpace && StringUtils::trim(line).size() > 2){
@@ -80,9 +101,9 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile) 
                 }
                 //single line declaration
                 else{
-                    //int star = line.find_last_of('*');
-                    //int ampersand = line.find_last_of('&');
+                    //Temp solution, find last ' ' separating type from name
                     int blank = line.find_last_of(' ');
+                    //Read all * or & that may be put together with the name
                     while(line[blank+1] == '*' || line[blank+1] == '&')
                         blank++;
                     blank++;
@@ -96,6 +117,7 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile) 
             }
         }
 
+        end:
         outputFile << line << std::endl;
     }
 }
@@ -112,8 +134,5 @@ void insertFieldsAndMethods(std::ofstream &outputFile, std::vector<Field>& field
 
     outputFile << "\t\treturn 0;\n" << "\t})();\n";
 
-    //TODO reset all data for potential new class definition
-    //TODO fix names and types
     //TODO try make __reflection_data_helper__ static
-
 }

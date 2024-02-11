@@ -35,4 +35,12 @@ private:
 };
 
 
+class NoReflectClass{
+public:
+    NoReflectClass() {}
+    int y;
+    int z;
+};
+
+
 #endif //WINTER_TESTCLASS_H

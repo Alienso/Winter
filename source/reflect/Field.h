@@ -12,6 +12,7 @@ public:
 
     Field(std::string& _name, std::string& _type, std::string& _className, int _offset) : name(_name), type(_type), className(_className), offset(_offset){}
     Field(const char* _name, const char* _type, const char* _className, int _offset) : name(_name), type(_type), className(_className), offset(_offset){}
+    Field() : offset(0){}
 
     void* getAddress(void* object) const;
 
