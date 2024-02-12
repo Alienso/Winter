@@ -26,11 +26,15 @@ public:
         clazz = _clazz;
     }
 
+    int getX(){
+        return x;
+    }
+
 private:
     int x;
     std::vector<int> vec;
     std::shared_ptr<int> *shared;
-    int& reference;
+    int reference;
     TestClass* clazz;
 };
 

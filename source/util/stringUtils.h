@@ -43,6 +43,16 @@ public:
         return {res};
     }
 
+    static string stripSpecialCharacters(string& s) {
+        char res[s.length()];
+        int i,j;
+        for (i=0,j=0; i<s.size(); i++)
+            if (isalnum(s[i]))
+                res[j++] = s[i];
+        res[j] = '\0';
+        return {res};
+    }
+
     static bool endsWith(string& s, const char* suffix) {
         int suffixSize = 0;
         for (;suffix[suffixSize] != '\0'; suffixSize++);

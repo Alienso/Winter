@@ -109,9 +109,10 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile) 
                     blank++;
                     std::string name = line.substr(blank, line.size() - blank - 1);
                     name = StringUtils::trim(name);
-                    std::string type = line.substr(0, blank);
-                    type = StringUtils::stripBlankCharacters(type);
-                    Field f(name, type, className, 0);
+                    std::string typeStr = line.substr(0, blank);
+                    typeStr = StringUtils::stripBlankCharacters(typeStr);
+                    FieldType type = convertToFieldType(StringUtils::stripSpecialCharacters(typeStr).data());
+                    Field f(name, typeStr, type, className, 0);
                     fields.push_back(f);
                 }
             }
@@ -128,7 +129,7 @@ void insertFieldsAndMethods(std::ofstream &outputFile, std::vector<Field>& field
     outputFile << "\tint __reflection__data__helper__ = ([this]() {\n";
 
     for (Field& x : fields){
-        outputFile << "\t\tdeclaredFields.emplace_back(\"" << x.name << "\",\"" << x.type << "\",\"" << x.className << "\","
+        outputFile << "\t\tdeclaredFields.emplace_back(\"" << x.name << "\",\"" << x.typeStr << "\"," << x.type << ",\"" << x.className << "\","
         << "(int*)(&this->" << x.name << ") - (int*)this" << ");\n";
     }
 

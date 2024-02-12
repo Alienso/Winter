@@ -41,7 +41,9 @@ set(SOURCES main.cpp source/Winter.cpp source/Winter.h
         source/app/service/MyService.cpp source/app/service/MyService.h
         source/reflect/Reflect.cpp source/reflect/Reflect.h
         source/reflect/Field.cpp source/reflect/Field.h
-        source/reflect/Method.cpp source/reflect/Method.h)
+        source/reflect/Method.cpp source/reflect/Method.h
+        source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
+        source/serialize/FieldEnums.h)
 
 add_executable(Winter ${SOURCES})
 
@@ -63,7 +65,9 @@ if (EXISTS ${PROJECT_SOURCE_DIR}/target/main.cpp)
             target/TestClass.cpp target/TestClass.h
             source/reflect/Reflect.cpp source/reflect/Reflect.h
             source/reflect/Field.cpp source/reflect/Field.h
-            source/reflect/Method.cpp source/reflect/Method.h)
+            source/reflect/Method.cpp source/reflect/Method.h
+            source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
+            source/serialize/FieldEnums.h)
 
     add_executable(Target ${SOURCES})
 

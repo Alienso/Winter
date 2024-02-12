@@ -5,6 +5,7 @@
 #include "iostream"
 
 #include "TestClass.h"
+#include "../source/serialize/JsonDeserializer.h"
 
 int main(){
 
@@ -31,4 +32,11 @@ int main(){
     }
     std::cout << '\n';
 
+
+    JsonDeserializer<TestClass> deserializer;
+    string jsonData = "{\n\t\"x\":3,\n\t\"reference\":-1\n}";
+    TestClass* deserializedClass = (TestClass*) deserializer.deserialize(jsonData);
+    std::cout << deserializedClass->getX() << '\n';
+
+    return 0;
 }

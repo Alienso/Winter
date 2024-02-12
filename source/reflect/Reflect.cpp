@@ -11,8 +11,12 @@ std::vector<Field> &Reflect::getDeclaredFields() {
     return declaredFields;
 }
 
-Field &Reflect::getField(const char *fieldName) {
-    return declaredFields[0];
+Field *Reflect::getField(const char *fieldName) {
+    for (Field& f : declaredFields){
+        if (f.name == fieldName)
+            return &f;
+    }
+    return &Field::INVALID;
 }
 
 std::vector<Method> &Reflect::getDeclaredMethods() {

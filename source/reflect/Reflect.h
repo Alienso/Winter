@@ -12,7 +12,7 @@
 class Reflect {
 public:
     static std::vector<Field>& getDeclaredFields();
-    static Field& getField(const char* fieldName);
+    static Field* getField(const char* fieldName);
 
     static std::vector<Method>& getDeclaredMethods();
     static Method& getMethod(const char* methodName);
