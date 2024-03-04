@@ -48,7 +48,7 @@ void HttpRequest::parseRequestLine(HttpRequest &request, string_view line) {
 
     endIndex = line.find(' ');
     string_view method(line.data(), endIndex);
-    request.method = HttpMethod::getFromString(method.data(), method.size());
+    request.method = HttpMethod::fromString(method.data());
 
     startIndex = endIndex + 1;
     endIndex = line.find(' ', endIndex + 1); //sizeof(' ')
@@ -62,7 +62,7 @@ void HttpRequest::parseRequestLine(HttpRequest &request, string_view line) {
     wtLogTrace("StartIndex: %d, EndIndex: %d", startIndex, endIndex);
     string_view version(&(line[startIndex]), endIndex - startIndex);
     version = StringUtils::rtrim(version);
-    request.httpVersion = HttpVersion::getFromString(version.data(), version.size());
+    request.httpVersion = HttpVersion::fromString(version.data(), version.size());
     wtLogTrace("HttpVersion is %d", request.httpVersion);
 }
 
@@ -112,4 +112,16 @@ void HttpRequest::setConnection(Connection* _connection) {
 
 Connection *HttpRequest::getConnection() {
     return connection;
+}
+
+URI &HttpRequest::getUri() {
+    return uri;
+}
+
+HttpMethod *HttpRequest::getMethod() {
+    return method;
+}
+
+string &HttpRequest::getRequestBody() {
+    return requestBody;
 }

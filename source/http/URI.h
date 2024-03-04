@@ -11,12 +11,19 @@ using namespace std;
 
 class URI {
 public:
-    URI() : value(""){}
+    URI() = default;
+    explicit URI(const char* s){
+        value = string(s);
+    }
     explicit URI(string_view s) {
         value = s.substr(0, s.size());
     }
     string getPath();
     string getFullPath();
+
+    bool operator==(const URI& other){
+        return value == other.value;
+    }
 private:
     string value;
 };

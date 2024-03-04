@@ -27,8 +27,7 @@ void Winter::mainLoop() {
     while(!shouldStop){
         httpServer.getRequestQueue().waitForEvent();
         shared_ptr<HttpRequest> request = httpServer.getRequestQueue().pop_front();
-        HttpResponse response = HttpResponse::generateResponse(request);
-        response.send();
+        router->routeRequest(request);
     }
 }
 

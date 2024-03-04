@@ -24,7 +24,7 @@ HttpMethod* HttpMethod::CONNECT = new HttpMethod("CONNECT");
 HttpMethod* HttpMethod::OPTIONS = new HttpMethod("OPTIONS");
 HttpMethod* HttpMethod::TRACE = new HttpMethod("TRACE");
 
-HttpVersion* HttpVersion::getFromString(const char* s, size_t length){
+HttpVersion* HttpVersion::fromString(const char* s, size_t length){
     wtLogTrace("Http version string: ", s, length);
     if (strcmp(s,"HTTP/1.0") == 0)
         return HttpVersion::V1_0;
@@ -35,7 +35,7 @@ HttpVersion* HttpVersion::getFromString(const char* s, size_t length){
     else return nullptr;
 }
 
-HttpMethod* HttpMethod::getFromString(const char* s, size_t length) {
+HttpMethod* HttpMethod::fromString(const char* s) {
     if (strcmp(s, "GET") == 0)
         return HttpMethod::GET;
     else if (strcmp(s, "POST") == 0)

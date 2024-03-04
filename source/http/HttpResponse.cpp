@@ -10,6 +10,14 @@ HttpResponse::HttpResponse() {
 
 }
 
+HttpResponse::HttpResponse(Reflect *data, HttpCode *code) : httpCode(code) {
+    responseBody = *(serializer.serialize(data)); //TODO this is a copy
+}
+
+string &HttpResponse::getBody() {
+    return responseBody;
+}
+
 shared_ptr<string> HttpResponse::toResponseString(){
 
     string requestLine = writeRequestLine();

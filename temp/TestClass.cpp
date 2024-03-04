@@ -3,3 +3,7 @@
 //
 
 #include "TestClass.h"
+
+HttpResponse *TestClass::handleData(HttpRequest *req) {
+    std::cout << x << '\n';
+}

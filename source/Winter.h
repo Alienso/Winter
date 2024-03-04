@@ -8,6 +8,7 @@
 
 #include "http/HttpServer.h"
 #include "PreProcessor.h"
+#include "Router.h"
 
 class Winter {
 public:
@@ -24,6 +25,8 @@ private:
     HttpServer httpServer;
     thread httpServerThread;
     PreProcessor* preProcessor = PreProcessor::getInstance();
+
+    Router* router = Router::getInstance();
 };
 
 

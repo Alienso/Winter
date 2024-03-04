@@ -61,7 +61,7 @@ void Connection::respondToHttpRequest(string& response){
     socket.write_some(asio::buffer(response.data(), response.size()));
     socket.close();
 
-    //TODO remove connecion from queue;
+    //TODO remove connection from queue;
     /*socket.async_write_some(asio::buffer(tempRequestBuffer, sizeof(tempRequestBuffer)),
                             [this](error_code ec, size_t bytes_written){
         if (!ec){

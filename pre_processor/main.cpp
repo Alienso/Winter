@@ -7,6 +7,8 @@
 
 #include "../source/util/stringUtils.h"
 #include "PreProcessor.h"
+#include "pass/ReflectionPass.h"
+#include "pass/AnnotationPass.h"
 
 int processFile(const std::filesystem::directory_entry &entry);
 void copyFileContents(ifstream &inputFile, ofstream &outputFile);
@@ -27,6 +29,12 @@ int main(int argc, char** argv) {
 
     inputDirectory = std::string (argv[1]);
     outputDirectory = std::string(argv[2]);
+
+    Pass* reflectionPass = new ReflectionPass();
+    preProcessor.addPass(reflectionPass);
+
+    Pass* annotationPass = new AnnotationPass();
+    preProcessor.addPass(annotationPass);
 
     for (const auto &dirEntry: std::filesystem::recursive_directory_iterator(argv[1])){
         if (processFile(dirEntry) != 0) {
@@ -60,11 +68,7 @@ int processFile(const std::filesystem::directory_entry &entry) {
     }
 
     string currentFileName = entry.path().string();
-    if (StringUtils::endsWith(currentFileName, ".h") || StringUtils::endsWith(currentFileName, ".hpp")) {
-        preProcessor.process(inputFile, outputFile);
-    }else{
-        copyFileContents(inputFile, outputFile);
-    }
+    preProcessor.process(inputFile, outputFile, currentFileName);
 
     inputFile.close();
     outputFile.close();

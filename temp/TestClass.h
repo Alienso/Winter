@@ -6,6 +6,7 @@
 #define WINTER_TESTCLASS_H
 
 #include "../source/reflect/Reflect.h"
+#include "../source/http/ControllerMapping.h"
 
 #include "memory"
 #include "vector"
@@ -29,6 +30,13 @@ public:
     int getX(){
         return x;
     }
+
+    std::vector<int>& getVec(){
+        return vec;
+    }
+
+$GET("/home")
+    static HttpResponse* handleData(HttpRequest* req);
 
 private:
     int x;

@@ -9,6 +9,8 @@
 #include <memory>
 #include "HttpRequest.h"
 #include "httpConstants.h"
+#include "../reflect/Reflect.h"
+#include "../serialize/JsonSerializer.h"
 
 using namespace std;
 
@@ -16,9 +18,11 @@ class HttpResponse {
 
 public:
     HttpResponse();
+    HttpResponse(Reflect* data, HttpCode* code = HttpCode::OK);
 
     void send();
     shared_ptr<string> toResponseString();
+    string& getBody();
 
     static HttpResponse generateResponse(const shared_ptr<HttpRequest>& sharedPtr);
 
@@ -28,6 +32,7 @@ private:
     unordered_map<string,string> responseHeaders;
     string responseBody;
     Connection* connection;
+    JsonSerializer serializer;
 
     string writeRequestLine();
     string writeRequestHeaders();

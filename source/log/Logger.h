@@ -115,15 +115,13 @@ public:
 
 
 private:
-    LogLevel logLevel;
-    vector<Appender> appenders;
-    void log(const char* logLevel, const char* s, va_list args);
-
     Logger();
     static Logger* instance;
     static mutex mutex_;
 
-
+    LogLevel logLevel;
+    vector<Appender> appenders;
+    void log(const char* logLevel, const char* s, va_list args);
 
     const char* TRACE_STR = "TRACE: ";
     const char* DEBUG_STR = "DEBUG: ";

@@ -34,9 +34,23 @@ int main(){
 
 
     JsonDeserializer<TestClass> deserializer;
-    string jsonData = "{\n\t\"x\":3,\n\t\"reference\":-1\n}";
+    string jsonData = "{\n\t\"x\":3,\n\t\"vec\":[1,2,3]\n}";
     TestClass* deserializedClass = (TestClass*) deserializer.deserialize(jsonData);
-    std::cout << deserializedClass->getX() << '\n';
+    std::cout << "Deserialized X value is: " << deserializedClass->getX() << '\n';
+
+    std::cout<<"Deserialized vec values are: ";
+    for (int i=0; i<3; i++){
+        std::cout << deserializedClass->getVec()[i] << ' ';
+    }
+    std::cout<<'\n';
+
+    /*string jsonData = "{\n\t\"x\":2345,\n\t\"vec\":[1,2,3]\n}";
+    unordered_map<string,string> headers;
+    HttpRequest req(HttpMethod::GET, URI("/home"), HttpVersion::V1_1, headers, jsonData, nullptr);
+    shared_ptr<HttpRequest> ptr = make_shared<HttpRequest>(req);
+
+    Router router;
+    router.routeRequestExample(ptr);*/
 
     return 0;
 }

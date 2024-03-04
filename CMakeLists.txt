@@ -43,7 +43,8 @@ set(SOURCES main.cpp source/Winter.cpp source/Winter.h
         source/reflect/Field.cpp source/reflect/Field.h
         source/reflect/Method.cpp source/reflect/Method.h
         source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
-        source/serialize/FieldEnums.h)
+        source/serialize/FieldEnums.h source/http/ControllerMapping.h
+        source/util/ThreadPool.h)
 
 add_executable(Winter ${SOURCES})
 
@@ -67,7 +68,9 @@ if (EXISTS ${PROJECT_SOURCE_DIR}/target/main.cpp)
             source/reflect/Field.cpp source/reflect/Field.h
             source/reflect/Method.cpp source/reflect/Method.h
             source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
-            source/serialize/FieldEnums.h)
+            source/serialize/FieldEnums.h
+            source/serialize/JsonSerializer.cpp source/serialize/JsonSerializer.h
+            source/util/ThreadPool.h)
 
     add_executable(Target ${SOURCES})
 
@@ -82,4 +85,8 @@ endif()
 #---------------------------------------------
 #PreProcessor
 
-add_executable(PreProcessor pre_processor/main.cpp pre_processor/PreProcessor.cpp pre_processor/PreProcessor.h)
+add_executable(PreProcessor pre_processor/main.cpp
+        pre_processor/PreProcessor.cpp pre_processor/PreProcessor.h
+        pre_processor/pass/ReflectionPass.cpp pre_processor/pass/ReflectionPass.h
+        pre_processor/pass/Pass.cpp pre_processor/pass/Pass.h
+        pre_processor/pass/AnnotationPass.cpp pre_processor/pass/AnnotationPass.h)

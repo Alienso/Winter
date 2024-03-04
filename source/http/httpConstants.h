@@ -31,7 +31,7 @@ public:
     }
     string name;
 
-    static HttpVersion* getFromString(const char* s, size_t length);
+    static HttpVersion* fromString(const char* s, size_t length);
 
     static HttpVersion* V1_0;
     static HttpVersion* V1_1;
@@ -45,7 +45,7 @@ public:
     }
     string method;
 
-    static HttpMethod* getFromString(const char* s, size_t length);
+    static HttpMethod* fromString(const char* s);
 
     static HttpMethod* GET;
     static HttpMethod* POST;

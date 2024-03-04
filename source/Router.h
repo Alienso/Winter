@@ -8,10 +8,41 @@
 
 #include <memory>
 #include "http/HttpRequest.h"
+#include "reflect/Reflect.h"
+#include "mutex"
+#include "http/HttpResponse.h"
+#include "util/ThreadPool.h"
+
+class Endpoint{
+public:
+    Endpoint() : method(nullptr), func(nullptr){} //f(nullptr), g(nullptr){}
+    Endpoint(const char* url, HttpMethod* _method, HttpResponse* (*f)(HttpRequest* request)) : uri(url), method(_method), func(f){}
+    HttpMethod* method;
+    URI uri;
+    HttpResponse* (*func)(HttpRequest* request);
+
+    //Reflect* (*f) (Reflect*);
+    //string* (*g) (Reflect* (*f) (Reflect*), shared_ptr<HttpRequest> &request);
+};
 
 class Router {
 public:
+    Router(Router& other) = delete;
+    void operator=(const Router&) = delete;
+    static Router* getInstance();
+
     void routeRequest(shared_ptr<HttpRequest> &request);
+    void registerEndpoint(Endpoint* endpoint);
+    void registerEndpoint(const char* url, HttpMethod* _method, HttpResponse* (*f)(HttpRequest* request));
+
+    vector<Endpoint*> endpoints;
+
+private:
+    Router() = default;
+    ~Router();
+    ThreadPool threadPool{20};
+    static Router* instance;
+    static mutex mutex_;
 };
 
 
