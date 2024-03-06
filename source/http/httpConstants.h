@@ -22,6 +22,7 @@ public:
     static HttpCode* BAD_REQUEST;
     static HttpCode* NOT_FOUND;
     static HttpCode* INTERNAL_SERVER_ERROR;
+    static HttpCode* METHOD_NOT_ALLOWED;
 };
 
 class HttpVersion{
@@ -55,6 +56,7 @@ public:
     static HttpMethod* CONNECT;
     static HttpMethod* OPTIONS;
     static HttpMethod* TRACE;
+    static HttpMethod* PATCH;
 
 };
 

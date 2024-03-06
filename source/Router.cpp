@@ -19,20 +19,31 @@ Router *Router::getInstance() {
 //HttpResponse response = HttpResponse::generateResponse(request);
 void Router::routeRequest(shared_ptr<HttpRequest> &request) {
     for (auto endpoint : endpoints){
-        if (endpoint->method == request->getMethod() && endpoint->uri == request->getUri()){
-            threadPool.queueTask([endpoint, request]{
-                HttpResponse* response = endpoint->func(request.get());
-                response->send();
-                delete response;
-            });
-            return; //TODO add method not supported
+        if (endpoint->uri == request->getUri()){
+            if (endpoint->method == request->getMethod()) {
+                threadPool.queueTask([endpoint, request] {
+                    HttpResponse *response = endpoint->func(request.get());
+                    response->setConnection(request->getConnection());
+                    response->send();
+                    delete response;
+                });
+                return;
+            } else {
+                HttpResponse httpResponse(HttpCode::METHOD_NOT_ALLOWED);
+                httpResponse.setConnection(request->getConnection());
+                httpResponse.send();
+                return;
+            }
         }
     }
 
-    //TODO add 404;
+    HttpResponse httpResponse(HttpCode::NOT_FOUND);
+    httpResponse.setConnection(request->getConnection());
+    httpResponse.send();
 }
 
 void Router::registerEndpoint(Endpoint *endpoint) {
+    wtLogTrace("Registered endpoint %s", endpoint->uri.getPath().data());
     endpoints.push_back(endpoint);
 }
 

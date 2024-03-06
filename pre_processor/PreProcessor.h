@@ -14,6 +14,8 @@ class PreProcessor {
 public:
     void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName);
     void addPass(Pass* pass);
+    void finish();
+
 private:
     std::string line;
     std::string lastLine;

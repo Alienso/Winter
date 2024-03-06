@@ -18,10 +18,12 @@ class HttpResponse {
 
 public:
     HttpResponse();
-    HttpResponse(Reflect* data, HttpCode* code = HttpCode::OK);
+    explicit HttpResponse(HttpCode* code);
+    explicit HttpResponse(Reflect* data, HttpCode* code = HttpCode::OK);
 
     void send();
     shared_ptr<string> toResponseString();
+    void setConnection(Connection* _connection);
     string& getBody();
 
     static HttpResponse generateResponse(const shared_ptr<HttpRequest>& sharedPtr);
@@ -33,6 +35,8 @@ private:
     string responseBody;
     Connection* connection;
     JsonSerializer serializer;
+
+    static unordered_map<string,string> baseResponseHeaders;
 
     string writeRequestLine();
     string writeRequestHeaders();

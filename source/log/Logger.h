@@ -121,12 +121,14 @@ private:
 
     LogLevel logLevel;
     vector<Appender> appenders;
-    void log(const char* logLevel, const char* s, va_list args);
+    int cwdOffset = 0;
+
+    void log(const char *logLevel, const char* file, int line, const char *s, va_list args);
 
     const char* TRACE_STR = "TRACE: ";
     const char* DEBUG_STR = "DEBUG: ";
-    const char* INFO_STR = "INFO: ";
-    const char* WARN_STR = "WARN: ";
+    const char* INFO_STR = "INFO:  ";
+    const char* WARN_STR = "WARN:  ";
     const char* ERROR_STR = "ERROR: ";
 
     template<typename T>

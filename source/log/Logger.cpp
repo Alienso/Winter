@@ -14,6 +14,13 @@ mutex Logger::mutex_;
 Logger::Logger() {
     logLevel = (LogLevel) Configuration::logLevel;
     appenders.emplace_back("", &cout);
+    string cwd = __FILE__;
+    size_t sourceIndex = cwd.find("log");
+    if (sourceIndex == string::npos) {
+        cout << "Error while initializing logger. Could not find source in path\n";
+        sourceIndex = 0;
+    }
+    cwdOffset = sourceIndex;
 }
 
 Logger *Logger::getInstance() {
@@ -30,7 +37,7 @@ void Logger::trace(const char* file, int line, const char* s, ...) {
         return;
     va_list argptr;
     va_start(argptr, s);
-    log(TRACE_STR, s, argptr);
+    log(TRACE_STR, file, line, s, argptr);
     va_end(argptr);
 }
 
@@ -39,7 +46,7 @@ void Logger::debug(const char* file, int line, const char* s, ...) {
         return;
     va_list argptr;
     va_start(argptr, s);
-    log(DEBUG_STR, s, argptr);
+    log(DEBUG_STR, file, line, s, argptr);
     va_end(argptr);
 }
 
@@ -48,7 +55,7 @@ void Logger::info(const char* file, int line, const char *s, ...) {
         return;
     va_list argptr;
     va_start(argptr, s);
-    log(INFO_STR, s, argptr);
+    log(INFO_STR, file, line, s, argptr);
     va_end(argptr);
 }
 
@@ -57,20 +64,20 @@ void Logger::warn(const char* file, int line, const char *s, ...) {
         return;
     va_list argptr;
     va_start(argptr, s);
-    log(WARN_STR, s, argptr);
+    log(WARN_STR, file, line, s, argptr);
     va_end(argptr);
 }
 
 void Logger::error(const char* file, int line, const char *s, ...) {
     va_list argptr;
     va_start(argptr, s);
-    log(ERROR_STR, s, argptr);
+    log(ERROR_STR, file + cwdOffset, line, s, argptr);
     va_end(argptr);
 }
 
-void Logger::log(const char *logLevel, const char *s, va_list args) {
+void Logger::log(const char *logLevel, const char* file, int line, const char *s, va_list args) {
     for (auto appender : appenders){
-        printf(logLevel);
+        printf("%s %s:%d\t", logLevel, file + cwdOffset, line);
         appender.write(s, args);
         printf("\n");
     }

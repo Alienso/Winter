@@ -15,11 +15,10 @@
 
 using namespace std;
 
-template<typename T>
 class JsonDeserializer {
 public:
-    Reflect* deserialize(string& s){
-        Reflect* response = new T(); //TODO T is used only here, maybe make this func take second parameter Reflect* so this is not a template
+    Reflect* deserialize(string& s, Reflect* response){
+        //Reflect* response = new T(); //TODO T is used only here, maybe make this func take second parameter Reflect* so this is not a template
         string fieldName, fieldValue;
         JsonFieldType fieldType;
 

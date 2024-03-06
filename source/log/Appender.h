@@ -18,6 +18,7 @@ public:
     void write(const string &s);
     void write(const char* s);
     void write(const char *s, va_list args);
+
 private:
     const string format;
     ostream* stream;

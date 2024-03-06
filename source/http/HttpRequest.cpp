@@ -14,14 +14,14 @@ HttpRequest::HttpRequest() {
 optional<HttpRequest> HttpRequest::parseFromString(string& data) {
     HttpRequest httpRequest;
 
-    wtLogTrace("Data received: %s", data.data());
+    //wtLogTrace("Data received: %s", data.data());
 
-    int startIndex, endIndex;
+    size_t startIndex, endIndex;
     endIndex = data.find('\n');
-    string_view line(data.data(), endIndex + 1); //sizeof \n
+    string line(data.data(), endIndex + 1); //sizeof \n
 
     startIndex = endIndex + 1;
-    endIndex = data.find("\n\n", endIndex + 1);
+    endIndex = data.find("\r\n\r\n", endIndex + 1); //TEMP FIX!
     if (endIndex == string::npos)
         endIndex = data.length();
     //string_view headers(&(data[startIndex]), endIndex - startIndex + 2); //sizeof \n\n
@@ -41,8 +41,8 @@ optional<HttpRequest> HttpRequest::parseFromString(string& data) {
     return {httpRequest};
 }
 
-void HttpRequest::parseRequestLine(HttpRequest &request, string_view line) {
-    wtLogTrace("Request Line: ", line.data(), line.length());
+void HttpRequest::parseRequestLine(HttpRequest &request, string &line) {
+    wtLogTrace("Request Line: %s", line.data());
 
     unsigned int startIndex, endIndex;
 
@@ -55,7 +55,7 @@ void HttpRequest::parseRequestLine(HttpRequest &request, string_view line) {
     string_view endpoint(&(line[startIndex]), endIndex - startIndex);
     URI newUri(endpoint);
     request.uri = newUri;
-    wtLogTrace("URI: ", request.uri.getPath().data(), request.uri.getPath().size());
+    wtLogTrace("URI: %s", request.uri.getPath().data());
 
     startIndex = endIndex + 1;
     endIndex = line.find('\n', endIndex + 1); //sizeof('\n')
@@ -63,11 +63,11 @@ void HttpRequest::parseRequestLine(HttpRequest &request, string_view line) {
     string_view version(&(line[startIndex]), endIndex - startIndex);
     version = StringUtils::rtrim(version);
     request.httpVersion = HttpVersion::fromString(version.data(), version.size());
-    wtLogTrace("HttpVersion is %d", request.httpVersion);
+    wtLogTrace("HttpVersion is %s", request.httpVersion->name.data());
 }
 
 void HttpRequest::parseRequestHeaders(HttpRequest &request, string &headers) {
-    //wtLogTrace("Headers: ", headers.data(), headers.length());
+    wtLogTrace("Headers: %s", headers.data());
     string headerValue, headerName;
     int startIndex = 0,endIndex = 0;
     int i;

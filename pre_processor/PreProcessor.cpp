@@ -27,3 +27,9 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile, 
 void PreProcessor::addPass(Pass *pass) {
     passes.push_back(pass);
 }
+
+void PreProcessor::finish() {
+    for (auto pass: passes){
+        pass->processingFinished();
+    }
+}

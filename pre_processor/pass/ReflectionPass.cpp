@@ -137,4 +137,8 @@ void ReflectionPass::insertFieldsAndMethods(std::ofstream &outputFile){
     //TODO try make __reflection_data_helper__ static
 }
 
+void ReflectionPass::processingFinished() {
+
+}
+
 

@@ -38,7 +38,7 @@ private:
     string requestBody;
     Connection* connection;
 
-    static void parseRequestLine(HttpRequest& request, string_view line);
+    static void parseRequestLine(HttpRequest& request, string &line);
     static void parseRequestHeaders(HttpRequest& request, string &headers);
     static void parseRequestBody(HttpRequest& request, string_view body);
 

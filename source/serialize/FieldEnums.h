@@ -21,12 +21,12 @@ enum FieldType{
     FIELD_TYPE_SHORT,
     FIELD_TYPE_INT,
     FIELD_TYPE_LONG,
-    FIELD_TYPE_FLOAT,
-    FIELD_TYPE_DOUBLE, //4
+    FIELD_TYPE_FLOAT, // 3
+    FIELD_TYPE_DOUBLE,
     FIELD_TYPE_CHAR,
     FIELD_TYPE_STRING,
-    FIELD_TYPE_OBJ,
-    FIELD_TYPE_PTR, // 8
+    FIELD_TYPE_OBJ, // 7
+    FIELD_TYPE_PTR,
     FIELD_TYPE_ARRAY,
     FIELD_TYPE_VECTOR
 };
@@ -46,6 +46,8 @@ inline FieldType convertToFieldType(const char* s){
         return FIELD_TYPE_SHORT;
     if (StringUtils::startsWith(s, "stdvec") || StringUtils::startsWith(s, "vec"))
         return FIELD_TYPE_VECTOR;
+    if (StringUtils::startsWith(s, "stdstring") || StringUtils::startsWith(s, "string"))
+        return FIELD_TYPE_STRING;
     //TODO ARRAYS!
     return FIELD_TYPE_OBJ;
 }

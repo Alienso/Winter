@@ -26,6 +26,12 @@ void AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
         }
     }
 
+    if (bracketCounter == 0){
+        if (StringUtils::trim(previousLine) != "$RestController")
+            return;
+        handleRestController(line);
+    }
+
     if (bracketCounter != 1)
         return;
 
@@ -64,6 +70,46 @@ void AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
 
     EndpointData endpoint(methodName, path, functionName, bodyType);
     endpointData.push_back(endpoint);
+}
+
+void AnnotationPass::handleRestController(string &line) {
+    size_t beginIndex = line.find("class");
+    if (beginIndex == string::npos)
+        return;
+
+    beginIndex+=5;
+
+    while(line[beginIndex] == ' '){
+        if (beginIndex == line.size())
+            return;
+        beginIndex++;
+    }
+
+    if (line[beginIndex] == '['){
+        //TODO handleAttributes
+        return;
+    }
+
+    if (StringUtils::startsWith(&(line[beginIndex]), "alignas")){
+        beginIndex+=8;
+        while(line[beginIndex] != ')') {
+            if (beginIndex == line.size())
+                return;
+            beginIndex++;
+        }
+
+        while(line[beginIndex] == ' '){
+            if (beginIndex == line.size())
+                return;
+            beginIndex++;
+        }
+    }
+
+    size_t endIndex = line.find(' ', beginIndex);
+    if (endIndex == string::npos)
+        return;
+
+    restControllers.emplace_back(line.substr(beginIndex, endIndex - beginIndex));
 }
 
 void AnnotationPass::generateMethod(std::ofstream &outputFile, EndpointData& endpoint){
@@ -119,4 +165,18 @@ void AnnotationPass::end(std::ifstream &inputFile, std::ofstream &outputFile) {
 
 bool AnnotationPass::shouldProcess(string &fileName) {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
+}
+
+void AnnotationPass::processingFinished() {
+    //TODO write inject file
+
+    /*MyController* controller = new MyController();
+    components.push_back(controller);
+    MyController::id = 0;
+
+    MyController2* controller2 = new MyController2();
+    components.push_back(controller2);
+    MyController2::id = 1;*/
+
+    //getByClass => return components[T::id]
 }

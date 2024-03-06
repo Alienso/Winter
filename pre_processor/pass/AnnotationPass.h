@@ -13,6 +13,7 @@ public:
     void begin() override;
     void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) override;
     void end(std::ifstream &inputFile, std::ofstream &outputFile) override;
+    void processingFinished() override;
 
     bool shouldProcess(std::string &fileName) override;
 
@@ -29,8 +30,10 @@ private:
     void generateMethod(std::ofstream &outputFile, EndpointData& endpoint);
     void generateEndpoint(std::ofstream &outputFile, EndpointData& endpoint);
     void registerEndpoints(std::ofstream &outputFile);
+    void handleRestController(std::string &line);
 
     std::vector<EndpointData> endpointData;
+    std::vector<std::string> restControllers;
     int bracketCounter;
 };
 

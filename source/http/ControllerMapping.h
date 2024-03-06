@@ -6,10 +6,14 @@
 #define WINTER_CONTROLLERMAPPING_H
 
 #include "../Router.h"
-#include "../source/serialize/JsonDeserializer.h"
-#include "../source/serialize/JsonSerializer.h"
-#include "../source/http/HttpRequest.h"
-#include "../source/http/httpConstants.h"
+#include "../serialize/JsonDeserializer.h"
+#include "../serialize/JsonSerializer.h"
+#include "../http/HttpRequest.h"
+#include "../http/httpConstants.h"
+
+#include "../Component.h"
+
+#define $RestController
 
 #define $GET(x)
 #define $POST(x)

@@ -6,11 +6,24 @@
 #include "Connection.h"
 #include "../log/Logger.h"
 
-HttpResponse::HttpResponse() {
+#include "../util/util.h"
 
+unordered_map<string,string> HttpResponse::baseResponseHeaders = {{"Connection","Closed"},
+                                                                  {"Server", "WT/0.0.1"}};
+
+HttpResponse::HttpResponse() : httpVersion(HttpVersion::V1_1) {
+    responseHeaders = baseResponseHeaders;
+    responseHeaders["Date"] = wt::current_datetime();
 }
 
-HttpResponse::HttpResponse(Reflect *data, HttpCode *code) : httpCode(code) {
+HttpResponse::HttpResponse(HttpCode *code) : httpVersion(HttpVersion::V1_1), httpCode(code) {
+    responseHeaders = baseResponseHeaders;
+    responseHeaders["Date"] = wt::current_datetime();
+}
+
+HttpResponse::HttpResponse(Reflect *data, HttpCode *code) : httpVersion(HttpVersion::V1_1), httpCode(code) {
+    responseHeaders = baseResponseHeaders;
+    responseHeaders["Date"] = wt::current_datetime();
     responseBody = *(serializer.serialize(data)); //TODO this is a copy
 }
 
@@ -74,4 +87,8 @@ string HttpResponse::writeRequestHeaders() {
 
 string HttpResponse::writeRequestBody() {
     return responseBody;
+}
+
+void HttpResponse::setConnection(Connection * _connection) {
+    this->connection = _connection;
 }

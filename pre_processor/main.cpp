@@ -43,6 +43,8 @@ int main(int argc, char** argv) {
         }
     }
 
+    preProcessor.finish();
+
     return 0;
 }
 
@@ -52,26 +54,34 @@ int processFile(const std::filesystem::directory_entry &entry) {
     std::string inputFileName = entry.path().string();
     std::string outputFileName = outputDirectory + (entry.path().string()).substr(inputDirectory.size(), inputFileName.size());
 
-    std::ifstream inputFile(inputFileName);
+    if (entry.is_directory()){
+        std::filesystem::create_directory(outputFileName);
+    } else if (entry.is_regular_file()){
 
-    if (!inputFile.is_open()) {
-        std::cerr << "Error: Unable to open input file " << inputFileName << std::endl;
-        return 1;
-    }
+        std::ifstream inputFile(inputFileName);
 
-    std::ofstream outputFile(outputFileName, std::ios::trunc | std::ios::out);
+        if (!inputFile.is_open()) {
+            std::cerr << "Error: Unable to open input file " << inputFileName << std::endl;
+            return 1;
+        }
 
-    if (!outputFile.is_open()) {
-        std::cerr << "Error: Unable to open output file " << outputFileName << std::endl;
+        if (!std::filesystem::exists(outputFileName)) {
+            std::filesystem::copy_file(inputFileName, outputFileName);
+        }
+        std::ofstream outputFile(outputFileName, std::ios::trunc | std::ios::out);
+
+        if (!outputFile.is_open()) {
+            std::cerr << "Error: Unable to open output file " << outputFileName << std::endl;
+            inputFile.close();
+            return 1;
+        }
+
+        string currentFileName = entry.path().string();
+        preProcessor.process(inputFile, outputFile, currentFileName);
+
         inputFile.close();
-        return 1;
+        outputFile.close();
     }
-
-    string currentFileName = entry.path().string();
-    preProcessor.process(inputFile, outputFile, currentFileName);
-
-    inputFile.close();
-    outputFile.close();
 
     return 0;
 }
