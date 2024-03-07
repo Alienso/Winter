@@ -29,6 +29,7 @@ set(SOURCES source/main.cpp source/Winter.cpp source/Winter.h
         source/reflect/Field.cpp source/reflect/Field.h
         source/reflect/Method.cpp source/reflect/Method.h
         source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
+        source/serialize/JsonSerializer.cpp source/serialize/JsonSerializer.h
         source/serialize/FieldEnums.h source/http/ControllerMapping.h
         source/util/ThreadPool.h source/util/util.h
         source/Component.cpp source/Component.h

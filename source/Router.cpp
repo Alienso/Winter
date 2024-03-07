@@ -15,8 +15,6 @@ Router *Router::getInstance() {
     return instance;
 }
 
-//endpoint->g(endpoint->f, request);
-//HttpResponse response = HttpResponse::generateResponse(request);
 void Router::routeRequest(shared_ptr<HttpRequest> &request) {
     for (auto endpoint : endpoints){
         if (endpoint->uri == request->getUri()){

@@ -72,4 +72,45 @@ inline FieldType getArraySubType(string& s){
     return FIELD_TYPE_INT;
 }
 
+inline JsonFieldType convertToJsonFieldType(string& s) {
+    switch(s[0]){
+        case '"':
+            return JSON_FILED_TYPE_STRING;
+        case '{':
+            return JSON_FILED_TYPE_OBJ;
+        case '[':
+            return JSON_FIELD_TYPE_ARRAY;
+        default:
+            if (s.find('.') != string::npos)
+                return JSON_FILED_TYPE_REAL_NUMBER;
+            return JSON_FILED_TYPE_NATURAL_NUMBER;
+    }
+}
+
+inline bool areTypesCompatible(JsonFieldType jsonType, FieldType fieldType) {
+    switch (jsonType) {
+        case JSON_FILED_TYPE_NATURAL_NUMBER:
+            if (fieldType == FIELD_TYPE_SHORT || fieldType == FIELD_TYPE_INT || fieldType == FIELD_TYPE_LONG)
+                return true;
+            return false;
+        case JSON_FILED_TYPE_REAL_NUMBER:
+            if (fieldType == FIELD_TYPE_FLOAT || fieldType == FIELD_TYPE_DOUBLE)
+                return true;
+            return false;
+        case JSON_FILED_TYPE_STRING:
+            if (fieldType == FIELD_TYPE_STRING)
+                return true;
+        case JSON_FILED_TYPE_OBJ:
+            if (fieldType == FIELD_TYPE_OBJ)
+                return true;
+            return false;
+        case JSON_FIELD_TYPE_ARRAY:
+            if (fieldType == FIELD_TYPE_ARRAY || fieldType == FIELD_TYPE_VECTOR)
+                return true;
+            return false;
+        default:
+            return false;
+    }
+}
+
 #endif //WINTER_FIELDENUMS_H

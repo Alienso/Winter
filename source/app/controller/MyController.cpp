@@ -9,8 +9,7 @@
 JsonDeserializer MyController::deserializer = {};
 
 HttpResponse *MyController::home(HttpRequest *httpRequest) {
-    auto* request = new BaseRequest();
-    deserializer.deserialize(httpRequest->getRequestBody(),request);
+    auto* request = (BaseRequest*) deserializer.deserialize(httpRequest->getRequestBody(),new BaseRequest());
 
     //TODO const char* is not deserialized
     //Do some logic

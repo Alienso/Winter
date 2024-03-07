@@ -14,13 +14,10 @@ using namespace std;
 
 class JsonSerializer {
 public:
-    string* serialize (Reflect* obj){
-        auto* s = new string();
-        for (auto field : Reflect::getDeclaredFields()){
-            ;;
-        }
-        return s;
-    }
+    string* serialize(Reflect* obj);
+
+private:
+    string convertToJsonString(Field &field, Reflect* obj);
 };
 
 
