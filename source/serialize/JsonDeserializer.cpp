@@ -55,7 +55,7 @@ Reflect* JsonDeserializer::deserialize(string& s, Reflect* response){
         offset = commaIndex + 1;
 
         fieldType = convertToJsonFieldType(fieldValue);
-        Field* f = Reflect::getField(fieldName.data());
+        Field* f = response->getField(fieldName.data());
         if (f == &Field::INVALID){
             continue;
         }

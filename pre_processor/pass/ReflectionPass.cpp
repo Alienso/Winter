@@ -7,6 +7,7 @@
 #include <fstream>
 
 void ReflectionPass::begin() {
+    flush = false;
     shouldAddReflection = false;
     bracketCounter = 0;
     smallBracketCounter = 0;
@@ -17,7 +18,9 @@ void ReflectionPass::begin() {
 }
 
 void ReflectionPass::end(ifstream &inputFile, ofstream &outputFile) {
-
+    if (flush && shouldAddReflection){
+        insertFieldsAndMethods(outputFile);
+    }
 }
 
 bool ReflectionPass::shouldProcess(string &fileName) {
@@ -25,6 +28,17 @@ bool ReflectionPass::shouldProcess(string &fileName) {
 }
 
 void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) {
+
+    if (flush){
+        flush = false;
+        if (shouldAddReflection) {
+            shouldAddReflection = false;
+            insertFieldsAndMethods(outputFile);
+        }
+
+        fields.resize(0);
+        methods.resize(0);
+    }
 
     //TODO add comments support
     declaringMethod = false;
@@ -59,11 +73,9 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
             //We finished reading a class, so we write the data and reset everything
             if (bracketCounter == 1) {
                 if (shouldAddReflection) {
-                    shouldAddReflection = false;
-                    insertFieldsAndMethods(outputFile);
+                    generateReflectOverrides(outputFile);
                 }
-                fields.resize(0);
-                methods.resize(0);
+                flush = true;
             }
             bracketCounter--;
         } else if (c == '(') {
@@ -123,18 +135,33 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
 }
 
 void ReflectionPass::insertFieldsAndMethods(std::ofstream &outputFile){
-
     outputFile << '\n';
-    outputFile << "\tint __reflection__data__helper__ = ([this]() {\n";
+    outputFile << "static int __" << className <<"__reflection__data__helper__ = ([]() {\n";
+    outputFile << "\t" << className << ' ' << className << ";\n";
 
     for (Field& x : fields){
-        outputFile << "\t\tdeclaredFields.emplace_back(\"" << x.name << "\",\"" << x.typeStr << "\"," << x.type << ",\"" << x.className << "\","
-                   << "(int*)(&this->" << x.name << ") - (int*)this" << ");\n";
+        outputFile << "\t" << className << "::declaredFields.emplace_back(\"" << x.name << "\",\"" << x.typeStr << "\"," << x.type << ",\"" << x.className << "\","
+                   << "(int*)(&" << className << "." << x.name << ") - (int*)&" << className << ");\n";
     }
 
-    outputFile << "\t\treturn 0;\n" << "\t})();\n";
+    outputFile << "\treturn 0;\n" << "})();\n";
+}
 
-    //TODO try make __reflection_data_helper__ static
+void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
+    outputFile << "\n\tstatic inline std::vector<Field> declaredFields = {};\n" <<
+                  "\tstatic inline std::vector<Method> declaredMethods = {};\n\n";
+
+    outputFile << "\tField *getField(const char *fieldName) override {\n"
+                  "        for (Field& f : declaredFields){\n"
+                  "            if (f.name == fieldName)\n"
+                  "                return &f;\n"
+                  "        }\n"
+                  "        return &Field::INVALID;\n"
+                  "    }\n"
+                  "\n"
+                  "    std::vector<Field> &getDeclaredFields() override {\n"
+                  "        return declaredFields;\n"
+                  "    }\n";
 }
 
 void ReflectionPass::processingFinished() {

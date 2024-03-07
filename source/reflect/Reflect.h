@@ -11,14 +11,14 @@
 
 class Reflect {
 public:
-    static std::vector<Field>& getDeclaredFields();
-    static Field* getField(const char* fieldName);
+    virtual std::vector<Field>& getDeclaredFields();
+    virtual Field* getField(const char* fieldName);
 
-    static std::vector<Method>& getDeclaredMethods();
-    static Method& getMethod(const char* methodName);
+    virtual std::vector<Method>& getDeclaredMethods();
+    virtual Method& getMethod(const char* methodName);
 
-    static std::vector<Field> declaredFields;
-    static std::vector<Method> declaredMethods;
+    static inline std::vector<Field> declaredFields = {};
+    static inline std::vector<Method> declaredMethods = {};
 };
 
 

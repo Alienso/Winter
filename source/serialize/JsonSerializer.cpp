@@ -6,9 +6,9 @@
 
 string* JsonSerializer::serialize(Reflect* obj){
     auto* s = new string("{\n");
-    size_t n = Reflect::getDeclaredFields().size();
+    size_t n = obj->getDeclaredFields().size();
     for (int i=0; i<n; i++){
-        Field& field = Reflect::getDeclaredFields()[i];
+        Field& field = obj->getDeclaredFields()[i];
         s->push_back('\"');
         s->append(field.name);
         s->append("\":\"");
@@ -42,13 +42,13 @@ string JsonSerializer::convertToJsonString(Field &field, Reflect* obj){
             return field.getString(obj);
         case FIELD_TYPE_OBJ:
         case FIELD_TYPE_PTR:
-            return ""; //TODO
+            return "\"\""; //TODO
         case FIELD_TYPE_ARRAY:
         case FIELD_TYPE_VECTOR:
             //return "[" + convertToJsonString(field, obj) + "]"; TODO
             return "[]";
         default:
-            break;
+            return "\"\"";
 
     }
 }

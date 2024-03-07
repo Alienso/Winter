@@ -21,7 +21,9 @@ public:
 
 private:
     void insertFieldsAndMethods(std::ofstream &outputFile);
+    void generateReflectOverrides(ofstream &outputFile);
 
+    bool flush = false;
     bool shouldAddReflection = false;
     bool declaringMethod;
     bool declaringClass;

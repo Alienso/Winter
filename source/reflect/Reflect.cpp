@@ -4,18 +4,15 @@
 
 #include "Reflect.h"
 
-std::vector<Field> Reflect::declaredFields = {};
-std::vector<Method> Reflect::declaredMethods = {};
+#include "../log/Logger.h"
 
 std::vector<Field> &Reflect::getDeclaredFields() {
+    wtLogError("getDeclaredFields called for Reflect*!");
     return declaredFields;
 }
 
 Field *Reflect::getField(const char *fieldName) {
-    for (Field& f : declaredFields){
-        if (f.name == fieldName)
-            return &f;
-    }
+    wtLogError("getField called for Reflect*!");
     return &Field::INVALID;
 }
 
