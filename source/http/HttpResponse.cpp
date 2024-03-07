@@ -24,6 +24,7 @@ HttpResponse::HttpResponse(HttpCode *code) : httpVersion(HttpVersion::V1_1), htt
 HttpResponse::HttpResponse(Reflect *data, HttpCode *code) : httpVersion(HttpVersion::V1_1), httpCode(code) {
     responseHeaders = baseResponseHeaders;
     responseHeaders["Date"] = wt::current_datetime();
+    responseHeaders["Content-Type"] = "application/json";
     responseBody = *(serializer.serialize(data)); //TODO this is a copy
 }
 

@@ -11,7 +11,7 @@ string* JsonSerializer::serialize(Reflect* obj){
         Field& field = obj->getDeclaredFields()[i];
         s->push_back('\"');
         s->append(field.name);
-        s->append("\":\"");
+        s->append("\":");
 
         string fieldValue = convertToJsonString(field, obj);
         s->append(fieldValue);
@@ -37,9 +37,9 @@ string JsonSerializer::convertToJsonString(Field &field, Reflect* obj){
         case FIELD_TYPE_DOUBLE:
             return to_string(field.getDouble(obj));
         case FIELD_TYPE_CHAR:
-            return to_string(field.getChar(obj));
+            return "\"" + to_string(field.getChar(obj)) + "\"";
         case FIELD_TYPE_STRING:
-            return field.getString(obj);
+            return "\"" + field.getString(obj) + "\"";
         case FIELD_TYPE_OBJ:
         case FIELD_TYPE_PTR:
             return "\"\""; //TODO
