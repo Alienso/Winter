@@ -20,6 +20,7 @@ void Winter::run() {
 void Winter::init() {
     wtLogTrace("Hello world");
     httpServerThread = std::thread([this]() { httpServer.start(); });
+    Reflect::initializeReflection();
     Component::initializeComponents();
 }
 

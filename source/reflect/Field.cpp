@@ -6,12 +6,8 @@
 
 Field Field::INVALID = {};
 
-void *Field::getAddress(void *object) const {
-    return (int*)(object) + offset;
-}
-
 void Field::setValue(void *object, void* data, unsigned int size) const {
-    memcpy(getAddress(object), data, size);
+    memcpy(getAddress(object), data, size); //TODO this is shallow copy!
 }
 
 void Field::setInt(void *object, int value) const {
@@ -50,24 +46,38 @@ void Field::setPtr(void *object, void *value) const {
     *((int*)getAddress(object)) = (unsigned long long)value;
 }
 
+void *Field::getAddress(void *object) const {
+    return (int*)(object) + offset;
+}
+
+void **Field::getPtr(void *object) const {
+    return (void**)((int*)(object) + offset);
+}
+
 int Field::getInt(void* object) const {
     return *(int*)getAddress(object);
 }
+
 long Field::getLong(void* object) const {
     return *(long*)getAddress(object);
 }
+
 char Field::getChar(void* object) const {
     return *(char*)getAddress(object);
 }
+
 float Field::getFloat(void* object) const{
     return *(float*)getAddress(object);
 }
+
 double Field::getDouble(void* object) const{
     return *(double *)getAddress(object);
 }
+
 short Field::getShort(void* object) const{
     return *(short*)getAddress(object);
 }
+
 string Field::getString(void* object) const{
     return *(string*)getAddress(object);
 }

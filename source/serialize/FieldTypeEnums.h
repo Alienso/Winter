@@ -2,8 +2,8 @@
 // Created by Alienson on 12.2.2024..
 //
 
-#ifndef WINTER_FIELDENUMS_H
-#define WINTER_FIELDENUMS_H
+#ifndef WINTER_FIELDTYPEENUMS_H
+#define WINTER_FIELDTYPEENUMS_H
 
 
 #include "cstring"
@@ -48,7 +48,6 @@ inline FieldType convertToFieldType(const char* s){
         return FIELD_TYPE_VECTOR;
     if (StringUtils::startsWith(s, "stdstring") || StringUtils::startsWith(s, "string"))
         return FIELD_TYPE_STRING;
-    //TODO ARRAYS!
     return FIELD_TYPE_OBJ;
 }
 
@@ -101,7 +100,7 @@ inline bool areTypesCompatible(JsonFieldType jsonType, FieldType fieldType) {
             if (fieldType == FIELD_TYPE_STRING)
                 return true;
         case JSON_FILED_TYPE_OBJ:
-            if (fieldType == FIELD_TYPE_OBJ)
+            if (fieldType == FIELD_TYPE_OBJ || fieldType == FIELD_TYPE_PTR)
                 return true;
             return false;
         case JSON_FIELD_TYPE_ARRAY:
@@ -113,4 +112,4 @@ inline bool areTypesCompatible(JsonFieldType jsonType, FieldType fieldType) {
     }
 }
 
-#endif //WINTER_FIELDENUMS_H
+#endif //WINTER_FIELDTYPEENUMS_H

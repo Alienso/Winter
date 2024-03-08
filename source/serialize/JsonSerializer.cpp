@@ -41,8 +41,9 @@ string JsonSerializer::convertToJsonString(Field &field, Reflect* obj){
         case FIELD_TYPE_STRING:
             return "\"" + field.getString(obj) + "\"";
         case FIELD_TYPE_OBJ:
+            return *serialize((Reflect*)field.getAddress(obj)); //TODO this is a copy
         case FIELD_TYPE_PTR:
-            return "\"\""; //TODO
+            return *serialize(*((Reflect**)field.getPtr(obj))); //TODO this is a copy
         case FIELD_TYPE_ARRAY:
         case FIELD_TYPE_VECTOR:
             //return "[" + convertToJsonString(field, obj) + "]"; TODO

@@ -126,7 +126,11 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
                 name = StringUtils::trim(name);
                 std::string typeStr = line.substr(0, blank);
                 typeStr = StringUtils::stripBlankCharacters(typeStr);
-                FieldType type = convertToFieldType(StringUtils::stripSpecialCharacters(typeStr).data());
+                FieldType type;
+                if (typeStr[typeStr.size()-1] == '*')
+                    type = FIELD_TYPE_PTR;
+                else
+                    type = convertToFieldType(StringUtils::stripSpecialCharacters(typeStr).data());
                 Field f(name, typeStr, type, className, 0);
                 fields.push_back(f);
             }
@@ -135,7 +139,7 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
 }
 
 void ReflectionPass::insertFieldsAndMethods(std::ofstream &outputFile){
-    outputFile << '\n';
+    /*outputFile << '\n';
     outputFile << "static int __" << className <<"__reflection__data__helper__ = ([]() {\n";
     outputFile << "\t" << className << ' ' << className << ";\n";
 
@@ -144,12 +148,15 @@ void ReflectionPass::insertFieldsAndMethods(std::ofstream &outputFile){
                    << "(int*)(&" << className << "." << x.name << ") - (int*)&" << className << ");\n";
     }
 
-    outputFile << "\treturn 0;\n" << "})();\n";
+    outputFile << "\treturn 0;\n" << "})();\n";*/
 }
 
 void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
+
+    string variableName = StringUtils::uncapitalize(className);
+
     outputFile << "\n\tstatic inline std::vector<Field> declaredFields = {};\n" <<
-                  "\tstatic inline std::vector<Method> declaredMethods = {};\n\n";
+               "\tstatic inline std::vector<Method> declaredMethods = {};\n";
 
     outputFile << "\tField *getField(const char *fieldName) override {\n"
                   "        for (Field& f : declaredFields){\n"
@@ -161,7 +168,21 @@ void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
                   "\n"
                   "    std::vector<Field> &getDeclaredFields() override {\n"
                   "        return declaredFields;\n"
-                  "    }\n";
+                  "    }\n\n"
+                  "    int getClassSize() override{\n"
+                  "        return sizeof(" << className << ");\n"
+                                                           "\t}\n\n";
+
+
+    outputFile << '\n';
+    outputFile << "\tstatic void initializeReflection(){\n";
+    outputFile << "\t\t" << className << "* " << variableName << " = (" << className << "*) malloc(sizeof(" << className << "));\n";
+
+    for (Field& x : fields){
+        outputFile << "\t\t" << className << "::declaredFields.emplace_back(\"" << x.name << "\",\"" << x.typeStr << "\"," << x.type << ",\"" << x.className << "\","
+                   << "(int*)(&" << variableName << "->" << x.name << ") - (int*)" << variableName << ");\n";
+    }
+    outputFile << "\t}\n";
 }
 
 void ReflectionPass::processingFinished() {

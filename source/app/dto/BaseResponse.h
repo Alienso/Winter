@@ -6,11 +6,14 @@
 #define WINTER_BASERESPONSE_H
 
 #include "../../reflect/Reflect.h"
+#include "InnerClass.h"
 
 class BaseResponse : public Reflect{
 public:
     int code;
     string message;
+    InnerClass* innerClass;
+    int sum;
 };
 
 #endif //WINTER_BASERESPONSE_H

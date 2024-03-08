@@ -5,9 +5,11 @@
 #ifndef WINTER_REFLECT_H
 #define WINTER_REFLECT_H
 
-#include <vector>
 #include "Field.h"
 #include "Method.h"
+
+#include <vector>
+#include <unordered_map>
 
 class Reflect {
 public:
@@ -17,8 +19,18 @@ public:
     virtual std::vector<Method>& getDeclaredMethods();
     virtual Method& getMethod(const char* methodName);
 
+    virtual int getClassSize();
+
+    static void* getClassInstanceByName(string& name);
+
     static inline std::vector<Field> declaredFields = {};
     static inline std::vector<Method> declaredMethods = {};
+    static inline const int _reflect_class_size_ = 0;
+
+    static inline std::unordered_map<string,Reflect* (*)()> classMap;
+
+    static void initializeReflection();
+    static void initializeClassMap();
 };
 
 

@@ -11,13 +11,25 @@ JsonDeserializer MyController::deserializer = {};
 HttpResponse *MyController::home(HttpRequest *httpRequest) {
     auto* request = (BaseRequest*) deserializer.deserialize(httpRequest->getRequestBody(),new BaseRequest());
 
-    //TODO const char* is not deserialized
     //Do some logic
     wtLogInfo("Received data: number= %d, type=%s", request->number, request->type.data());
+    wtLogInfo("InnerClass: x=%f, y=%f, c=%s", request->innerClass->x, request->innerClass->y, request->innerClass->c.data());
+    wtLogInfo("List: ", request->values);
+
+    InnerClass* inner = new InnerClass();
+    inner->x = request->innerClass->x * 2;
+    inner->y = request->innerClass->y * 2;
+    inner->c = request->innerClass->c + "X2";
+
+    int sum = 0;
+    for (int value : request->values)
+        sum+=value;
 
     auto* response = new BaseResponse();
     response->code = 0;
     response->message = "OK";
+    response->innerClass = inner;
+    response->sum = sum;
 
     return new HttpResponse(response, HttpCode::OK);
 }

@@ -3,7 +3,7 @@ project(Winter)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -O0")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
 
 include_directories(${PROJECT_SOURCE_DIR}/lib/)
@@ -30,10 +30,10 @@ set(SOURCES source/main.cpp source/Winter.cpp source/Winter.h
         source/reflect/Method.cpp source/reflect/Method.h
         source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
         source/serialize/JsonSerializer.cpp source/serialize/JsonSerializer.h
-        source/serialize/FieldEnums.h source/http/ControllerMapping.h
+        source/serialize/FieldTypeEnums.h source/http/ControllerMapping.h
         source/util/ThreadPool.h source/util/util.h
         source/Component.cpp source/Component.h
-        source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h)
+        source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h source/app/dto/InnerClass.h)
 
 #add_executable(Winter ${SOURCES})
 

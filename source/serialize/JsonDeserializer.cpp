@@ -12,7 +12,7 @@ Reflect* JsonDeserializer::deserialize(string& s, Reflect* response){
     size_t semicolonIndex;
     size_t commaIndex;
 
-    int bracketCounter = 0;
+    int bracketCounter = 0, largeBracketCounter = 0;
     bool inStr = false;
 
     offset = s.find('{');
@@ -29,21 +29,39 @@ Reflect* JsonDeserializer::deserialize(string& s, Reflect* response){
             return response;
 
         commaIndex = string::npos;
-        for (size_t i=semicolonIndex; i<s.size(); i++){
-            if (s[i] == '[' || s[i] == '{')
-                bracketCounter+=s[i];
-            if (s[i] == ']' || s[i] == '}')
-                bracketCounter-=s[i]+2;
+        size_t i;
+        for (i=semicolonIndex; i<s.size(); i++){
+            switch (s[i]) {
+                case '[':
+                    bracketCounter++;
+                    break;
+                case '{':
+                    largeBracketCounter++;
+                    break;
+                case ']':
+                    bracketCounter--;
+                    break;
+                case '}':
+                    largeBracketCounter--;
+                    break;
+                default:
+                    break;
+            }
             if (s[i] == '"' && s[i-1] != '\\')
                 inStr = !inStr;
-            if (bracketCounter == 0 && !inStr && s[i] == ',') {
+            if (bracketCounter == 0 && largeBracketCounter == 0 && !inStr && s[i] == ',') {
                 commaIndex = i;
                 break;
             }
         }
 
-        if (commaIndex == string::npos || commaIndex >= s.size())
-            commaIndex = s.size() - 1;
+        if (commaIndex == string::npos || i >= s.size()) {
+            commaIndex = s.rfind('}', s.size());
+            if (commaIndex == string::npos){
+                wtLogError("Could not find } in json!");
+                continue;
+            }
+        }
 
         fieldName = s.substr(offset, semicolonIndex - offset);
         fieldValue = s.substr(semicolonIndex + 1, commaIndex - semicolonIndex - 1);
@@ -62,18 +80,25 @@ Reflect* JsonDeserializer::deserialize(string& s, Reflect* response){
         FieldType expectedType = f->type;
 
         if (areTypesCompatible(fieldType, expectedType)) {
+
+            if(fieldType == JSON_FILED_TYPE_STRING)
+                fieldValue = fieldValue.substr(1, fieldValue.size() - 2);
+
             if (fieldType == JSON_FIELD_TYPE_ARRAY) {
                 FieldType subType = getArraySubType(f->typeStr);
                 setFieldValueArray(fieldValue, expectedType, subType, response, f);
             }
-            else setFieldValue(fieldValue, expectedType, response, f);
+            else {
+                string typeStr = expectedType == FIELD_TYPE_PTR ? f->typeStr.substr(0,f->typeStr.size() - 1) : f->typeStr;
+                setFieldValue(fieldValue, expectedType, response, f, typeStr);
+            }
         }else{
             wtLogError("Incompatible types: %d and %d for field %s", fieldType, expectedType, fieldName.data());
         }
     }
 }
 
-void JsonDeserializer::setFieldValue(string& fieldValue, FieldType fieldType, Reflect* obj, Field* f){
+void JsonDeserializer::setFieldValue(string& fieldValue, FieldType fieldType, Reflect* obj, Field* f, string& typeStr){
     switch(fieldType){
         case FIELD_TYPE_INT:
             f->setInt(obj, stoi(fieldValue));
@@ -97,8 +122,15 @@ void JsonDeserializer::setFieldValue(string& fieldValue, FieldType fieldType, Re
             f->setString(obj, fieldValue);
             break;
         case FIELD_TYPE_OBJ:
-            //serialize field recursively?
-            f->setValue(obj, &fieldValue, sizeof(fieldValue));
+            tempObj = deserialize(fieldValue, (Reflect*) Reflect::getClassInstanceByName(typeStr));
+            f->setValue(obj, tempObj, tempObj->getClassSize());
+            delete tempObj;
+            break;
+        case FIELD_TYPE_PTR:
+            tempObj = deserialize(fieldValue, (Reflect*) Reflect::getClassInstanceByName(typeStr));
+            f->setPtr(obj, tempObj);
+            tempObj = nullptr;
+            break;
         default:
             f->setInt(obj, 0);
     }
@@ -139,8 +171,10 @@ void JsonDeserializer::setFieldValueArray(string& fieldValue, FieldType fieldTyp
             break;
         case FIELD_TYPE_OBJ:
             //serialize field
-            f->setValue(obj, &fieldValue, sizeof(fieldValue));
+            f->setValue(obj, &fieldValue, sizeof(fieldValue)); //TODO
+            break;
         default:
             f->setInt(obj, 0);
+            break;
     }
 }

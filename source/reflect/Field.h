@@ -6,7 +6,7 @@
 #define WINTER_FIELD_H
 
 #include <string>
-#include "../serialize/FieldEnums.h"
+#include "../serialize/FieldTypeEnums.h"
 
 class Field {
 public:
@@ -39,6 +39,7 @@ public:
     double getDouble(void* object) const;
     short getShort(void* object) const;
     string getString(void* object) const;
+    void** getPtr(void *object) const;
 
     std::string name;
     std::string typeStr;

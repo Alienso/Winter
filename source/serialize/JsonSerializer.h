@@ -7,7 +7,7 @@
 
 #include "../reflect/Reflect.h"
 #include "../log/Logger.h"
-#include "FieldEnums.h"
+#include "FieldTypeEnums.h"
 #include "../util/stringUtils.h"
 
 using namespace std;

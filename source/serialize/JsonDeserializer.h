@@ -9,7 +9,7 @@
 
 #include "../reflect/Reflect.h"
 #include "../log/Logger.h"
-#include "FieldEnums.h"
+#include "FieldTypeEnums.h"
 #include "../util/stringUtils.h"
 #include <cstdlib>
 
@@ -20,7 +20,7 @@ public:
     Reflect* deserialize(string& s, Reflect* response);
 
 private:
-    static void setFieldValue(string& fieldValue, FieldType fieldType, Reflect* obj, Field* f);
+    void setFieldValue(string& fieldValue, FieldType fieldType, Reflect* obj, Field* f, string& typeStr);
     void setFieldValueArray(string& fieldValue, FieldType fieldType, FieldType subType, Reflect* obj, Field* f);
 
     template<typename U>
@@ -43,6 +43,7 @@ private:
         }
     }
 
+    Reflect* tempObj;
 };
 
 

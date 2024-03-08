@@ -22,13 +22,13 @@ public:
                 break;
             }
         }
-        for(int i=s.size(); i > 0; i--){
+        for(int i=s.size() - 1; i > 0; i--){
             if (!isspace(s[i])){
                 end = i;
                 break;
             }
         }
-        return s.substr(start, end - start);
+        return s.substr(start, end - start + 1);
     }
 
     static string stripBlankCharacters(string& s){
@@ -129,6 +129,15 @@ public:
             startIndex = endIndex + 1;
         }
 
+        return res;
+    }
+
+    static string uncapitalize(string& s){
+        string res(s);
+        for (int i=0; i<s.size(); i++){
+            if(isalpha(res[i]) && isupper(res[i]))
+                res[i] = (char)tolower(res[i]);
+        }
         return res;
     }
 
