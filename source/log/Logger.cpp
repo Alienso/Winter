@@ -75,9 +75,9 @@ void Logger::error(const char* file, int line, const char *s, ...) {
     va_end(argptr);
 }
 
-void Logger::log(const char *logLevel, const char* file, int line, const char *s, va_list args) {
+void Logger::log(const char *logLevelStr, const char* file, int line, const char *s, va_list args) {
     for (auto appender : appenders){
-        printf("%s %s:%d\t", logLevel, file + cwdOffset, line);
+        printf("%s %s:%d\t", logLevelStr, file + cwdOffset, line);
         appender.write(s, args);
         printf("\n");
     }

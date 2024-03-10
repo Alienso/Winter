@@ -25,7 +25,6 @@ public:
 
     static inline std::vector<Field> declaredFields = {};
     static inline std::vector<Method> declaredMethods = {};
-    static inline const int _reflect_class_size_ = 0;
 
     static inline std::unordered_map<string,Reflect* (*)()> classMap;
 

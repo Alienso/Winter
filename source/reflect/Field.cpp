@@ -43,7 +43,8 @@ void Field::setString(void *object, const char *value) const {
 }
 
 void Field::setPtr(void *object, void *value) const {
-    *((int*)getAddress(object)) = (unsigned long long)value;
+    int** ptr = ((int**) getPtr(object));
+    *ptr = (int*)value;
 }
 
 void *Field::getAddress(void *object) const {

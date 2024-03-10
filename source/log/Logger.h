@@ -41,7 +41,7 @@ public:
     void trace(const char* file, int line, const char *s, vector<T> vec) {
         if(logLevel > LOG_LEVEL_TRACE)
             return;
-        cout << TRACE_STR << s;
+        printf("%s %s:%d\t", TRACE_STR, file + cwdOffset, line);
         logArray(s, vec.data(), vec.size());
     }
 
@@ -49,7 +49,7 @@ public:
     void debug(const char* file, int line, const char *s, vector<T> vec) {
         if(logLevel > LOG_LEVEL_DEBUG)
             return;
-        cout << DEBUG_STR << s;
+        printf("%s %s:%d\t", DEBUG_STR, file + cwdOffset, line);
         logArray(s, vec.data(), vec.size());
     }
 
@@ -57,7 +57,7 @@ public:
     void info(const char* file, int line, const char *s, vector<T> vec) {
         if(logLevel > LOG_LEVEL_INFO)
             return;
-        cout << INFO_STR << s;
+        printf("%s %s:%d\t", INFO_STR, file + cwdOffset, line);
         logArray(s, vec.data(), vec.size());
     }
 
@@ -65,13 +65,13 @@ public:
     void warn(const char* file, int line, const char *s, vector<T> vec) {
         if(logLevel > LOG_LEVEL_WARN)
             return;
-        cout << WARN_STR << s;
+        printf("%s %s:%d\t", WARN_STR, file + cwdOffset, line);
         logArray(s, vec.data(), vec.size());
     }
 
     template<typename T>
     void error(const char* file, int line, const char *s, vector<T> vec) {
-        cout << ERROR_STR << s;
+        printf("%s %s:%d\t", ERROR_STR, file + cwdOffset, line);
         logArray(s, vec.data(), vec.size());
     }
 
@@ -79,7 +79,7 @@ public:
     void trace(const char* file, int line, const char *s, T *array, int n) {
         if(logLevel > LOG_LEVEL_TRACE)
             return;
-        cout << TRACE_STR << s;
+        printf("%s %s:%d\t", TRACE_STR, file + cwdOffset, line);
         logArray(s, array, n);
     }
 
@@ -87,7 +87,7 @@ public:
     void debug(const char* file, int line, const char *s, T *array, int n) {
         if(logLevel > LOG_LEVEL_DEBUG)
             return;
-        cout << DEBUG_STR << s;
+        printf("%s %s:%d\t", DEBUG_STR, file + cwdOffset, line);
         logArray(s, array, n);
     }
 
@@ -95,7 +95,7 @@ public:
     void info(const char* file, int line, const char *s, T *array, int n) {
         if(logLevel > LOG_LEVEL_INFO)
             return;
-        cout << INFO_STR << s;
+        printf("%s %s:%d\t", INFO_STR, file + cwdOffset, line);
         logArray(s, array, n);
     }
 
@@ -103,14 +103,19 @@ public:
     void warn(const char* file, int line, const char *s, T *array, int n) {
         if(logLevel > LOG_LEVEL_WARN)
             return;
-        cout << WARN_STR << s;
+        printf("%s %s:%d\t", WARN_STR, file + cwdOffset, line);
         logArray(s, array, n);
     }
 
     template<typename T>
     void error(const char* file, int line, const char *s, T *array, int n) {
-        cout << ERROR_STR << s;
+        printf("%s %s:%d\t", ERROR_STR, file + cwdOffset, line);
         logArray(s, array, n);
+    }
+
+    template<typename T>
+    void info(const char* file, int line, const char *s, T *ptr){
+        cout << *ptr << '\n';
     }
 
 

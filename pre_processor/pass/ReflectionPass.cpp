@@ -182,6 +182,7 @@ void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
         outputFile << "\t\t" << className << "::declaredFields.emplace_back(\"" << x.name << "\",\"" << x.typeStr << "\"," << x.type << ",\"" << x.className << "\","
                    << "(int*)(&" << variableName << "->" << x.name << ") - (int*)" << variableName << ");\n";
     }
+    outputFile << "\t\tfree(" << variableName << ");\n";
     outputFile << "\t}\n";
 }
 

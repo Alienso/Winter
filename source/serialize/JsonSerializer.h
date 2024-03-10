@@ -18,6 +18,8 @@ public:
 
 private:
     string convertToJsonString(Field &field, Reflect* obj);
+
+    Reflect* ptr;
 };
 
 

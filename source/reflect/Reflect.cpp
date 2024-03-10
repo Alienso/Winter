@@ -28,7 +28,7 @@ Method &Reflect::getMethod(const char *methodName) {
 }
 
 int Reflect::getClassSize() {
-    return _reflect_class_size_;
+    return 0;
 }
 
 void* Reflect::getClassInstanceByName(string& name){
@@ -48,6 +48,9 @@ void Reflect::initializeReflection() {
     initializeClassMap();
 }
 
+Reflect* baseResponse(){
+    return new BaseResponse();
+}
 
 Reflect* baseRequest(){
     return new BaseRequest();
@@ -58,6 +61,7 @@ Reflect* innerClass(){
 }
 
 void Reflect::initializeClassMap(){
+    Reflect::classMap["BaseResponse"] = &baseResponse;
     Reflect::classMap["BaseRequest"] = &baseRequest;
     Reflect::classMap["InnerClass"] = &innerClass;
 }
