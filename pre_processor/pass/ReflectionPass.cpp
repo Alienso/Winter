@@ -6,7 +6,7 @@
 
 #include <fstream>
 
-void ReflectionPass::begin() {
+void ReflectionPass::begin(std::string& fileName) {
     flush = false;
     shouldAddReflection = false;
     bracketCounter = 0;
@@ -15,12 +15,25 @@ void ReflectionPass::begin() {
     fields.resize(0);
     methods.resize(0);
     className = {};
+
+    size_t start = fileName.rfind("Reflect.h");
+    if (start != string::npos) {
+        string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
+        reflectionCppFile = StringUtils::replace(path , '\\', '/');
+    }
 }
 
-void ReflectionPass::end(ifstream &inputFile, ofstream &outputFile) {
-    if (flush && shouldAddReflection){
-        insertFieldsAndMethods(outputFile);
+void ReflectionPass::end(ifstream &inputFile, ofstream &outputFile, std::string& fileName) {
+    if (!reflectClasses.empty()) {
+        for (int i = reflectClasses.size() - 1; i >= 0; i++) {
+            if (reflectClasses[i].filePath.empty())
+                reflectClasses[i].filePath = fileName;
+            else break;
+        }
     }
+    /*if (flush && shouldAddReflection){
+        insertFieldsAndMethods(outputFile);
+    }*/
 }
 
 bool ReflectionPass::shouldProcess(string &fileName) {
@@ -73,6 +86,7 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
             //We finished reading a class, so we write the data and reset everything
             if (bracketCounter == 1) {
                 if (shouldAddReflection) {
+                    reflectClasses.emplace_back("", className, "_" + className + "_");
                     generateReflectOverrides(outputFile);
                 }
                 flush = true;
@@ -153,7 +167,7 @@ void ReflectionPass::insertFieldsAndMethods(std::ofstream &outputFile){
 
 void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
 
-    string variableName = StringUtils::uncapitalize(className);
+    string variableName = "_" + StringUtils::uncapitalize(className) + "_";
 
     outputFile << "\n\tstatic inline std::vector<Field> declaredFields = {};\n" <<
                "\tstatic inline std::vector<Method> declaredMethods = {};\n";
@@ -188,6 +202,40 @@ void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
 
 void ReflectionPass::processingFinished() {
 
+    ofstream outputFile = ofstream(reflectionCppFile, std::ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error while opening Reflect.cpp!";
+    }
+
+    //add includes
+    for (auto &x: reflectClasses){
+        string path = StringUtils::replace(x.filePath, '\\', '/');
+        outputFile << "#include \"" << path << "\"\n";
+    }
+    outputFile << '\n';
+
+    //generate class generators
+    for (auto &x: reflectClasses){
+        outputFile << "Reflect* " << x.alternativeName << "(){\n"
+        << "\treturn new " << x.className << "();\n"
+        << "}\n\n";
+    }
+
+    //generate initializeClassMap()
+    outputFile << "void Reflect::initializeClassMap(){\n";
+    for (auto &x : reflectClasses){
+        outputFile << "\tReflect::classMap[\"" << x.className << "\"] = &" << x.alternativeName << ";\n";
+    }
+    outputFile << "}\n";
+
+    //generate initializeReflection()
+    outputFile << "void Reflect::initializeReflection() {\n";
+    for (auto &x : reflectClasses){
+        outputFile << '\t' << x.className << "::initializeReflection();\n";
+    }
+    outputFile << "\tinitializeClassMap();\n}";
+
+    outputFile.close();
 }
 
 

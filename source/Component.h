@@ -33,7 +33,8 @@ public:
         //return components[T::id];
     }
 
-    static int id;
+    //since this should be singleton, ids can be non-static
+    int _componentId_ = 0;
 
 private:
     static vector<Component*> components;

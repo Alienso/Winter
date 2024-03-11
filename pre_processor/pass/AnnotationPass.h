@@ -10,9 +10,9 @@
 
 class AnnotationPass : public Pass{
 public:
-    void begin() override;
+    void begin(std::string& fileName) override;
     void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) override;
-    void end(std::ifstream &inputFile, std::ofstream &outputFile) override;
+    void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) override;
     void processingFinished() override;
 
     bool shouldProcess(std::string &fileName) override;

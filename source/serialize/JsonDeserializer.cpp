@@ -140,15 +140,13 @@ void JsonDeserializer::setFieldValueArray(string& fieldValue, FieldType fieldTyp
     switch(subType){
         case FIELD_TYPE_INT:
             if (fieldType == FIELD_TYPE_VECTOR){
-                //std::vector<int> vec;
-                //f->setValue(obj, &vec, sizeof(vec));
                 auto* data = static_cast<vector<int> *>(f->getAddress(obj));
                 insertVectorData<int>(data, fieldValue, [](string &val){ return stoi(val);});
             }else {
                 int *array = nullptr;
                 unsigned int size;
                 parseArrayData<int>(fieldValue, [](string &val){ return stoi(val);}, array, &size);
-                f->setValue(obj, array, size * sizeof(int));
+                f->setValue(obj, array, size * sizeof(int)); //TODO set ptr
             }
             break;
         case FIELD_TYPE_SHORT:

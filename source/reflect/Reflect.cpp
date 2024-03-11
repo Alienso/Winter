@@ -6,9 +6,6 @@
 
 #include "../log/Logger.h"
 
-#include "../app/dto/BaseRequest.h"
-#include "../app/dto/BaseResponse.h"
-
 std::vector<Field> &Reflect::getDeclaredFields() {
     wtLogError("getDeclaredFields called for Reflect*!");
     return declaredFields;
@@ -36,32 +33,4 @@ void* Reflect::getClassInstanceByName(string& name){
     if (i == classMap.end())
         return nullptr;
     return i->second();
-}
-
-//To be generated
-
-void Reflect::initializeReflection() {
-    BaseRequest::initializeReflection();
-    BaseResponse::initializeReflection();
-    InnerClass::initializeReflection();
-
-    initializeClassMap();
-}
-
-Reflect* baseResponse(){
-    return new BaseResponse();
-}
-
-Reflect* baseRequest(){
-    return new BaseRequest();
-}
-
-Reflect* innerClass(){
-    return new InnerClass();
-}
-
-void Reflect::initializeClassMap(){
-    Reflect::classMap["BaseResponse"] = &baseResponse;
-    Reflect::classMap["BaseRequest"] = &baseRequest;
-    Reflect::classMap["InnerClass"] = &innerClass;
 }

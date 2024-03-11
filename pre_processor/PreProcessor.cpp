@@ -6,21 +6,25 @@
 
 void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {
 
+    std::vector<Pass*> requiredPasses;
     for (auto pass : passes){
-        pass->begin();
+        if (pass->shouldProcess(fileName))
+            requiredPasses.push_back(pass);
+    }
+
+    for (auto pass : requiredPasses){
+        pass->begin(fileName);
     }
 
     while (std::getline(inputFile, line)) {
-        for(auto pass : passes){
-            if (pass->shouldProcess(fileName))
-                pass->process(inputFile, outputFile, line, lastLine);
-        }
+        for(auto pass : requiredPasses)
+            pass->process(inputFile, outputFile, line, lastLine);
         outputFile << line << std::endl;
         lastLine = line;
     }
 
-    for (auto pass : passes){
-        pass->end(inputFile,outputFile);
+    for (auto pass : requiredPasses){
+        pass->end(inputFile,outputFile, fileName);
     }
 }
 

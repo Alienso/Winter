@@ -151,6 +151,39 @@ public:
 
         return string_view(s.data(), size + 1);
     }
+
+    static string replace(string& s, char pattern, char replacement) {
+
+        if (s.empty())
+            return "";
+
+        string res(s);
+        for (int i=0; i<s.size(); i++){
+            if (res[i] == pattern)
+                res[i] = replacement;
+        }
+        return res;
+    }
+
+    static string replace(string& s, const char *pattern, char replacement) {
+
+        if (s.empty())
+            return "";
+
+        string res;
+        size_t start=0,end;
+        for (int i = 0; i<s.size(); i++){
+            end = s.find(pattern, start);
+            for (int j=start; j<end && j<s.size(); j++)
+                res.push_back(s[j]);
+            if (end == string::npos) {
+                break;
+            }
+            res.push_back(replacement);
+            start = end + 1;
+        }
+        return res;
+    }
 };
 
 #endif //WINTER_STRINGUTILS_H

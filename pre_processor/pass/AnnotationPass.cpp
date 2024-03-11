@@ -7,7 +7,7 @@
 #include "AnnotationPass.h"
 #include "../source/util/stringUtils.h"
 
-void AnnotationPass::begin() {
+void AnnotationPass::begin(std::string& fileName) {
     bracketCounter = 0;
 }
 
@@ -159,7 +159,7 @@ void AnnotationPass::registerEndpoints(std::ofstream &outputFile) {
     }
 }
 
-void AnnotationPass::end(std::ifstream &inputFile, std::ofstream &outputFile) {
+void AnnotationPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {
 
 }
 
@@ -168,7 +168,7 @@ bool AnnotationPass::shouldProcess(string &fileName) {
 }
 
 void AnnotationPass::processingFinished() {
-    //TODO write inject file
+    //TODO write Component.Cpp file (remember handle to Component.h file so we can open Component.cpp)
 
     /*MyController* controller = new MyController();
     components.push_back(controller);

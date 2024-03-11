@@ -9,6 +9,7 @@
 #include "PreProcessor.h"
 #include "pass/ReflectionPass.h"
 #include "pass/AnnotationPass.h"
+#include "pass/ComponentPass.h"
 
 int processFile(const std::filesystem::directory_entry &entry);
 void copyFileContents(ifstream &inputFile, ofstream &outputFile);
@@ -24,7 +25,7 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    std::cout << "source provided: " << argv[1] << '\n';
+    std::cout << "source is: " << argv[1] << '\n';
     std::cout << "target is: " << argv[2] << '\n';
 
     inputDirectory = std::string (argv[1]);
@@ -35,6 +36,9 @@ int main(int argc, char** argv) {
 
     Pass* annotationPass = new AnnotationPass();
     preProcessor.addPass(annotationPass);
+
+    Pass* componentPass = new ComponentPass();
+    preProcessor.addPass(componentPass);
 
     for (const auto &dirEntry: std::filesystem::recursive_directory_iterator(argv[1])){
         if (processFile(dirEntry) != 0) {
@@ -76,8 +80,7 @@ int processFile(const std::filesystem::directory_entry &entry) {
             return 1;
         }
 
-        string currentFileName = entry.path().string();
-        preProcessor.process(inputFile, outputFile, currentFileName);
+        preProcessor.process(inputFile, outputFile, outputFileName);
 
         inputFile.close();
         outputFile.close();

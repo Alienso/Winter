@@ -11,9 +11,9 @@
 
 class Pass {
 public:
-    virtual void begin() = 0;
+    virtual void begin(std::string& fileName) = 0;
     virtual void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) = 0;
-    virtual void end(std::ifstream &inputFile, std::ofstream &outputFile) = 0;
+    virtual void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) = 0;
     virtual void processingFinished() = 0;
 
     virtual bool shouldProcess(std::string &fileName) = 0;
