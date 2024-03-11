@@ -4,11 +4,10 @@
 
 #include "URI.h"
 
-string URI::getPath(){
-    //TODO
+string& URI::getPath(){
     return value;
 }
 
-string URI::getFullPath(){
+string& URI::getFullPath(){
     return value;
 }

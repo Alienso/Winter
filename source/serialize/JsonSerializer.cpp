@@ -51,7 +51,7 @@ string JsonSerializer::convertToJsonString(Field &field, Reflect* obj){
             //return "[" + convertToJsonString(field, obj) + "]"; TODO
             return "[]";
         default:
+            wtLogError("Unknown fieldType: %d", field.type);
             return "\"\"";
-
     }
 }

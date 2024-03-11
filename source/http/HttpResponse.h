@@ -21,26 +21,24 @@ public:
     explicit HttpResponse(HttpCode* code);
     explicit HttpResponse(Reflect* data, HttpCode* code = HttpCode::OK);
 
-    void send();
-    shared_ptr<string> toResponseString();
+    void send() const;
+    [[nodiscard]] string toResponseString() const;
+    [[nodiscard]] string& getBody();
     void setConnection(Connection* _connection);
-    string& getBody();
-
-    static HttpResponse generateResponse(const shared_ptr<HttpRequest>& sharedPtr);
 
 private:
-    HttpVersion* httpVersion;
-    HttpCode* httpCode;
+    HttpVersion* httpVersion = nullptr;
+    HttpCode* httpCode = nullptr;
     unordered_map<string,string> responseHeaders;
     string responseBody;
-    Connection* connection;
-    JsonSerializer serializer;
 
+    Connection* connection = nullptr;
+    JsonSerializer serializer{};
     static unordered_map<string,string> baseResponseHeaders;
 
-    string writeRequestLine();
-    string writeRequestHeaders();
-    string writeRequestBody();
+    [[nodiscard]] string writeRequestLine() const;
+    [[nodiscard]] string writeRequestHeaders() const;
+    [[nodiscard]] string writeRequestBody() const;
 };
 
 

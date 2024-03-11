@@ -28,7 +28,7 @@ private:
     char tempRequestBuffer[20 * 1024];
     string requestData;
 
-    int timeoutStep = 100;
+    const int timeoutStep = 100;
     int timeout = 100;
     bool requestParsed = false;
 

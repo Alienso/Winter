@@ -13,11 +13,11 @@ Appender::Appender(string _format, ostream* _stream) : format(std::move(_format)
 
 }
 
-void Appender::write(const string &s) {
+void Appender::write(const string &s) const {
     write(s.data());
 }
 
-void Appender::write(const char *s) {
+void Appender::write(const char *s) const {
     *(this->stream) << s;
 }
 
@@ -25,7 +25,7 @@ void Appender::write(const char *s) {
     vprintf(s, args);
 }*/
 
-void Appender::write(const char *s, va_list args) {
+void Appender::write(const char *s, va_list args) const {
     for (int i=0; s[i]!='\0'; i++){
         if (s[i] == '%'){
 

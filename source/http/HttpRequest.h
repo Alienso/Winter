@@ -10,6 +10,7 @@
 #include <optional>
 #include <utility>
 #include <vector>
+#include <memory>
 #include "URI.h"
 #include "httpConstants.h"
 
@@ -23,12 +24,14 @@ public:
     HttpRequest();
     HttpRequest(HttpMethod* _method, URI _uri, HttpVersion* _httpVersion, unordered_map<string,string>& _requestHeaders, string& _requestBody, Connection* _connection ) :
     method(_method), uri(std::move(_uri)), httpVersion(_httpVersion), requestHeaders(_requestHeaders), requestBody(_requestBody), connection(_connection){}
+
+    [[nodiscard]] static shared_ptr<HttpRequest> parseFromString(string &data);
+
     void setConnection(Connection* _connection);
-    Connection* getConnection();
-    static optional<HttpRequest> parseFromString(string &data);
-    URI& getUri();
-    HttpMethod* getMethod();
-    string& getRequestBody();
+    [[nodiscard]] Connection* getConnection() const;
+    [[nodiscard]] URI& getUri();
+    [[nodiscard]] HttpMethod* getMethod() const;
+    [[nodiscard]] string& getRequestBody();
 
 private:
     HttpMethod* method;

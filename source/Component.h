@@ -27,7 +27,7 @@ public:
     }
 
     template<class T>
-    static Component* get(){
+    [[nodiscard]] static Component* get(){
         wtLogTrace("Get Called for ID %d", T::id);
         return nullptr;
         //return components[T::id];

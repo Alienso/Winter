@@ -132,6 +132,7 @@ void JsonDeserializer::setFieldValue(string& fieldValue, FieldType fieldType, Re
             tempObj = nullptr;
             break;
         default:
+            wtLogError("Unknown FieldType Type %d", fieldType);
             f->setInt(obj, 0);
     }
 }
@@ -141,7 +142,7 @@ void JsonDeserializer::setFieldValueArray(string& fieldValue, FieldType fieldTyp
         case FIELD_TYPE_INT:
             if (fieldType == FIELD_TYPE_VECTOR){
                 auto* data = static_cast<vector<int> *>(f->getAddress(obj));
-                insertVectorData<int>(data, fieldValue, [](string &val){ return stoi(val);});
+                insertVectorData<int>(fieldValue, [](string &val){ return stoi(val);}, data);
             }else {
                 int *array = nullptr;
                 unsigned int size;
@@ -172,6 +173,7 @@ void JsonDeserializer::setFieldValueArray(string& fieldValue, FieldType fieldTyp
             f->setValue(obj, &fieldValue, sizeof(fieldValue)); //TODO
             break;
         default:
+            wtLogError("Unknown FieldType Type %d in vec", subType);
             f->setInt(obj, 0);
             break;
     }

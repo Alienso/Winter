@@ -17,14 +17,17 @@ Field *Reflect::getField(const char *fieldName) {
 }
 
 std::vector<Method> &Reflect::getDeclaredMethods() {
+    wtLogError("getDeclaredMethods called for Reflect*!");
     return declaredMethods;
 }
 
 Method &Reflect::getMethod(const char *methodName) {
+    wtLogError("getMethod %s called for Reflect*!", methodName);
     return declaredMethods[0];
 }
 
 int Reflect::getClassSize() {
+    wtLogError("getClassSize called for Reflect*!");
     return 0;
 }
 

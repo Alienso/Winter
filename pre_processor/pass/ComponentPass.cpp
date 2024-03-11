@@ -86,6 +86,6 @@ void ComponentPass::processingFinished() {
     outputFile << "}";
 }
 
-bool ComponentPass::shouldProcess(std::string &fileName) {
+bool ComponentPass::shouldProcess(std::string &fileName) const {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
 }

@@ -22,12 +22,12 @@ public:
     void update();
     void waitForEvent();
 
-    tsqueue<shared_ptr<HttpRequest>> &getRequestQueue(){
+    [[nodiscard]] tsqueue<shared_ptr<HttpRequest>> &getRequestQueue(){
         return requestQueue;
     }
 
-    uint16_t port;
-    uint16_t maxConnections;
+    const uint32_t port;
+    const uint32_t maxConnections;
     bool shouldStop = false;
 
     std::thread asioThread;

@@ -36,7 +36,9 @@ HttpVersion* HttpVersion::fromString(const char* s){
         return HttpVersion::V1_1;
     else if (StringUtils::startsWith(s,"HTTP/2.0"))
         return HttpVersion::V2_0;
-    else return nullptr;
+
+    wtLogError("Invalid HttpVersion: %s", s);
+    return nullptr;
 }
 
 HttpMethod* HttpMethod::fromString(const char* s) {
@@ -58,5 +60,7 @@ HttpMethod* HttpMethod::fromString(const char* s) {
         return HttpMethod::TRACE;
     else if (StringUtils::startsWith(s, "PATCH"))
         return HttpMethod::PATCH;
+
+    wtLogError("Invalid HttpMethod: %s", s);
     return nullptr;
 }

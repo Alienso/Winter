@@ -11,7 +11,7 @@
 #include <chrono>
 
 namespace wt{
-    inline std::string current_datetime(){
+    [[nodiscard]] inline std::string current_datetime(){
         auto end = std::chrono::system_clock::now();
         std::time_t end_time = std::chrono::system_clock::to_time_t(end);
         std::string timeStr = std::ctime(&end_time); //TODO optimize

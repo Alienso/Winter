@@ -4,7 +4,7 @@
 
 #include "Field.h"
 
-Field Field::INVALID = {};
+Field Field::INVALID = {"","",FIELD_TYPE_INT, "", 0};
 
 void Field::setValue(void *object, void* data, unsigned int size) const {
     memcpy(getAddress(object), data, size); //TODO this is shallow copy!

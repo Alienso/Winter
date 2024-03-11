@@ -5,9 +5,10 @@
 #ifndef WINTER_FIELDTYPEENUMS_H
 #define WINTER_FIELDTYPEENUMS_H
 
-
-#include "cstring"
 #include "../util/stringUtils.h"
+
+#include <cstring>
+#include <iostream>
 
 enum JsonFieldType{
     JSON_FILED_TYPE_NATURAL_NUMBER,
@@ -31,7 +32,7 @@ enum FieldType{
     FIELD_TYPE_VECTOR
 };
 
-inline FieldType convertToFieldType(const char* s){
+[[nodiscard]] inline FieldType convertToFieldType(const char* s){
     if (strcmp(s, "int") == 0)
         return FIELD_TYPE_INT;
     if (strcmp(s, "float") == 0)
@@ -44,14 +45,14 @@ inline FieldType convertToFieldType(const char* s){
         return FIELD_TYPE_LONG;
     if (strcmp(s, "short") == 0)
         return FIELD_TYPE_SHORT;
-    if (StringUtils::startsWith(s, "stdvec") || StringUtils::startsWith(s, "vec"))
+    if (StringUtils::startsWith(s, "stdvec") || StringUtils::startsWith(s, "vec")) //TODO have single name
         return FIELD_TYPE_VECTOR;
     if (StringUtils::startsWith(s, "stdstring") || StringUtils::startsWith(s, "string"))
         return FIELD_TYPE_STRING;
     return FIELD_TYPE_OBJ;
 }
 
-inline FieldType getArraySubType(string& s){
+[[nodiscard]] inline FieldType getArraySubType(const string& s){
     size_t index;
 
     //array check
@@ -68,10 +69,11 @@ inline FieldType getArraySubType(string& s){
         return convertToFieldType(s.substr(index + 1,endIndex - index - 1).data());
     }
 
+    std::cout << "Error! Unknown ArraySubType: " << s << '\n';
     return FIELD_TYPE_INT;
 }
 
-inline JsonFieldType convertToJsonFieldType(string& s) {
+[[nodiscard]] inline JsonFieldType convertToJsonFieldType(string& s) {
     switch(s[0]){
         case '"':
             return JSON_FILED_TYPE_STRING;
@@ -86,7 +88,7 @@ inline JsonFieldType convertToJsonFieldType(string& s) {
     }
 }
 
-inline bool areTypesCompatible(JsonFieldType jsonType, FieldType fieldType) {
+[[nodiscard]] inline bool areTypesCompatible(JsonFieldType jsonType, FieldType fieldType) {
     switch (jsonType) {
         case JSON_FILED_TYPE_NATURAL_NUMBER:
             if (fieldType == FIELD_TYPE_SHORT || fieldType == FIELD_TYPE_INT || fieldType == FIELD_TYPE_LONG)

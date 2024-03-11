@@ -4,6 +4,7 @@
 
 #include "Logger.h"
 #include "../Configuration.h"
+
 #include <cstdarg>
 
 using namespace std;
@@ -32,7 +33,7 @@ Logger *Logger::getInstance() {
     return instance;
 }
 
-void Logger::trace(const char* file, int line, const char* s, ...) {
+void Logger::trace(const char* file, int line, const char* s, ...) const {
     if(logLevel > LOG_LEVEL_TRACE)
         return;
     va_list argptr;
@@ -41,7 +42,7 @@ void Logger::trace(const char* file, int line, const char* s, ...) {
     va_end(argptr);
 }
 
-void Logger::debug(const char* file, int line, const char* s, ...) {
+void Logger::debug(const char* file, int line, const char* s, ...) const {
     if(logLevel > LOG_LEVEL_DEBUG)
         return;
     va_list argptr;
@@ -50,7 +51,7 @@ void Logger::debug(const char* file, int line, const char* s, ...) {
     va_end(argptr);
 }
 
-void Logger::info(const char* file, int line, const char *s, ...) {
+void Logger::info(const char* file, int line, const char *s, ...) const {
     if(logLevel > LOG_LEVEL_INFO)
         return;
     va_list argptr;
@@ -59,7 +60,7 @@ void Logger::info(const char* file, int line, const char *s, ...) {
     va_end(argptr);
 }
 
-void Logger::warn(const char* file, int line, const char *s, ...) {
+void Logger::warn(const char* file, int line, const char *s, ...) const {
     if(logLevel > LOG_LEVEL_WARN)
         return;
     va_list argptr;
@@ -68,15 +69,15 @@ void Logger::warn(const char* file, int line, const char *s, ...) {
     va_end(argptr);
 }
 
-void Logger::error(const char* file, int line, const char *s, ...) {
+void Logger::error(const char* file, int line, const char *s, ...) const {
     va_list argptr;
     va_start(argptr, s);
     log(ERROR_STR, file + cwdOffset, line, s, argptr);
     va_end(argptr);
 }
 
-void Logger::log(const char *logLevelStr, const char* file, int line, const char *s, va_list args) {
-    for (auto appender : appenders){
+void Logger::log(const char *logLevelStr, const char* file, int line, const char *s, va_list args) const {
+    for (auto& appender : appenders){
         printf("%s %s:%d\t", logLevelStr, file + cwdOffset, line);
         appender.write(s, args);
         printf("\n");

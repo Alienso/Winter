@@ -28,45 +28,26 @@ HttpResponse::HttpResponse(Reflect *data, HttpCode *code) : httpVersion(HttpVers
     responseBody = *(serializer.serialize(data)); //TODO this is a copy
 }
 
-string &HttpResponse::getBody() {
-    return responseBody;
-}
-
-shared_ptr<string> HttpResponse::toResponseString(){
+string HttpResponse::toResponseString() const{
 
     string requestLine = writeRequestLine();
     string headers = writeRequestHeaders();
     string body = writeRequestBody();
 
-    string response = requestLine + headers + body + "\n";
-    return make_shared<string>(response);
+    return requestLine + headers + body + "\n";
 }
 
-void HttpResponse::send() {
-    shared_ptr<string> response = toResponseString();
-    connection->respondToHttpRequest(*response);
+void HttpResponse::send() const {
+    string response = toResponseString();
+    connection->respondToHttpRequest(response);
 }
 
-HttpResponse HttpResponse::generateResponse(const shared_ptr<HttpRequest>& httpRequest) {
-    HttpResponse response;
-    response.httpVersion = HttpVersion::V1_1;
-    response.httpCode = HttpCode::OK;
-
-    response.responseHeaders["Date"] = "Mon, 27 Jul 2009 12:28:53 GMT";
-    response.responseHeaders["Connection"] = "Closed";
-    response.responseHeaders["Server"] = "WT/0.0.1";
-
-    response.connection = httpRequest->getConnection();
-    response.responseBody = "This is the body!";
-    return response;
-}
-
-string HttpResponse::writeRequestLine() {
+string HttpResponse::writeRequestLine() const {
     return httpVersion->name + ' ' + to_string(httpCode->code) + ' ' + httpCode->name + '\n';
 }
 
-string HttpResponse::writeRequestHeaders() {
-    vector<char> result; //TODO
+string HttpResponse::writeRequestHeaders() const {
+    string result;
     for (const auto& x : responseHeaders){
 
         for (char c: x.first)
@@ -83,10 +64,14 @@ string HttpResponse::writeRequestHeaders() {
 
     result.push_back('\n');
     result.push_back('\0');
-    return {result.data()};
+    return result;
 }
 
-string HttpResponse::writeRequestBody() {
+string HttpResponse::writeRequestBody() const {
+    return responseBody;
+}
+
+string &HttpResponse::getBody() {
     return responseBody;
 }
 

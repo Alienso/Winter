@@ -16,7 +16,7 @@ public:
     virtual void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) = 0;
     virtual void processingFinished() = 0;
 
-    virtual bool shouldProcess(std::string &fileName) = 0;
+    [[nodiscard]] virtual bool shouldProcess(std::string &fileName) const = 0 ;
 };
 
 

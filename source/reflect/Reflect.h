@@ -16,23 +16,22 @@ public:
 
     virtual ~Reflect()= default;
 
-    virtual std::vector<Field>& getDeclaredFields();
-    virtual Field* getField(const char* fieldName);
+    [[nodiscard]] virtual std::vector<Field>& getDeclaredFields();
+    [[nodiscard]] virtual Field* getField(const char* fieldName);
 
-    virtual std::vector<Method>& getDeclaredMethods();
-    virtual Method& getMethod(const char* methodName);
+    [[nodiscard]] virtual std::vector<Method>& getDeclaredMethods();
+    [[nodiscard]] virtual Method& getMethod(const char* methodName);
 
-    virtual int getClassSize();
+    [[nodiscard]] virtual int getClassSize();
+    [[nodiscard]] static void* getClassInstanceByName(string& name);
 
-    static void* getClassInstanceByName(string& name);
+    static void initializeReflection();
+    static void initializeClassMap();
 
     static inline std::vector<Field> declaredFields = {};
     static inline std::vector<Method> declaredMethods = {};
 
     static inline std::unordered_map<string,Reflect* (*)()> classMap;
-
-    static void initializeReflection();
-    static void initializeClassMap();
 };
 
 

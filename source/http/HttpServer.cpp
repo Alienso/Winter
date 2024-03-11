@@ -11,10 +11,7 @@
 HttpServer::HttpServer() :
     port(Configuration::serverPort),
     maxConnections(Configuration::serverMaxConnections),
-    asioAcceptor(asioContext, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)) {
-
-
-}
+    asioAcceptor(asioContext, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)) {}
 
 void HttpServer::listen() {
     asioAcceptor.async_accept([this](std::error_code ec, asio::ip::tcp::socket socket){

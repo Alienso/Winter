@@ -10,16 +10,12 @@
 #include <thread>
 
 Connection::Connection(asio::io_context &context, asio::ip::tcp::socket socket_, tsqueue<shared_ptr<HttpRequest>>& queue) :
-     socket(std::move(socket_)), asioContext(context), requestQueue(queue) {
-
-}
+     socket(std::move(socket_)), asioContext(context), requestQueue(queue) {}
 
 void Connection::tryParseRequest(){
-    optional<HttpRequest> requestOptional = HttpRequest::parseFromString(requestData);
-    if (requestOptional.has_value()){
-        requestOptional.value().setConnection(this);
-        requestQueue.push_back(make_shared<HttpRequest>(requestOptional.value()));
-    }
+    shared_ptr<HttpRequest> httpRequest = HttpRequest::parseFromString(requestData);
+    httpRequest->setConnection(this);
+    requestQueue.push_back(shared_ptr<HttpRequest>(httpRequest));
     requestParsed = true;
 }
 
@@ -57,17 +53,7 @@ void Connection::createHttpRequest() {
 }
 
 void Connection::respondToHttpRequest(string& response){
-
     socket.write_some(asio::buffer(response.data(), response.size()));
     socket.close();
-
     //TODO remove connection from queue;
-    /*socket.async_write_some(asio::buffer(tempRequestBuffer, sizeof(tempRequestBuffer)),
-                            [this](error_code ec, size_t bytes_written){
-        if (!ec){
-
-        }else{
-
-        }
-    });*/
 }

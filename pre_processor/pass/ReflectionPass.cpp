@@ -7,7 +7,6 @@
 #include <fstream>
 
 void ReflectionPass::begin(std::string& fileName) {
-    flush = false;
     shouldAddReflection = false;
     bracketCounter = 0;
     smallBracketCounter = 0;
@@ -31,27 +30,13 @@ void ReflectionPass::end(ifstream &inputFile, ofstream &outputFile, std::string&
             else break;
         }
     }
-    /*if (flush && shouldAddReflection){
-        insertFieldsAndMethods(outputFile);
-    }*/
 }
 
-bool ReflectionPass::shouldProcess(string &fileName) {
+bool ReflectionPass::shouldProcess(string &fileName) const {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
 }
 
 void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) {
-
-    if (flush){
-        flush = false;
-        if (shouldAddReflection) {
-            shouldAddReflection = false;
-            insertFieldsAndMethods(outputFile);
-        }
-
-        fields.resize(0);
-        methods.resize(0);
-    }
 
     //TODO add comments support
     declaringMethod = false;
@@ -89,7 +74,9 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
                     reflectClasses.emplace_back("", className, "_" + className + "_");
                     generateReflectOverrides(outputFile);
                 }
-                flush = true;
+                shouldAddReflection = false;
+                fields.resize(0);
+                methods.resize(0);
             }
             bracketCounter--;
         } else if (c == '(') {
@@ -150,19 +137,6 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
             }
         }
     }
-}
-
-void ReflectionPass::insertFieldsAndMethods(std::ofstream &outputFile){
-    /*outputFile << '\n';
-    outputFile << "static int __" << className <<"__reflection__data__helper__ = ([]() {\n";
-    outputFile << "\t" << className << ' ' << className << ";\n";
-
-    for (Field& x : fields){
-        outputFile << "\t" << className << "::declaredFields.emplace_back(\"" << x.name << "\",\"" << x.typeStr << "\"," << x.type << ",\"" << x.className << "\","
-                   << "(int*)(&" << className << "." << x.name << ") - (int*)&" << className << ");\n";
-    }
-
-    outputFile << "\treturn 0;\n" << "})();\n";*/
 }
 
 void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {

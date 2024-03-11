@@ -17,29 +17,29 @@ using namespace std;
 
 class JsonDeserializer {
 public:
-    Reflect* deserialize(string& s, Reflect* response);
+    [[nodiscard]] Reflect* deserialize(string& s, Reflect* response);
 
 private:
     void setFieldValue(string& fieldValue, FieldType fieldType, Reflect* obj, Field* f, string& typeStr);
     void setFieldValueArray(string& fieldValue, FieldType fieldType, FieldType subType, Reflect* obj, Field* f);
 
     template<typename U>
-    void insertVectorData(vector<U> *dest, string& str, U (*f)(string& val)){
-        vector<string>* vec = StringUtils::splitArray(str);
+    void insertVectorData(string& source, U (*parseFunc)(string& val), vector<U> *dest) const{
+        vector<string>* vec = StringUtils::splitArray(source);
         for(string& s : *vec){
-            U u = f(s);
+            U u = parseFunc(s);
             dest->push_back(u);
         }
     }
 
     template<typename U>
-    void parseArrayData(string& str, U (*f)(string& val), U* array, unsigned int* size){
-        vector<string>* vec = StringUtils::splitArray(str, ','); //TODO handle , in strings
-        array = (U*)calloc(vec->size(), sizeof(U));
-        *size = vec->size();
+    void parseArrayData(string& source, U (*parseFunc)(string& val), U* dest, unsigned int* destSize) const{
+        vector<string>* vec = StringUtils::splitArray(source, ','); //TODO handle , in strings
+        dest = (U*)calloc(vec->size(), sizeof(U));
+        *destSize = vec->size();
         for(size_t i=0; i<vec->size(); i++){
-            U u = f((*vec)[i]);
-            array[i] = u;
+            U u = parseFunc((*vec)[i]);
+            dest[i] = u;
         }
     }
 

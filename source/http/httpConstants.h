@@ -11,12 +11,9 @@ using namespace std;
 
 class HttpCode{
 public:
-    HttpCode(int _code, const char* _name){
-        this->code = _code;
-        this->name = string(_name);
-    }
-    int code{};
-    string name;
+    HttpCode(int _code, const char* _name) : code(_code), name(_name) {}
+    const int code;
+    const string name;
 
     static HttpCode* OK;
     static HttpCode* BAD_REQUEST;
@@ -27,12 +24,10 @@ public:
 
 class HttpVersion{
 public:
-    explicit HttpVersion(const char* _name){
-        this->name = string(_name);
-    }
-    string name;
+    explicit HttpVersion(const char* _name) : name(_name){}
+    const string name;
 
-    static HttpVersion* fromString(const char* s);
+    [[nodiscard]] static HttpVersion* fromString(const char* s);
 
     static HttpVersion* V1_0;
     static HttpVersion* V1_1;
@@ -41,12 +36,10 @@ public:
 
 class HttpMethod{
 public:
-    explicit HttpMethod(const char* _method){
-        this->method = string(_method);
-    }
-    string method;
+    explicit HttpMethod(const char* _method) : method(_method) {}
+    const string method;
 
-    static HttpMethod* fromString(const char* s);
+    [[nodiscard]] static HttpMethod* fromString(const char* s);
 
     static HttpMethod* GET;
     static HttpMethod* POST;

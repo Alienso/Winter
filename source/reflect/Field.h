@@ -10,14 +10,12 @@
 
 class Field {
 public:
-
+    Field() : type(FIELD_TYPE_INT), offset(0) {}
     Field(std::string& _name, std::string& _typeStr, int _type, std::string& _className, int _offset) :
     name(_name), typeStr(_typeStr), type(static_cast<FieldType>(_type)), className(_className), offset(_offset){}
 
     Field(const char* _name, const char* _typeStr, int _type, const char* _className, int _offset) :
             name(_name), typeStr(_typeStr), type(static_cast<FieldType>(_type)), className(_className), offset(_offset){}
-
-    Field() : type(FIELD_TYPE_INT), offset(0) {}
 
     void* getAddress(void* object) const;
 
@@ -32,14 +30,14 @@ public:
     void setPtr(void* object, void* value) const;
     void setValue(void* object, void* data, unsigned int size) const;
 
-    int getInt(void* object) const;
-    long getLong(void* object) const;
-    char getChar(void* object) const;
-    float getFloat(void* object) const;
-    double getDouble(void* object) const;
-    short getShort(void* object) const;
-    string getString(void* object) const;
-    void** getPtr(void *object) const;
+    [[nodiscard]] int getInt(void* object) const;
+    [[nodiscard]] long getLong(void* object) const;
+    [[nodiscard]] char getChar(void* object) const;
+    [[nodiscard]] float getFloat(void* object) const;
+    [[nodiscard]] double getDouble(void* object) const;
+    [[nodiscard]] short getShort(void* object) const;
+    [[nodiscard]] string getString(void* object) const;
+    [[nodiscard]] void** getPtr(void *object) const;
 
     std::string name;
     std::string typeStr;

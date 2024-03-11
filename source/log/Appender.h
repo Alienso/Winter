@@ -15,9 +15,9 @@ public:
 
     Appender(string _format, ostream* _stream);
 
-    void write(const string &s);
-    void write(const char* s);
-    void write(const char *s, va_list args);
+    void write(const string &s) const;
+    void write(const char* s) const;
+    void write(const char *s, va_list args) const;
 
 private:
     const string format;

@@ -14,7 +14,7 @@ using namespace std;
 class StringUtils{
 public:
 
-    static string trim(string& s){
+    [[nodiscard]] static string trim(string& s){
         size_t start = 0, end = s.size();
         for(size_t i=0; i < s.size(); i++){
             if (!isspace(s[i])){
@@ -31,7 +31,7 @@ public:
         return s.substr(start, end - start + 1);
     }
 
-    static string stripBlankCharacters(string& s){
+    [[nodiscard]] static string stripBlankCharacters(string& s){
         string res;
         res.resize(s.length());
         size_t i,j;
@@ -42,7 +42,7 @@ public:
         return res;
     }
 
-    static string stripSpecialCharacters(string& s) {
+    [[nodiscard]] static string stripSpecialCharacters(string& s) {
         string res;
         res.resize(s.length());
         size_t i,j;
@@ -53,7 +53,7 @@ public:
         return res;
     }
 
-    static bool endsWith(string& s, const char* suffix) {
+    [[nodiscard]] static bool endsWith(string& s, const char* suffix) {
         int suffixSize = 0;
         for (;suffix[suffixSize] != '\0'; suffixSize++);
         suffixSize--;
@@ -68,11 +68,11 @@ public:
         return true;
     }
 
-    static bool startsWith(string& s, const char* prefix) {
+    [[nodiscard]] static bool startsWith(string& s, const char* prefix) {
         return startsWith(s.data(), prefix);
     }
 
-    static bool startsWith(const char*s, const char* prefix) {
+    [[nodiscard]] static bool startsWith(const char*s, const char* prefix) {
         for (int i=0; true; i++) {
             if (prefix[i] == '\0' || s[i] == '\0')
                 return true;
@@ -81,7 +81,7 @@ public:
         }
     }
 
-    static vector<string>* split(string& s, char c){
+    [[nodiscard]] static vector<string>* split(string& s, char c){
         auto* res = new vector<string>();
         size_t startIndex = 0, endIndex;
         while (startIndex < s.size()){
@@ -96,7 +96,7 @@ public:
         return res;
     }
 
-    static vector<string>* splitArray(string& s, char c = ','){
+    [[nodiscard]] static vector<string>* splitArray(string& s, char c = ','){
         auto* res = new vector<string>();
         size_t startIndex = 0, endIndex;
         bool hasBrackets = false;
@@ -134,7 +134,7 @@ public:
         return res;
     }
 
-    static string uncapitalize(string& s){
+    [[nodiscard]] static string uncapitalize(string& s){
         string res(s);
         for (size_t i=0; i<s.size(); i++){
             if(isalpha(res[i]) && isupper(res[i]))
@@ -143,7 +143,7 @@ public:
         return res;
     }
 
-    static string_view rtrim(string_view s){
+    [[nodiscard]] static string_view rtrim(string_view s){
         int size = s.size();
         for(int i=size;i>=0; i--){
             if (isspace(s[i]))
@@ -154,7 +154,7 @@ public:
         return string_view(s.data(), size + 1);
     }
 
-    static string replace(string& s, char pattern, char replacement) {
+    [[nodiscard]] static string replace(string& s, char pattern, char replacement) {
 
         if (s.empty())
             return "";
@@ -167,7 +167,7 @@ public:
         return res;
     }
 
-    static string replace(string& s, const char *pattern, char replacement) {
+    [[nodiscard]] static string replace(string& s, const char *pattern, char replacement) {
 
         if (s.empty())
             return "";

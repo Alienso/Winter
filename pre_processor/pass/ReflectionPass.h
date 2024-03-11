@@ -19,13 +19,11 @@ public:
     void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) override;
     void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) override;
     void processingFinished() override;
-    bool shouldProcess(string &fileName) override;
+    [[nodiscard]] bool shouldProcess(string &fileName) const override;
 
 private:
-    void insertFieldsAndMethods(std::ofstream &outputFile);
     void generateReflectOverrides(ofstream &outputFile);
 
-    bool flush = false;
     bool shouldAddReflection = false;
     bool declaringMethod;
     bool declaringClass;

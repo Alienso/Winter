@@ -15,7 +15,7 @@ public:
     void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) override;
     void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string &fileName) override;
     void processingFinished() override;
-    bool shouldProcess(std::string &fileName) override;
+    [[nodiscard]] bool shouldProcess(std::string &fileName) const override;
 
 
 private:

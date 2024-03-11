@@ -112,35 +112,6 @@ void AnnotationPass::handleRestController(string &line) {
     restControllers.emplace_back(line.substr(beginIndex, endIndex - beginIndex));
 }
 
-void AnnotationPass::generateMethod(std::ofstream &outputFile, EndpointData& endpoint){
-    outputFile << "}\n";
-    outputFile << "\tstd::string* __" << endpoint.functionName << "__(shared_ptr<HttpRequest> &httpRequest, Reflect* (*f)(Reflect*)) {\n";
-    outputFile << "\t\tstring requestStr = httpRequest->getRequestBody();\n";
-    outputFile << "\t\tJsonDeserializer<" << endpoint.bodyType << "> deserializer;\n";
-    outputFile << "\t\tReflect* request = deserializer.deserialize(requestStr);\n";
-    outputFile << "\t\tReflect* res = f(request);\n";
-    outputFile << "\t\tJsonSerializer serializer;\n";
-    outputFile << "\t\treturn serializer.serialize(res);\n";
-    outputFile << "\t}\n";
-}
-
-void AnnotationPass::generateEndpoint(std::ofstream &outputFile, EndpointData& endpoint){
-    outputFile << '\n';
-    outputFile << "\tint __endpoint_data__helper__ = ([this]() {\n";
-
-    outputFile << "\t\tURI uri{\"" << endpoint.uri << "\"};\n";
-    outputFile << "\t\tHttpMethod* method = HttpMethod::fromString(\"" << endpoint.method.data() << "\");\n";
-
-    outputFile << "\t\tauto* endpoint = new Endpoint();\n";
-    outputFile << "\t\tendpoint->f = reinterpret_cast<Reflect *(*)(Reflect *)>(&" << endpoint.functionName <<");\n";
-    outputFile << "\t\tendpoint->g = __" << endpoint.functionName << "__;\n";
-    outputFile << "\t\tendpoint->method = method;\n";
-    outputFile << "\t\tendpoint->uri = uri;\n";
-    outputFile << "\t\tRouter::getInstance()->registerEndpoint(endpoint);\n";
-
-    outputFile << "\t\treturn 0;\n" << "\t})();\n";
-}
-
 void AnnotationPass::registerEndpoints(std::ofstream &outputFile) {
     for (auto& endpoint: endpointData){
         outputFile << '\n';
@@ -163,20 +134,9 @@ void AnnotationPass::end(std::ifstream &inputFile, std::ofstream &outputFile, st
 
 }
 
-bool AnnotationPass::shouldProcess(string &fileName) {
+bool AnnotationPass::shouldProcess(string &fileName) const {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
 }
 
 void AnnotationPass::processingFinished() {
-    //TODO write Component.Cpp file (remember handle to Component.h file so we can open Component.cpp)
-
-    /*MyController* controller = new MyController();
-    components.push_back(controller);
-    MyController::id = 0;
-
-    MyController2* controller2 = new MyController2();
-    components.push_back(controller2);
-    MyController2::id = 1;*/
-
-    //getByClass => return components[T::id]
 }

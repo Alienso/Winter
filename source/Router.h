@@ -15,14 +15,11 @@
 
 class Endpoint{
 public:
-    Endpoint() : method(nullptr), func(nullptr){} //f(nullptr), g(nullptr){}
+    Endpoint() : method(nullptr), func(nullptr){}
     Endpoint(const char* url, HttpMethod* _method, HttpResponse* (*f)(HttpRequest* request)) : method(_method), uri(url), func(f){}
     HttpMethod* method;
     URI uri;
     HttpResponse* (*func)(HttpRequest* request);
-
-    //Reflect* (*f) (Reflect*);
-    //string* (*g) (Reflect* (*f) (Reflect*), shared_ptr<HttpRequest> &request);
 };
 
 class Router {
