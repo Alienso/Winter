@@ -7,7 +7,7 @@
 string* JsonSerializer::serialize(Reflect* obj){
     auto* s = new string("{\n");
     size_t n = obj->getDeclaredFields().size();
-    for (int i=0; i<n; i++){
+    for (size_t i=0; i<n; i++){
         Field& field = obj->getDeclaredFields()[i];
         s->push_back('\"');
         s->append(field.name);

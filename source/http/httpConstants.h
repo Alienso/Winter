@@ -32,7 +32,7 @@ public:
     }
     string name;
 
-    static HttpVersion* fromString(const char* s, size_t length);
+    static HttpVersion* fromString(const char* s);
 
     static HttpVersion* V1_0;
     static HttpVersion* V1_1;

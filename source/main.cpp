@@ -1,6 +1,7 @@
 #define ASIO_STANDALONE
-
 #define _GLIBCXX_HAS_GTHREADS
+
+#include <SDKDDKVer.h>
 
 #include <iostream>
 #include "Winter.h"

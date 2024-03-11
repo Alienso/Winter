@@ -16,7 +16,7 @@ public:
 
     static string trim(string& s){
         size_t start = 0, end = s.size();
-        for(int i=0; i < s.size(); i++){
+        for(size_t i=0; i < s.size(); i++){
             if (!isspace(s[i])){
                 start = i;
                 break;
@@ -32,23 +32,25 @@ public:
     }
 
     static string stripBlankCharacters(string& s){
-        char res[s.length()];
-        int i,j;
+        string res;
+        res.resize(s.length());
+        size_t i,j;
         for (i=0,j=0; i<s.size(); i++)
             if (!isspace(s[i]))
                 res[j++] = s[i];
-        res[j] = '\0';
-        return {res};
+        res.resize(j);
+        return res;
     }
 
     static string stripSpecialCharacters(string& s) {
-        char res[s.length()];
-        int i,j;
+        string res;
+        res.resize(s.length());
+        size_t i,j;
         for (i=0,j=0; i<s.size(); i++)
             if (isalnum(s[i]))
                 res[j++] = s[i];
-        res[j] = '\0';
-        return {res};
+        res.resize(j);
+        return res;
     }
 
     static bool endsWith(string& s, const char* suffix) {
@@ -134,7 +136,7 @@ public:
 
     static string uncapitalize(string& s){
         string res(s);
-        for (int i=0; i<s.size(); i++){
+        for (size_t i=0; i<s.size(); i++){
             if(isalpha(res[i]) && isupper(res[i]))
                 res[i] = (char)tolower(res[i]);
         }
@@ -158,7 +160,7 @@ public:
             return "";
 
         string res(s);
-        for (int i=0; i<s.size(); i++){
+        for (size_t i=0; i<s.size(); i++){
             if (res[i] == pattern)
                 res[i] = replacement;
         }
@@ -172,9 +174,9 @@ public:
 
         string res;
         size_t start=0,end;
-        for (int i = 0; i<s.size(); i++){
+        for (size_t i = 0; i<s.size(); i++){
             end = s.find(pattern, start);
-            for (int j=start; j<end && j<s.size(); j++)
+            for (size_t j=start; j<end && j<s.size(); j++)
                 res.push_back(s[j]);
             if (end == string::npos) {
                 break;

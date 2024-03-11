@@ -12,7 +12,7 @@ std::vector<Field> &Reflect::getDeclaredFields() {
 }
 
 Field *Reflect::getField(const char *fieldName) {
-    wtLogError("getField called for Reflect*!");
+    wtLogError("getField called for %s for Reflect*!", fieldName);
     return &Field::INVALID;
 }
 

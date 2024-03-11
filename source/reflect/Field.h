@@ -17,7 +17,7 @@ public:
     Field(const char* _name, const char* _typeStr, int _type, const char* _className, int _offset) :
             name(_name), typeStr(_typeStr), type(static_cast<FieldType>(_type)), className(_className), offset(_offset){}
 
-    Field() : offset(0), type(FIELD_TYPE_INT) {}
+    Field() : type(FIELD_TYPE_INT), offset(0) {}
 
     void* getAddress(void* object) const;
 

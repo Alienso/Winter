@@ -12,7 +12,6 @@
 #include "pass/ComponentPass.h"
 
 int processFile(const std::filesystem::directory_entry &entry);
-void copyFileContents(ifstream &inputFile, ofstream &outputFile);
 
 std::string outputDirectory;
 std::string inputDirectory;
@@ -87,12 +86,4 @@ int processFile(const std::filesystem::directory_entry &entry) {
     }
 
     return 0;
-}
-
-void copyFileContents(ifstream &inputFile, ofstream &outputFile) {
-    std::string line;
-
-    while (std::getline(inputFile, line)) {
-        outputFile << line << std::endl;
-    }
 }

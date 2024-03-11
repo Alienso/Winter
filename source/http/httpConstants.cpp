@@ -28,7 +28,7 @@ HttpMethod* HttpMethod::OPTIONS = new HttpMethod("OPTIONS");
 HttpMethod* HttpMethod::TRACE = new HttpMethod("TRACE");
 HttpMethod* HttpMethod::PATCH = new HttpMethod("PATCH");
 
-HttpVersion* HttpVersion::fromString(const char* s, size_t length){
+HttpVersion* HttpVersion::fromString(const char* s){
     wtLogTrace("Http version string: %s", s);
     if (StringUtils::startsWith(s,"HTTP/1.0"))
         return HttpVersion::V1_0;

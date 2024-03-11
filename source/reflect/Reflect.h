@@ -13,6 +13,9 @@
 
 class Reflect {
 public:
+
+    virtual ~Reflect()= default;
+
     virtual std::vector<Field>& getDeclaredFields();
     virtual Field* getField(const char* fieldName);
 

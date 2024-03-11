@@ -10,7 +10,7 @@
 #include <thread>
 
 Connection::Connection(asio::io_context &context, asio::ip::tcp::socket socket_, tsqueue<shared_ptr<HttpRequest>>& queue) :
-    asioContext(context), socket(std::move(socket_)), requestQueue(queue) {
+     socket(std::move(socket_)), asioContext(context), requestQueue(queue) {
 
 }
 

@@ -37,7 +37,7 @@ private:
         vector<string>* vec = StringUtils::splitArray(str, ','); //TODO handle , in strings
         array = (U*)calloc(vec->size(), sizeof(U));
         *size = vec->size();
-        for(int i=0; i<vec->size(); i++){
+        for(size_t i=0; i<vec->size(); i++){
             U u = f((*vec)[i]);
             array[i] = u;
         }

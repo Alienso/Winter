@@ -62,15 +62,15 @@ void HttpRequest::parseRequestLine(HttpRequest &request, string &line) {
     wtLogTrace("StartIndex: %d, EndIndex: %d", startIndex, endIndex);
     string_view version(&(line[startIndex]), endIndex - startIndex);
     version = StringUtils::rtrim(version);
-    request.httpVersion = HttpVersion::fromString(version.data(), version.size());
+    request.httpVersion = HttpVersion::fromString(version.data());
     wtLogTrace("HttpVersion is %s", request.httpVersion->name.data());
 }
 
 void HttpRequest::parseRequestHeaders(HttpRequest &request, string &headers) {
     wtLogTrace("Headers: %s", headers.data());
     string headerValue, headerName;
-    int startIndex = 0,endIndex = 0;
-    int i;
+    size_t startIndex = 0,endIndex = 0;
+    size_t i;
     while(true){
         //find indexes of headerName
         for(i = startIndex; i<headers.size(); i++){

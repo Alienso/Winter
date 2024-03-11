@@ -99,6 +99,7 @@ inline bool areTypesCompatible(JsonFieldType jsonType, FieldType fieldType) {
         case JSON_FILED_TYPE_STRING:
             if (fieldType == FIELD_TYPE_STRING)
                 return true;
+            return false;
         case JSON_FILED_TYPE_OBJ:
             if (fieldType == FIELD_TYPE_OBJ || fieldType == FIELD_TYPE_PTR)
                 return true;
