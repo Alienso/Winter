@@ -37,7 +37,6 @@ public:
     mutex muxBlocking;
     condition_variable cvBlocking;
 
-    tsqueue<shared_ptr<Connection>> connectionQueue;
     tsqueue<shared_ptr<HttpRequest>> requestQueue;
 };
 

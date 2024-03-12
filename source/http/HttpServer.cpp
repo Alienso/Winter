@@ -17,15 +17,13 @@ void HttpServer::listen() {
     asioAcceptor.async_accept([this](std::error_code ec, asio::ip::tcp::socket socket){
         if (!ec){
             wtLogTrace("New Connection: %s", socket.remote_endpoint().address().to_string().data());
-
-            shared_ptr<Connection> newConnection = make_shared<Connection>(asioContext, std::move(socket), requestQueue);
-            connectionQueue.push_back(newConnection);
-            //TODO drop connection when we finish processing request
+            auto* newConnection = new Connection(asioContext, std::move(socket), requestQueue);
             newConnection->createHttpRequest();
         }else{
             wtLogError("New connection ERROR: %s", ec.message().data());
         }
 
+        requestQueue.waitForEvent(maxConnections);
         listen();
     });
 }
@@ -35,7 +33,7 @@ void HttpServer::update() {
 }
 
 void HttpServer::waitForEvent() {
-    while(connectionQueue.empty()){
+    while(requestQueue.empty()){
         unique_lock<mutex> ul(muxBlocking);
         cvBlocking.wait(ul);
     }

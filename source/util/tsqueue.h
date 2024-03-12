@@ -32,27 +32,30 @@ public:
     void clear();
 
     void waitForEvent();
+    void waitForEvent(size_t maxSize);
 
 
 private:
     deque<T> queue;
     mutex mutex_;
 
-    mutex muxBlocking;
-    condition_variable cvBlocking;
+    mutex mutexEmpty;
+    condition_variable cvEmpty;
+    mutex mutexFull;
+    condition_variable cvFull;
 };
 
 template<typename T>
 void tsqueue<T>::push_front(const T& val) {
     scoped_lock lock(mutex_);
-    cvBlocking.notify_one();
+    cvEmpty.notify_one();
     queue.push_front(val);
 }
 
 template<typename T>
 void tsqueue<T>::push_back(const T& val) {
     scoped_lock lock(mutex_);
-    cvBlocking.notify_one();
+    cvEmpty.notify_one();
     queue.push_back(val);
 }
 
@@ -61,6 +64,7 @@ T tsqueue<T>::pop_front() {
     scoped_lock lock(mutex_);
     T val = std::move(queue.front());
     queue.pop_front();
+    cvFull.notify_one();
     return val;
 }
 
@@ -69,6 +73,7 @@ T tsqueue<T>::pop_back() {
     scoped_lock lock(mutex_);
     T val = std::move(queue.back());
     queue.pop_back();
+    cvFull.notify_one();
     return val;
 }
 
@@ -105,8 +110,16 @@ void tsqueue<T>::clear() {
 template<typename T>
 void tsqueue<T>::waitForEvent() {
     while(empty()){
-        unique_lock<mutex> ul(muxBlocking);
-        cvBlocking.wait(ul);
+        unique_lock<mutex> ul(mutexEmpty);
+        cvEmpty.wait(ul);
+    }
+}
+
+template<typename T>
+void tsqueue<T>::waitForEvent(size_t size) {
+    while(this->size() > size){
+        unique_lock<mutex> ul(mutexFull);
+        cvFull.wait(ul);
     }
 }
 
