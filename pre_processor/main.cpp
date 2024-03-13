@@ -20,7 +20,7 @@ PreProcessor preProcessor;
 
 int main(int argc, char** argv) {
     if (argc != 3) {
-        std::cout << "Please provide source and target directory";
+        std::cout << "Please provide source and target directory\n";
         return -1;
     }
 
