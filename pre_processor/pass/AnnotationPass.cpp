@@ -5,7 +5,7 @@
 #include "fstream"
 
 #include "AnnotationPass.h"
-#include "../source/util/stringUtils.h"
+#include "stringUtils.h"
 
 void AnnotationPass::begin(std::string& fileName) {
     bracketCounter = 0;

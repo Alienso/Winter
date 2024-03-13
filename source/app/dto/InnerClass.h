@@ -5,7 +5,7 @@
 #ifndef WINTER_INNERCLASS_H
 #define WINTER_INNERCLASS_H
 
-#include "../../reflect/Reflect.h"
+#include "Reflect.h"
 
 class InnerClass : public Reflect{
 public:

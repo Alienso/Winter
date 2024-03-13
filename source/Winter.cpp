@@ -6,7 +6,7 @@
 
 #include "Winter.h"
 #include "http/HttpRequest.h"
-#include "log/Logger.h"
+#include "Logger.h"
 #include "http/HttpResponse.h"
 #include "Component.h"
 

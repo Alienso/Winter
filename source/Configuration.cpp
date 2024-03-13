@@ -4,7 +4,7 @@
 
 #include "Configuration.h"
 
-#include "log/Logger.h"
+#include "Logger.h"
 
 const int Configuration::logLevel = LOG_LEVEL_TRACE;
 const int Configuration::serverPort = 8080;

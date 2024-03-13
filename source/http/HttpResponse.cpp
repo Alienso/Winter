@@ -4,9 +4,9 @@
 
 #include "HttpResponse.h"
 #include "Connection.h"
-#include "../log/Logger.h"
+#include "Logger.h"
 
-#include "../util/util.h"
+#include "util.h"
 
 unordered_map<string,string> HttpResponse::baseResponseHeaders = {{"Connection","Closed"},
                                                                   {"Server", "WT/0.0.1"}};

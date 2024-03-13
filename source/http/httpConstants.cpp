@@ -3,8 +3,8 @@
 //
 
 #include "httpConstants.h"
-#include "../log/Logger.h"
-#include "../util/stringUtils.h"
+#include "Logger.h"
+#include "stringUtils.h"
 
 #include <cstring>
 

@@ -8,8 +8,8 @@
 
 #include "Pass.h"
 
-#include "../source/reflect/Field.h"
-#include "../source/reflect/Method.h"
+#include "Field.h"
+#include "Method.h"
 
 #include <utility>
 

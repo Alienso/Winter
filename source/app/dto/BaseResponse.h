@@ -5,7 +5,7 @@
 #ifndef WINTER_BASERESPONSE_H
 #define WINTER_BASERESPONSE_H
 
-#include "../../reflect/Reflect.h"
+#include "Reflect.h"
 #include "InnerClass.h"
 
 class BaseResponse : public Reflect{

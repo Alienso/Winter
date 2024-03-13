@@ -8,6 +8,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-par
 include_directories(${PROJECT_SOURCE_DIR}/lib/)
 link_directories(${PROJECT_SOURCE_DIR}/lib/)
 
+#temp lib includes
+include_directories(${PROJECT_SOURCE_DIR}/source/log)
+include_directories(${PROJECT_SOURCE_DIR}/source/reflect)
+include_directories(${PROJECT_SOURCE_DIR}/source/serialize)
+include_directories(${PROJECT_SOURCE_DIR}/source/util)
+
 #pre-process app dir and use it for compilation
 
 set(SOURCES source/main.cpp source/Winter.cpp source/Winter.h

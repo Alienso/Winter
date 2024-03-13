@@ -7,10 +7,10 @@
 
 #include <string>
 
-#include "../reflect/Reflect.h"
-#include "../log/Logger.h"
+#include "Reflect.h"
+#include "Logger.h"
 #include "FieldTypeEnums.h"
-#include "../util/stringUtils.h"
+#include "stringUtils.h"
 #include <cstdlib>
 
 using namespace std;

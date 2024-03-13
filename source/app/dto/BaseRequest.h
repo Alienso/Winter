@@ -2,7 +2,7 @@
 // Created by Alienson on 5.3.2024..
 //
 
-#include "../../reflect/Reflect.h"
+#include "Reflect.h"
 #include "InnerClass.h"
 
 #ifndef WINTER_BASEREQUEST_H

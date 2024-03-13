@@ -5,10 +5,10 @@
 #ifndef WINTER_JSONSERIALIZER_H
 #define WINTER_JSONSERIALIZER_H
 
-#include "../reflect/Reflect.h"
-#include "../log/Logger.h"
+#include "Reflect.h"
+#include "Logger.h"
 #include "FieldTypeEnums.h"
-#include "../util/stringUtils.h"
+#include "stringUtils.h"
 
 using namespace std;
 

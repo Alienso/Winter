@@ -4,7 +4,7 @@
 
 #include "Connection.h"
 #include "asio/read.hpp"
-#include "../log/Logger.h"
+#include "Logger.h"
 #include <iostream>
 #include <optional>
 #include <thread>

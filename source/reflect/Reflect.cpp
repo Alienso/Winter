@@ -4,7 +4,7 @@
 
 #include "Reflect.h"
 
-#include "../log/Logger.h"
+#include "Logger.h"
 
 std::vector<Field> &Reflect::getDeclaredFields() {
     wtLogError("getDeclaredFields called for Reflect*!");

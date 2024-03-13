@@ -4,8 +4,8 @@
 
 #include "HttpRequest.h"
 #include "Connection.h"
-#include "../log/Logger.h"
-#include "../util/stringUtils.h"
+#include "Logger.h"
+#include "stringUtils.h"
 
 HttpRequest::HttpRequest() {}
 

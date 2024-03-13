@@ -6,7 +6,7 @@
 #define WINTER_FIELD_H
 
 #include <string>
-#include "../serialize/FieldTypeEnums.h"
+#include "FieldTypeEnums.h"
 
 class Field {
 public:

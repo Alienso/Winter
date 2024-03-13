@@ -5,7 +5,7 @@
 #ifndef WINTER_FIELDTYPEENUMS_H
 #define WINTER_FIELDTYPEENUMS_H
 
-#include "../util/stringUtils.h"
+#include "stringUtils.h"
 
 #include <cstring>
 #include <iostream>

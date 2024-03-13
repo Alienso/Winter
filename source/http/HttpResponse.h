@@ -9,8 +9,8 @@
 #include <memory>
 #include "HttpRequest.h"
 #include "httpConstants.h"
-#include "../reflect/Reflect.h"
-#include "../serialize/JsonSerializer.h"
+#include "Reflect.h"
+#include "JsonSerializer.h"
 
 using namespace std;
 

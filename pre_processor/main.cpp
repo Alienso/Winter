@@ -5,7 +5,7 @@
 #include <iostream>
 #include <filesystem>
 
-#include "../source/util/stringUtils.h"
+#include "stringUtils.h"
 #include "PreProcessor.h"
 #include "pass/ReflectionPass.h"
 #include "pass/AnnotationPass.h"
