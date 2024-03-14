@@ -28,11 +28,15 @@ private:
     };
 
     void registerEndpoints(std::ofstream &outputFile);
+    void addPostConstruct(std::ofstream &outputFile);
     void handleRestController(std::string &line);
+    void handlePostConstruct(std::string &basicString);
 
     std::vector<EndpointData> endpointData;
     std::vector<std::string> restControllers;
     int bracketCounter;
+    std::string routerCppFile;
+    std::string postConstructMethodName;
 };
 
 

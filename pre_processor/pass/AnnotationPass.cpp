@@ -9,9 +9,25 @@
 
 void AnnotationPass::begin(std::string& fileName) {
     bracketCounter = 0;
+
+    size_t start = fileName.rfind("Router.h");
+    if (start != string::npos) {
+        string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
+        routerCppFile = StringUtils::replace(path , '\\', '/');
+    }
 }
 
 void AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) {
+
+    if (bracketCounter == 0) {
+        if (StringUtils::trim(previousLine) == "$RestController")
+            handleRestController(line);
+    }
+
+    if (bracketCounter == 1){
+        if (StringUtils::trim(previousLine) == "$PostConstruct")
+            handlePostConstruct(line);
+    }
 
     for (char c: line) {
         if (c == '{')
@@ -20,21 +36,18 @@ void AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
             //We finished reading a class, so we write the data and reset everything
             if (bracketCounter == 1) {
                 registerEndpoints(outputFile);
+                addPostConstruct(outputFile);
                 endpointData.resize(0);
+                postConstructMethodName = {};
             }
             bracketCounter--;
         }
     }
 
-    if (bracketCounter == 0){
-        if (StringUtils::trim(previousLine) != "$RestController")
-            return;
-        handleRestController(line);
-    }
-
     if (bracketCounter != 1)
         return;
 
+    //Endpoint annotation
     size_t beginIndex = previousLine.find('$');
     if (beginIndex == string::npos)
         return;
@@ -112,10 +125,22 @@ void AnnotationPass::handleRestController(string &line) {
     restControllers.emplace_back(line.substr(beginIndex, endIndex - beginIndex));
 }
 
+void AnnotationPass::handlePostConstruct(string &line) {
+    size_t endIndex, beginIndex;
+    endIndex = line.find('(');
+    if (endIndex == string::npos)
+        return;
+    beginIndex = line.rfind(' ', endIndex);
+    if (beginIndex == string::npos)
+        return;
+
+    postConstructMethodName = line.substr(beginIndex + 1, endIndex - beginIndex - 1);
+}
+
 void AnnotationPass::registerEndpoints(std::ofstream &outputFile) {
     for (auto& endpoint: endpointData){
         outputFile << '\n';
-        outputFile << "\tint __endpoint_data__helper__ = ([this]() {\n";
+        outputFile << "\tint _endpoint_data__helper_ = ([this]() {\n";
 
         outputFile << "\t\tURI uri{\"" << endpoint.uri << "\"};\n";
         outputFile << "\t\tHttpMethod* method = HttpMethod::fromString(\"" << endpoint.method.data() << "\");\n";
@@ -130,8 +155,16 @@ void AnnotationPass::registerEndpoints(std::ofstream &outputFile) {
     }
 }
 
-void AnnotationPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {
+void AnnotationPass::addPostConstruct(std::ofstream &outputFile){
+    if (postConstructMethodName.empty())
+        return;
+    outputFile << '\n';
+    outputFile << "\tint _post_construct_helper_ = ([this]() {\n";
+    outputFile << "\t\t" << postConstructMethodName << "();\n";
+    outputFile << "\t\treturn 0;\n" << "\t})();\n";
+}
 
+void AnnotationPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {
 }
 
 bool AnnotationPass::shouldProcess(string &fileName) const {
@@ -139,4 +172,37 @@ bool AnnotationPass::shouldProcess(string &fileName) const {
 }
 
 void AnnotationPass::processingFinished() {
+
+    //TODO how to get method reference?
+    endpointData.resize(0);
+
+    ofstream outputFile = ofstream(routerCppFile, std::ios::app);
+    if (!outputFile.is_open()) {
+        cout << "Error while opening Router.cpp!";
+    }
+
+    if(endpointData.empty()) {
+        outputFile.close();
+        return;
+    }
+
+    outputFile << "void Router::initializeEndpoints(){\n";
+    outputFile << "\tURI uri;\n";
+    outputFile << "\tHttpMethod* method = nullptr;\n";
+    outputFile << "\tEndpoint* endpoint = new Endpoint();\n";
+
+    for (auto& endpoint: endpointData){
+        outputFile << "\turi = {\"" << endpoint.uri << "\"};\n";
+        outputFile << "\tmethod = HttpMethod::fromString(\"" << endpoint.method.data() << "\");\n";
+
+        outputFile << "\tendpoint = new Endpoint();\n";
+        outputFile << "\tendpoint->func = &" << endpoint.functionName <<";\n";
+        outputFile << "\tendpoint->method = method;\n";
+        outputFile << "\tendpoint->uri = uri;\n";
+        outputFile << "\tRouter::getInstance()->registerEndpoint(endpoint);\n";
+    }
+
+    outputFile << "}\n";
+
+    outputFile.close();
 }

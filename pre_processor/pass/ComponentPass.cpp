@@ -79,7 +79,7 @@ void ComponentPass::processingFinished() {
     outputFile << "\twtLogTrace(\"Initializing components\");\n";
     outputFile << "\tint i=0;\n\n";
     for (auto &x: componentClasses){
-        outputFile << "auto* " << x.alternativeName << " = new " << x.className << "();\n";
+        outputFile << "\tauto* " << x.alternativeName << " = new " << x.className << "();\n";
         outputFile << "\t" << x.alternativeName << "->_componentId_ = i++;\n";
         outputFile << "\tcomponents.push_back((Component*)" << x.alternativeName << ");\n\n";
     }

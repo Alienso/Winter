@@ -31,6 +31,7 @@ public:
     void routeRequest(shared_ptr<HttpRequest> &request);
     void registerEndpoint(Endpoint* endpoint);
     void registerEndpoint(const char* url, HttpMethod* _method, HttpResponse* (*f)(HttpRequest* request));
+    void initializeEndpoints(){}
 
     vector<Endpoint*> endpoints;
 

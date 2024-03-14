@@ -27,7 +27,6 @@ void Connection::getHttpRequestData(){
             timeout = timeoutStep;
             if (!socket.is_open()){
                 wtLogTrace("Socket closed!");
-                //TODO drop connection from queue
                 tryParseRequest();
             }
             std::size_t oldSize = requestData.size();
@@ -55,5 +54,4 @@ void Connection::createHttpRequest() {
 void Connection::respondToHttpRequest(string& response){
     socket.write_some(asio::buffer(response.data(), response.size()));
     socket.close();
-    //TODO remove connection from queue;
 }

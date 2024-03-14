@@ -26,11 +26,9 @@ public:
         components.push_back(component);
     }
 
-    template<class T>
-    [[nodiscard]] static Component* get(){
-        wtLogTrace("Get Called for ID %d", T::id);
-        return nullptr;
-        //return components[T::id];
+    [[nodiscard]] static Component* getById(int id){
+        wtLogTrace("Get Called for ID %d", id);
+        return components[id];
     }
 
     //since this should be singleton, ids can be non-static

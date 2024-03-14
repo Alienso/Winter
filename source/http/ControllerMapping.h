@@ -14,6 +14,7 @@
 #include "../Component.h"
 
 #define $RestController
+#define $PostConstruct
 
 #define $GET(x)
 #define $POST(x)
