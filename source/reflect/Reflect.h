@@ -23,7 +23,7 @@ public:
     [[nodiscard]] virtual Method& getMethod(const char* methodName);
 
     [[nodiscard]] virtual int getClassSize();
-    [[nodiscard]] static void* getClassInstanceByName(string& name);
+    [[nodiscard]] static void* getClassInstanceByName(const string& name);
 
     static void initializeReflection();
     static void initializeClassMap();

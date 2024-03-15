@@ -73,7 +73,7 @@ enum FieldType{
     return FIELD_TYPE_INT;
 }
 
-[[nodiscard]] inline JsonFieldType convertToJsonFieldType(string& s) {
+[[nodiscard]] inline JsonFieldType convertToJsonFieldType(const string& s) {
     switch(s[0]){
         case '"':
             return JSON_FILED_TYPE_STRING;
@@ -88,7 +88,7 @@ enum FieldType{
     }
 }
 
-[[nodiscard]] inline bool areTypesCompatible(JsonFieldType jsonType, FieldType fieldType) {
+[[nodiscard]] inline bool areTypesCompatible(const JsonFieldType jsonType, const FieldType fieldType) {
     switch (jsonType) {
         case JSON_FILED_TYPE_NATURAL_NUMBER:
             if (fieldType == FIELD_TYPE_SHORT || fieldType == FIELD_TYPE_INT || fieldType == FIELD_TYPE_LONG)

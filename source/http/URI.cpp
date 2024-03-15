@@ -4,10 +4,10 @@
 
 #include "URI.h"
 
-string& URI::getPath(){
+const string& URI::getPath() const{
     return value;
 }
 
-string& URI::getFullPath(){
+const string& URI::getFullPath() const{
     return value;
 }

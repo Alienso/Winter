@@ -33,7 +33,7 @@ Logger *Logger::getInstance() {
     return instance;
 }
 
-void Logger::trace(const char* file, int line, const char* s, ...) const {
+void Logger::trace(const char* file, const int line, const char* s, ...) const {
     if(logLevel > LOG_LEVEL_TRACE)
         return;
     va_list argptr;
@@ -42,7 +42,7 @@ void Logger::trace(const char* file, int line, const char* s, ...) const {
     va_end(argptr);
 }
 
-void Logger::debug(const char* file, int line, const char* s, ...) const {
+void Logger::debug(const char* file, const int line, const char* s, ...) const {
     if(logLevel > LOG_LEVEL_DEBUG)
         return;
     va_list argptr;
@@ -51,7 +51,7 @@ void Logger::debug(const char* file, int line, const char* s, ...) const {
     va_end(argptr);
 }
 
-void Logger::info(const char* file, int line, const char *s, ...) const {
+void Logger::info(const char* file, const int line, const char *s, ...) const {
     if(logLevel > LOG_LEVEL_INFO)
         return;
     va_list argptr;
@@ -60,7 +60,7 @@ void Logger::info(const char* file, int line, const char *s, ...) const {
     va_end(argptr);
 }
 
-void Logger::warn(const char* file, int line, const char *s, ...) const {
+void Logger::warn(const char* file, const int line, const char *s, ...) const {
     if(logLevel > LOG_LEVEL_WARN)
         return;
     va_list argptr;
@@ -69,14 +69,14 @@ void Logger::warn(const char* file, int line, const char *s, ...) const {
     va_end(argptr);
 }
 
-void Logger::error(const char* file, int line, const char *s, ...) const {
+void Logger::error(const char* file, const int line, const char *s, ...) const {
     va_list argptr;
     va_start(argptr, s);
     log(ERROR_STR, file + cwdOffset, line, s, argptr);
     va_end(argptr);
 }
 
-void Logger::log(const char *logLevelStr, const char* file, int line, const char *s, va_list args) const {
+void Logger::log(const char *logLevelStr, const char* file, const int line, const char *s, va_list args) const {
     for (auto& appender : appenders){
         printf("%s %s:%d\t", logLevelStr, file + cwdOffset, line);
         appender.write(s, args);

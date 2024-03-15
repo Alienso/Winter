@@ -4,7 +4,7 @@
 
 #include "JsonDeserializer.h"
 
-Reflect* JsonDeserializer::deserialize(string& s, Reflect* response){
+Reflect* JsonDeserializer::deserialize(const string& s, Reflect* response){
     string fieldName, fieldValue;
     JsonFieldType fieldType;
 
@@ -98,7 +98,7 @@ Reflect* JsonDeserializer::deserialize(string& s, Reflect* response){
     }
 }
 
-void JsonDeserializer::setFieldValue(string& fieldValue, FieldType fieldType, Reflect* obj, Field* f, string& typeStr){
+void JsonDeserializer::setFieldValue(const string& fieldValue, const FieldType fieldType, Reflect* obj, const Field* f, const string& typeStr){
     switch(fieldType){
         case FIELD_TYPE_INT:
             f->setInt(obj, stoi(fieldValue));
@@ -137,7 +137,7 @@ void JsonDeserializer::setFieldValue(string& fieldValue, FieldType fieldType, Re
     }
 }
 
-void JsonDeserializer::setFieldValueArray(string& fieldValue, FieldType fieldType, FieldType subType, Reflect* obj, Field* f){
+void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldType fieldType, const FieldType subType, Reflect* obj, const Field* f){
     switch(subType){
         case FIELD_TYPE_INT:
             if (fieldType == FIELD_TYPE_VECTOR){

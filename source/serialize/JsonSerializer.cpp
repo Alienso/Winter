@@ -24,7 +24,7 @@ string* JsonSerializer::serialize(Reflect* obj){
     return s;
 }
 
-string JsonSerializer::convertToJsonString(Field &field, Reflect* obj){
+string JsonSerializer::convertToJsonString(const Field &field, Reflect* obj){
     switch (field.type) {
         case FIELD_TYPE_INT:
             return to_string(field.getInt(obj));

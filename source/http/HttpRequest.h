@@ -25,13 +25,13 @@ public:
     HttpRequest(HttpMethod* _method, URI _uri, HttpVersion* _httpVersion, unordered_map<string,string>& _requestHeaders, string& _requestBody, Connection* _connection ) :
     method(_method), uri(std::move(_uri)), httpVersion(_httpVersion), requestHeaders(_requestHeaders), requestBody(_requestBody), connection(_connection){}
 
-    [[nodiscard]] static shared_ptr<HttpRequest> parseFromString(string &data);
+    [[nodiscard]] static shared_ptr<HttpRequest> parseFromString(const string &data);
 
     void setConnection(Connection* _connection);
     [[nodiscard]] Connection* getConnection() const;
-    [[nodiscard]] URI& getUri();
+    [[nodiscard]] const URI& getUri() const;
     [[nodiscard]] HttpMethod* getMethod() const;
-    [[nodiscard]] string& getRequestBody();
+    [[nodiscard]] const string& getRequestBody() const;
 
 private:
     HttpMethod* method;
@@ -41,8 +41,8 @@ private:
     string requestBody;
     Connection* connection;
 
-    static void parseRequestLine(HttpRequest& request, string &line);
-    static void parseRequestHeaders(HttpRequest& request, string &headers);
+    static void parseRequestLine(HttpRequest& request, const string &line);
+    static void parseRequestHeaders(HttpRequest& request, const string &headers);
     static void parseRequestBody(HttpRequest& request, string_view body);
 
 };

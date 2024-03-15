@@ -17,14 +17,14 @@ using namespace std;
 
 class JsonDeserializer {
 public:
-    [[nodiscard]] Reflect* deserialize(string& s, Reflect* response);
+    [[nodiscard]] Reflect* deserialize(const string& s, Reflect* response);
 
 private:
-    void setFieldValue(string& fieldValue, FieldType fieldType, Reflect* obj, Field* f, string& typeStr);
-    void setFieldValueArray(string& fieldValue, FieldType fieldType, FieldType subType, Reflect* obj, Field* f);
+    void setFieldValue(const string& fieldValue, FieldType fieldType, Reflect* obj, const Field* f, const string& typeStr);
+    void setFieldValueArray(const string& fieldValue, FieldType fieldType, FieldType subType, Reflect* obj, const Field* f);
 
     template<typename U>
-    void insertVectorData(string& source, U (*parseFunc)(string& val), vector<U> *dest) const{
+    void insertVectorData(const string& source, U (*parseFunc)(string& val), vector<U> *dest) const{
         vector<string>* vec = StringUtils::splitArray(source);
         for(string& s : *vec){
             U u = parseFunc(s);
@@ -33,7 +33,7 @@ private:
     }
 
     template<typename U>
-    void parseArrayData(string& source, U (*parseFunc)(string& val), U* dest, unsigned int* destSize) const{
+    void parseArrayData(const string& source, U (*parseFunc)(string& val), U* dest, unsigned int* destSize) const{
         vector<string>* vec = StringUtils::splitArray(source, ','); //TODO handle , in strings
         dest = (U*)calloc(vec->size(), sizeof(U));
         *destSize = vec->size();

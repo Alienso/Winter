@@ -71,7 +71,7 @@ string HttpResponse::writeRequestBody() const {
     return responseBody;
 }
 
-string &HttpResponse::getBody() {
+const string &HttpResponse::getBody() const {
     return responseBody;
 }
 

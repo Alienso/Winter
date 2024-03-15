@@ -6,35 +6,35 @@
 
 Field Field::INVALID = {"","",FIELD_TYPE_INT, "", 0};
 
-void Field::setValue(void *object, void* data, unsigned int size) const {
+void Field::setValue(void *object, const void* data, const unsigned int size) const {
     memcpy(getAddress(object), data, size); //TODO this is shallow copy!
 }
 
-void Field::setInt(void *object, int value) const {
+void Field::setInt(void *object, const int value) const {
     *((int*)getAddress(object)) = value;
 }
 
-void Field::setLong(void *object, long value) const {
+void Field::setLong(void *object, const long value) const {
     *((long*)getAddress(object)) = value;
 }
 
-void Field::setChar(void *object, char value) const {
+void Field::setChar(void *object, const char value) const {
     *((char*)getAddress(object)) = value;
 }
 
-void Field::setFloat(void *object, float value) const {
+void Field::setFloat(void *object, const float value) const {
     *((float*)getAddress(object)) = value;
 }
 
-void Field::setDouble(void *object, double value) const {
+void Field::setDouble(void *object, const double value) const {
     *((double*)getAddress(object)) = value;
 }
 
-void Field::setShort(void *object, short value) const {
+void Field::setShort(void *object, const short value) const {
     *((short*)getAddress(object)) = value;
 }
 
-void Field::setString(void *object, std::string& value) const {
+void Field::setString(void *object, const std::string& value) const {
     *((std::string*)getAddress(object)) = value;
 }
 
@@ -42,7 +42,7 @@ void Field::setString(void *object, const char *value) const {
     *((std::string*)getAddress(object)) = std::string(value);
 }
 
-void Field::setPtr(void *object, void *value) const {
+void Field::setPtr(void *object, const void *value) const {
     int** ptr = ((int**) getPtr(object));
     *ptr = (int*)value;
 }

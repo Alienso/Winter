@@ -15,10 +15,10 @@ public:
     Connection(asio::io_context& asioContext, asio::ip::tcp::socket socket, tsqueue<shared_ptr<HttpRequest>>& requestQueue);
 
     void createHttpRequest();
-    void respondToHttpRequest(string& response);
+    void respondToHttpRequest(const string& response);
 
 private:
-    void getHttpRequestData();
+    void readDataFromSocket();
     void tryParseRequest();
 
     asio::ip::tcp::socket socket;

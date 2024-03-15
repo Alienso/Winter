@@ -5,8 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -O0")
 
-include_directories(${PROJECT_SOURCE_DIR}/lib/)
+include_directories(${PROJECT_SOURCE_DIR}/include/)
+include_directories(${PROJECT_SOURCE_DIR}/include/postgreSQL)
+
 link_directories(${PROJECT_SOURCE_DIR}/lib/)
+link_directories(${PROJECT_SOURCE_DIR}/lib/postgreSQL)
 
 #temp lib includes
 include_directories(${PROJECT_SOURCE_DIR}/source/log)
@@ -38,7 +41,7 @@ set(SOURCES source/main.cpp source/Winter.cpp source/Winter.h
         source/serialize/FieldTypeEnums.h source/http/ControllerMapping.h
         source/util/ThreadPool.h source/util/util.h
         source/Component.cpp source/Component.h
-        source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h source/app/dto/InnerClass.h)
+        source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h source/app/dto/InnerClass.h source/sql/Connection.h source/sql/Statement.h source/sql/postgres/PgConnection.cpp source/sql/postgres/PgConnection.h source/sql/postgres/PgStatement.cpp source/sql/postgres/PgStatement.h source/sql/postgres/PgPreparedStatement.cpp source/sql/postgres/PgPreparedStatement.h source/sql/ResultSet.h source/sql/postgres/PgResultSet.cpp source/sql/postgres/PgResultSet.h)
 
 #add_executable(Winter ${SOURCES})
 
@@ -116,3 +119,9 @@ add_executable(PreProcessor pre_processor/main.cpp
 #        source/util/tsqueue.cpp source/util/tsqueue.h)
 
 #target_link_libraries(Tests wsock32 ws2_32)
+
+
+#---------------------------------------
+#Temp
+add_executable(Temp ./temp/main.cpp)
+target_link_libraries(Temp)

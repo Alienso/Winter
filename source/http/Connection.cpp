@@ -19,7 +19,7 @@ void Connection::tryParseRequest(){
     requestParsed = true;
 }
 
-void Connection::getHttpRequestData(){
+void Connection::readDataFromSocket(){
     socket.async_read_some(asio::buffer(tempRequestBuffer, sizeof(tempRequestBuffer)),
             [this](error_code ec, size_t length){
         if (!ec){
@@ -32,7 +32,7 @@ void Connection::getHttpRequestData(){
             std::size_t oldSize = requestData.size();
             requestData.resize(requestData.size() + length);
             memcpy(&(requestData[oldSize]), tempRequestBuffer, length);
-            getHttpRequestData();
+            readDataFromSocket();
         }else{
             wtLogError("Error occurred while reading data from socket", ec.message().data());
             tryParseRequest();
@@ -48,10 +48,10 @@ void Connection::getHttpRequestData(){
 }
 
 void Connection::createHttpRequest() {
-    getHttpRequestData();
+    readDataFromSocket();
 }
 
-void Connection::respondToHttpRequest(string& response){
+void Connection::respondToHttpRequest(const string& response){
     socket.write_some(asio::buffer(response.data(), response.size()));
     socket.close();
 }

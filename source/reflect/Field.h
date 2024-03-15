@@ -25,10 +25,10 @@ public:
     void setFloat(void* object, float value) const;
     void setDouble(void* object, double value) const;
     void setShort(void* object, short value) const;
-    void setString(void* object, std::string& value) const;
+    void setString(void* object, const std::string& value) const;
     void setString(void* object, const char* value) const;
-    void setPtr(void* object, void* value) const;
-    void setValue(void* object, void* data, unsigned int size) const;
+    void setPtr(void* object, const void* value) const;
+    void setValue(void* object, const void* data, unsigned int size) const;
 
     [[nodiscard]] int getInt(void* object) const;
     [[nodiscard]] long getLong(void* object) const;

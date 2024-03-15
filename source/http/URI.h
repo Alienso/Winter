@@ -14,8 +14,8 @@ public:
     URI() = default;
     explicit URI(const char* s) : value(s){}
     explicit URI(string_view s) : value(s.substr(0, s.size())){}
-    string &getPath();
-    string &getFullPath();
+    [[nodiscard]] const string &getPath() const;
+    [[nodiscard]] const string &getFullPath() const;
 
     bool operator==(const URI& other){
         return value == other.value;

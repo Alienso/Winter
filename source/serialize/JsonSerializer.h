@@ -17,7 +17,7 @@ public:
     string* serialize(Reflect* obj);
 
 private:
-    [[nodiscard]] string convertToJsonString(Field &field, Reflect* obj);
+    [[nodiscard]] string convertToJsonString(const Field &field, Reflect* obj);
 
     Reflect* ptr;
 };

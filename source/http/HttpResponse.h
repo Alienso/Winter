@@ -23,7 +23,7 @@ public:
 
     void send() const;
     [[nodiscard]] string toResponseString() const;
-    [[nodiscard]] string& getBody();
+    [[nodiscard]] const string& getBody() const;
     void setConnection(Connection* _connection);
 
 private:

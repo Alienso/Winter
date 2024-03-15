@@ -9,7 +9,7 @@
 
 HttpRequest::HttpRequest() {}
 
-shared_ptr<HttpRequest> HttpRequest::parseFromString(string& data) {
+shared_ptr<HttpRequest> HttpRequest::parseFromString(const string& data) {
     shared_ptr<HttpRequest> httpRequest{new HttpRequest()};
 
     size_t startIndex, endIndex;
@@ -36,7 +36,7 @@ shared_ptr<HttpRequest> HttpRequest::parseFromString(string& data) {
     return httpRequest;
 }
 
-void HttpRequest::parseRequestLine(HttpRequest &request, string &line) {
+void HttpRequest::parseRequestLine(HttpRequest &request, const string &line) {
     wtLogTrace("Request Line: %s", line.data());
 
     size_t startIndex, endIndex;
@@ -58,7 +58,7 @@ void HttpRequest::parseRequestLine(HttpRequest &request, string &line) {
     request.httpVersion = HttpVersion::fromString(version.data());
 }
 
-void HttpRequest::parseRequestHeaders(HttpRequest &request, string &headers) {
+void HttpRequest::parseRequestHeaders(HttpRequest &request, const string &headers) {
     string headerValue, headerName;
     size_t startIndex = 0,endIndex = 0;
     size_t i;
@@ -105,7 +105,7 @@ Connection *HttpRequest::getConnection() const {
     return connection;
 }
 
-URI &HttpRequest::getUri() {
+const URI &HttpRequest::getUri() const {
     return uri;
 }
 
@@ -113,6 +113,6 @@ HttpMethod *HttpRequest::getMethod() const {
     return method;
 }
 
-string &HttpRequest::getRequestBody() {
+const string &HttpRequest::getRequestBody() const {
     return requestBody;
 }

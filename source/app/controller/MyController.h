@@ -19,7 +19,7 @@ class MyController : public Component {
     $GET("/home")
     static HttpResponse* home(HttpRequest* request);
 
-    $PostConstruct
+    //$PostConstruct
     void postConstruct(){
         myController = (MyController *)(getById(MyController::_componentId_));
     }

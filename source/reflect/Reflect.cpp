@@ -31,7 +31,7 @@ int Reflect::getClassSize() {
     return 0;
 }
 
-void* Reflect::getClassInstanceByName(string& name){
+void* Reflect::getClassInstanceByName(const string& name){
     auto i = classMap.find(name);
     if (i == classMap.end())
         return nullptr;
