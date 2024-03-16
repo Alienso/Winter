@@ -3,7 +3,7 @@ project(Winter)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -O0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0")
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 include_directories(${PROJECT_SOURCE_DIR}/include/postgreSQL)
@@ -19,7 +19,7 @@ include_directories(${PROJECT_SOURCE_DIR}/source/util)
 
 #pre-process app dir and use it for compilation
 
-set(SOURCES source/main.cpp source/Winter.cpp source/Winter.h
+set(SOURCES source/Winter.cpp source/Winter.h
         source/http/HttpServer.cpp source/http/HttpServer.h
         source/http/HttpRequest.cpp source/http/HttpRequest.h
         source/http/URI.cpp source/http/URI.h
@@ -71,9 +71,11 @@ message(TARGET LEN=${targetLen})
 
 if (${sourceLen} STREQUAL  ${targetLen})
 
-    add_executable(Target ${SOURCES})
+    add_executable(Target target/main.cpp ${SOURCES} )
 
-    target_link_libraries(Target wsock32 ws2_32)
+    if (WIN32)
+        target_link_libraries(Target wsock32 ws2_32)
+    endif (WIN32)
 
     add_custom_command(TARGET Target PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -107,21 +109,12 @@ add_executable(PreProcessor pre_processor/main.cpp
 
 #---------------------------------------------
 #Tests
-#add_executable(Tests tests/runTests.cpp
-#        tests/loggerTests.h
-#        source/Winter.cpp source/Winter.h
-#        source/http/HttpServer.cpp source/http/HttpServer.h
-#        source/http/HttpRequest.cpp source/http/HttpRequest.h
-#        source/http/URI.cpp source/http/URI.h
-#        source/log/Logger.cpp source/log/Logger.h
-#        source/log/Appender.cpp source/log/Appender.h
-#        source/Configuration.cpp source/Configuration.h
-#        source/util/tsqueue.cpp source/util/tsqueue.h)
-
-#target_link_libraries(Tests wsock32 ws2_32)
+add_executable(Tests ${SOURCES}
+        tests/runTests.cpp)
+target_link_libraries(Tests wsock32 ws2_32)
 
 
 #---------------------------------------
 #Temp
-add_executable(Temp ./temp/main.cpp)
-target_link_libraries(Temp)
+#add_executable(Temp ./temp/main.cpp)
+#target_link_libraries(Temp)

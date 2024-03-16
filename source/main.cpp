@@ -14,6 +14,4 @@ int main() {
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
-
-    return 0;
 }

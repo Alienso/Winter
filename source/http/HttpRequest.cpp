@@ -116,3 +116,7 @@ HttpMethod *HttpRequest::getMethod() const {
 const string &HttpRequest::getRequestBody() const {
     return requestBody;
 }
+
+const unordered_map<string, string> &HttpRequest::getRequestHeaders() {
+    return requestHeaders;
+}

@@ -31,6 +31,7 @@ public:
     [[nodiscard]] Connection* getConnection() const;
     [[nodiscard]] const URI& getUri() const;
     [[nodiscard]] HttpMethod* getMethod() const;
+    [[nodiscard]] const unordered_map<string,string>& getRequestHeaders();
     [[nodiscard]] const string& getRequestBody() const;
 
 private:

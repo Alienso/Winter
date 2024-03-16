@@ -9,11 +9,18 @@
 
 void parseRequestLine(){
     string requestLine = "GET /some/endpoint HTTP/1.1\n\n\n";
-    optional<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+    shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
 }
 
-void runHttpRequestParseTests(){
-    parseRequestLine();
+TEST_CASE("Parsing HttpRequest", "[HttpRequest::parseFromString]"){
+    SECTION("Parsing empty http request") {
+        string requestLine = "GET /some/endpoint HTTP/1.1\n\n\n";
+        shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        REQUIRE(request->getUri().getPath() == "/some/endpoint");
+        REQUIRE(request->getMethod() == HttpMethod::GET);
+        REQUIRE(request->getRequestHeaders().empty());
+        REQUIRE(request->getRequestBody().empty());
+    }
 }
 
 #endif //WINTER_HTTPREQUESTPARSETESTS_H
