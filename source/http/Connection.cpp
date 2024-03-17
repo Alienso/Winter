@@ -20,7 +20,19 @@ void Connection::tryParseRequest(){
 }
 
 void Connection::readDataFromSocket(){
-    socket.async_read_some(asio::buffer(tempRequestBuffer, sizeof(tempRequestBuffer)),
+    wtLogTrace("Reading data from socket");
+    int bufferSize = sizeof(tempRequestBuffer);
+    while (int read = socket.read_some(asio::buffer(tempRequestBuffer))){
+        std::size_t oldSize = requestData.size();
+        requestData.resize(requestData.size() + read);
+        memcpy(&(requestData[oldSize]), tempRequestBuffer, read);
+        if (read != bufferSize){
+            tryParseRequest();
+            break;
+        }
+    }
+
+    /*socket.async_read_some(asio::buffer(tempRequestBuffer, sizeof(tempRequestBuffer)),
             [this](error_code ec, size_t length){
         if (!ec){
             wtLogTrace("Reading data from socket");
@@ -39,12 +51,13 @@ void Connection::readDataFromSocket(){
         }
     });
 
+    //On Linux callback if never invoked when this part of the code is present
     while(timeout > 0) {
         std::this_thread::sleep_for(std::chrono::milliseconds(timeoutStep));
         timeout-=timeoutStep;
     }
     if (!requestParsed)
-        socket.cancel();
+        socket.cancel();*/
 }
 
 void Connection::createHttpRequest() {

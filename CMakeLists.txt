@@ -3,8 +3,14 @@ project(Winter)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0")
+if (WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0")
+endif (WIN32)
+if (UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0 -fuse-ld=mold")
+endif(UNIX)
 
+include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 include_directories(${PROJECT_SOURCE_DIR}/include/postgreSQL)
 
@@ -81,6 +87,15 @@ if (${sourceLen} STREQUAL  ${targetLen})
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${PROJECT_SOURCE_DIR}/source/app $<TARGET_FILE_DIR:Target>/app)
 
+
+    #---------------------------------------------
+    #Tests
+    add_executable(Tests ${SOURCES}
+            tests/runTests.cpp)
+    if (WIN32)
+        target_link_libraries(Tests wsock32 ws2_32)
+    endif (WIN32)
+
 endif()
 
 #list(TRANSFORM SOURCES PREPEND target/)
@@ -105,14 +120,6 @@ add_executable(PreProcessor pre_processor/main.cpp
         pre_processor/pass/ReflectionPass.cpp pre_processor/pass/ReflectionPass.h
         pre_processor/pass/Pass.cpp pre_processor/pass/Pass.h
         pre_processor/pass/AnnotationPass.cpp pre_processor/pass/AnnotationPass.h pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h)
-
-
-#---------------------------------------------
-#Tests
-add_executable(Tests ${SOURCES}
-        tests/runTests.cpp)
-target_link_libraries(Tests wsock32 ws2_32)
-
 
 #---------------------------------------
 #Temp

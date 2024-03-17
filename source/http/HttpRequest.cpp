@@ -6,8 +6,22 @@
 #include "Connection.h"
 #include "Logger.h"
 #include "stringUtils.h"
+#include "../util/util.h"
 
 HttpRequest::HttpRequest() {}
+
+size_t getHeadersDelimiterIndex(const size_t endIndex, const string& data){
+    for (size_t i = endIndex + 1; i<data.size(); i++){
+        if (data[i] == '\r' && i+3 < data.size()){
+            if (data[i+1] == '\n' && data[i+2] == '\r' && data[i+3] == '\n')
+                return i+3;
+        }else if (data[i] == '\n' && i+1 < data.size()){
+            if (data[i+1] == '\n')
+                return i+1;
+        }
+    }
+    return string::npos;
+}
 
 shared_ptr<HttpRequest> HttpRequest::parseFromString(const string& data) {
     shared_ptr<HttpRequest> httpRequest{new HttpRequest()};
@@ -17,7 +31,8 @@ shared_ptr<HttpRequest> HttpRequest::parseFromString(const string& data) {
     string line(data.data(), endIndex + 1); //sizeof \n
 
     startIndex = endIndex + 1;
-    endIndex = data.find("\r\n\r\n", endIndex + 1); //TEMP FIX!
+    endIndex = getHeadersDelimiterIndex(endIndex, data);
+
     if (endIndex == string::npos)
         endIndex = data.length();
     string headers = data.substr(startIndex, endIndex - startIndex + 2);
@@ -46,16 +61,68 @@ void HttpRequest::parseRequestLine(HttpRequest &request, const string &line) {
     request.method = HttpMethod::fromString(method.data());
 
     startIndex = endIndex + 1;
-    endIndex = line.find(' ', endIndex + 1); //sizeof(' ')
-    string_view endpoint(&(line[startIndex]), endIndex - startIndex);
-    URI newUri(endpoint);
+    size_t queryParamsStart = 0;
+    endIndex++;
+    for (; endIndex < line.length(); endIndex++){
+        if (line[endIndex] == '?') {
+            queryParamsStart = endIndex;
+        }else if (line[endIndex] == ' ')
+            break;
+    }
+    if (queryParamsStart == 0){
+        queryParamsStart = endIndex;
+    }
+
+    string_view endpoint(&(line[startIndex]), queryParamsStart - startIndex);
+    URI newUri(wt::urlDecode(endpoint));
     request.uri = newUri;
+
+    if (queryParamsStart != endIndex){
+        parseQueryParams(request, line, queryParamsStart + 1, endIndex - 1);
+    }
 
     startIndex = endIndex + 1;
     endIndex = line.find('\n', endIndex + 1); //sizeof('\n')
     string_view version(&(line[startIndex]), endIndex - startIndex);
     version = StringUtils::rtrim(version);
     request.httpVersion = HttpVersion::fromString(version.data());
+}
+
+void HttpRequest::parseQueryParams(HttpRequest &request, const string &requestLine, const size_t start, const size_t end) {
+    string requestParamValue, requestParamName;
+    size_t startIndex = start,endIndex = 0;
+    size_t i;
+    while (true){
+        //find indexes of requestParamName
+        for(i = startIndex; i<end; i++){
+            if (requestLine[i] == '=') {
+                endIndex = i;
+                break;
+            }
+        }
+        //Cannot find another line of x:y
+        if (i >= end){
+            break;
+        }
+
+        requestParamName = requestLine.substr(startIndex,endIndex - startIndex);
+        //find index of requestParamValue
+        startIndex = endIndex + 1;
+        for(i = startIndex; i<end; i++){
+            if (requestLine[i] == '&') {
+                endIndex = i - 1;
+                break;
+            }
+        }
+
+        if (startIndex > endIndex){
+            endIndex = i;
+        }
+
+        requestParamValue = requestLine.substr(startIndex, endIndex - startIndex + 1);
+        startIndex = endIndex + 2;
+        request.queryParameters[requestParamName] = requestParamValue;
+    }
 }
 
 void HttpRequest::parseRequestHeaders(HttpRequest &request, const string &headers) {
@@ -119,4 +186,12 @@ const string &HttpRequest::getRequestBody() const {
 
 const unordered_map<string, string> &HttpRequest::getRequestHeaders() {
     return requestHeaders;
+}
+
+HttpVersion *HttpRequest::getHttpVersion() const {
+    return httpVersion;
+}
+
+const unordered_map<string, string> &HttpRequest::getQueryParameters() {
+    return queryParameters;
 }

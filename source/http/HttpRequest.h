@@ -31,6 +31,8 @@ public:
     [[nodiscard]] Connection* getConnection() const;
     [[nodiscard]] const URI& getUri() const;
     [[nodiscard]] HttpMethod* getMethod() const;
+    [[nodiscard]] HttpVersion* getHttpVersion() const;
+    [[nodiscard]] const unordered_map<string,string>& getQueryParameters();
     [[nodiscard]] const unordered_map<string,string>& getRequestHeaders();
     [[nodiscard]] const string& getRequestBody() const;
 
@@ -38,6 +40,7 @@ private:
     HttpMethod* method;
     URI uri;
     HttpVersion* httpVersion;
+    unordered_map<string,string> queryParameters;
     unordered_map<string,string> requestHeaders;
     string requestBody;
     Connection* connection;
@@ -45,7 +48,7 @@ private:
     static void parseRequestLine(HttpRequest& request, const string &line);
     static void parseRequestHeaders(HttpRequest& request, const string &headers);
     static void parseRequestBody(HttpRequest& request, string_view body);
-
+    static void parseQueryParams(HttpRequest &request, const string &basicString, size_t start, size_t index);
 };
 
 
