@@ -16,21 +16,24 @@ Logger::Logger() {
     logLevel = (LogLevel) Configuration::logLevel;
     appenders.emplace_back("", &cout);
     string cwd = __FILE__;
-    size_t sourceIndex = cwd.find("log");
+    size_t sourceIndex = cwd.find("Winter");
     if (sourceIndex == string::npos) {
         cout << "Error while initializing logger. Could not find source in path\n";
         sourceIndex = 0;
     }
-    cwdOffset = sourceIndex;
+    cwdOffset = sourceIndex + 7;
 }
 
 Logger *Logger::getInstance() {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (instance == nullptr)
-    {
+    if (instance == nullptr){
         instance = new Logger();
     }
     return instance;
+}
+
+void Logger::addAppender(ostream* stream) {
+    appenders.emplace_back("", stream);
 }
 
 void Logger::trace(const char* file, const int line, const char* s, ...) const {
@@ -72,14 +75,16 @@ void Logger::warn(const char* file, const int line, const char *s, ...) const {
 void Logger::error(const char* file, const int line, const char *s, ...) const {
     va_list argptr;
     va_start(argptr, s);
-    log(ERROR_STR, file + cwdOffset, line, s, argptr);
+    log(ERROR_STR, file, line, s, argptr);
     va_end(argptr);
 }
 
 void Logger::log(const char *logLevelStr, const char* file, const int line, const char *s, va_list args) const {
     for (auto& appender : appenders){
-        printf("%s %s:%d\t", logLevelStr, file + cwdOffset, line);
-        appender.write(s, args);
-        printf("\n");
+        va_list args_copy;
+        va_copy(args_copy, args);
+        appender.writeFormatString(logLevelStr, file + cwdOffset, line);
+        appender.write(s, args_copy);
+        appender.write("\n");
     }
 }

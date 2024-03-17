@@ -14,10 +14,10 @@ size_t getHeadersDelimiterIndex(const size_t endIndex, const string& data){
     for (size_t i = endIndex + 1; i<data.size(); i++){
         if (data[i] == '\r' && i+3 < data.size()){
             if (data[i+1] == '\n' && data[i+2] == '\r' && data[i+3] == '\n')
-                return i+3;
+                return i+4;
         }else if (data[i] == '\n' && i+1 < data.size()){
             if (data[i+1] == '\n')
-                return i+1;
+                return i+2;
         }
     }
     return string::npos;
@@ -156,7 +156,7 @@ void HttpRequest::parseRequestHeaders(HttpRequest &request, const string &header
             headerValue = headers.substr(startIndex, endIndex - startIndex);
 
         startIndex = endIndex + 1;
-        request.requestHeaders[headerName] = headerValue;
+        request.requestHeaders[headerName] = StringUtils::trim(headerValue);
     }
 }
 

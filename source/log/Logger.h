@@ -31,6 +31,8 @@ public:
     void operator=(const Logger&) = delete;
     static Logger* getInstance();
 
+    void addAppender(ostream* stream);
+
     void trace(const char* file, int line, const char* s, ...) const;
     void debug(const char* file, int line, const char* s, ...) const;
     void info(const char* file, int line, const char* s, ...) const;
@@ -41,76 +43,66 @@ public:
     void trace(const char* file, const int line, const char *s, const vector<T> vec) const {
         if(logLevel > LOG_LEVEL_TRACE)
             return;
-        printf("%s %s:%d\t %s ", TRACE_STR, file + cwdOffset, line, s);
-        logArray(vec.data(), vec.size());
+        logArray(TRACE_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
     template<typename T>
     void debug(const char* file, const int line, const char *s, const vector<T> vec) const {
         if(logLevel > LOG_LEVEL_DEBUG)
             return;
-        printf("%s %s:%d\t %s ", DEBUG_STR, file + cwdOffset, line, s);
-        logArray(vec.data(), vec.size());
+        logArray(DEBUG_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
     template<typename T>
     void info(const char* file, const int line, const char *s, const vector<T> vec) const {
         if(logLevel > LOG_LEVEL_INFO)
             return;
-        printf("%s %s:%d\t %s ", INFO_STR, file + cwdOffset, line, s);
-        logArray(vec.data(), vec.size());
+        logArray(INFO_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
     template<typename T>
     void warn(const char* file, int line, const char *s, const vector<T> vec) const {
         if(logLevel > LOG_LEVEL_WARN)
             return;
-        printf("%s %s:%d\t %s ", WARN_STR, file + cwdOffset, line, s);
-        logArray(vec.data(), vec.size());
+        logArray(WARN_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
     template<typename T>
     void error(const char* file, const int line, const char *s, const vector<T> vec) const {
-        printf("%s %s:%d\t %s ", ERROR_STR, file + cwdOffset, line, s);
-        logArray(vec.data(), vec.size());
+        logArray(ERROR_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
     template<typename T>
     void trace(const char* file, const int line, const char *s, const T *array, const int n) const {
         if(logLevel > LOG_LEVEL_TRACE)
             return;
-        printf("%s %s:%d\t %s ", TRACE_STR, file + cwdOffset, line, s);
-        logArray(array, n);
+        logArray(TRACE_STR, file + cwdOffset, line, s, array, n);
     }
 
     template<typename T>
     void debug(const char* file, const int line, const char *s, const T *array, const int n) const {
         if(logLevel > LOG_LEVEL_DEBUG)
             return;
-        printf("%s %s:%d\t %s ", DEBUG_STR, file + cwdOffset, line, s);
-        logArray(array, n);
+        logArray(DEBUG_STR, file + cwdOffset, line, s, array, n);
     }
 
     template<typename T>
     void info(const char* file, const int line, const char *s, const T *array, const int n) const {
         if(logLevel > LOG_LEVEL_INFO)
             return;
-        printf("%s %s:%d\t %s ", INFO_STR, file + cwdOffset, line, s);
-        logArray(array, n);
+        logArray(INFO_STR, file + cwdOffset, line, s, array, n);
     }
 
     template<typename T>
     void warn(const char* file, const int line, const char *s, const T *array, const int n) const {
         if(logLevel > LOG_LEVEL_WARN)
             return;
-        printf("%s %s:%d\t %s ", WARN_STR, file + cwdOffset, line, s);
-        logArray(array, n);
+        logArray(WARN_STR, file + cwdOffset, line, s, array, n);
     }
 
     template<typename T>
     void error(const char* file, const int line, const char *s, const T *array, const int n) const {
-        printf("%s %s:%d\t %s ", ERROR_STR, file + cwdOffset, line, s);
-        logArray(array, n);
+        logArray(ERROR_STR, file + cwdOffset, line, s, array, n);
     }
 
     /*template<typename T>
@@ -138,18 +130,23 @@ private:
     const char* ERROR_STR = "ERROR: ";
 
     template<typename T>
-    void logArray(const T *data, const int n) const {
+    void logArray(const char* logLevelStr, const char* filePath, int line, const char* s, const T *data, const int n) const {
 
-        if (n == 0){
-            cout << "[]\n";
-            return;
-        }
+        for (auto& appender : appenders){
+            appender.writeFormatString(logLevelStr, filePath, line);
+            appender.write(s);
 
-        cout << '[' << data[0];
-        for (int i=1; i<n; i++){
-            cout << ',' << data[i];
+            if (n == 0){
+                appender.write("[]\n");
+                return;
+            }
+
+            *(appender.getStream()) << '[' << data[0];
+            for (int i=1; i<n; i++){
+                *(appender.getStream()) << ',' << data[i];
+            }
+            appender.write("]\n");
         }
-        cout << "]\n";
     }
 };
 
