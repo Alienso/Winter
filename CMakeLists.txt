@@ -97,7 +97,11 @@ if (${sourceLen} STREQUAL  ${targetLen})
     #---------------------------------------------
     #Tests
     add_executable(Tests ${SOURCES}
-            tests/runTests.cpp tests/deserializationTests.h)
+            tests/runTests.cpp
+            tests/deserializationTests.h
+            tests/serializationTests.h
+            tests/loggerTests.h
+            tests/httpRequestParseTests.h)
     if (WIN32)
         target_link_libraries(Tests wsock32 ws2_32)
     endif (WIN32)

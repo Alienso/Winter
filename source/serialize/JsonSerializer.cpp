@@ -44,7 +44,7 @@ string JsonSerializer::convertToJsonString(const Field &field, Reflect* obj){
             return *serialize((Reflect*)field.getAddress(obj)); //TODO this is a copy
         case FIELD_TYPE_PTR:
             ptr = *((Reflect**)field.getPtr(obj));
-            if (ptr == nullptr) return "\"\"";
+            if (ptr == nullptr) return "null";
             return *serialize(ptr); //TODO this is a copy
         case FIELD_TYPE_ARRAY:
         case FIELD_TYPE_VECTOR:

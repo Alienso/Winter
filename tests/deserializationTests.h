@@ -62,7 +62,7 @@ TEST_CASE("Deserialization Tests", "[JsonDeserializer::deserialize]"){
         REQUIRE(request->innerClassPtr->c == clazz.c);
     }
 
-    SECTION("Deserialization allTypes"){
+    SECTION("Deserialization allTypes with ptr"){
         string s = R"({"i":5, "f":5.5, "s": "Hello World", "vec": [1,2,3] ,"innerClassPtr":{"x":5.0, "y": 2.5, "c":"c"}})";
         AllFieldsDTO dto;
         dto.i = 5;
@@ -80,6 +80,26 @@ TEST_CASE("Deserialization Tests", "[JsonDeserializer::deserialize]"){
         REQUIRE(request->innerClassPtr->x == clazz.x);
         REQUIRE(request->innerClassPtr->y == clazz.y);
         REQUIRE(request->innerClassPtr->c == clazz.c);
+    }
+
+    SECTION("Deserialization allTypes with obj"){
+        string s = R"({"i":5, "f":5.5, "s": "Hello World", "vec": [1,2,3] ,"innerClassObj":{"x":5.0, "y": 2.5, "c":"c"}})";
+        AllFieldsDTO dto;
+        dto.i = 5;
+        dto.f = 5.5;
+        dto.s = "Hello World";
+        dto.vec = {1,2,3};
+        InnerClass clazz{5,2.5,"c"};
+        dto.innerClassObj = clazz;
+
+        deserializer.deserialize(s, request);
+        REQUIRE(request->i == 5);
+        REQUIRE(request->f == 5.5);
+        REQUIRE(request->s == "Hello World");
+        REQUIRE(request->vec == std::vector<int>{1,2,3});
+        REQUIRE(request->innerClassObj.x == clazz.x);
+        REQUIRE(request->innerClassObj.y == clazz.y);
+        REQUIRE(request->innerClassObj.c == clazz.c);
     }
 
     SECTION("Deserialization spaces check"){

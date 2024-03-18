@@ -9,3 +9,4 @@
 #include "loggerTests.h"
 #include "httpRequestParseTests.h"
 #include "deserializationTests.h"
+#include "serializationTests.h"

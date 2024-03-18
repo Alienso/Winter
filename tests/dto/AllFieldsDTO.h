@@ -14,6 +14,9 @@ public:
     string s;
     vector<int> vec;
     InnerClass* innerClassPtr;
+    InnerClass innerClassObj;
+
+    AllFieldsDTO() = default;
 
 	static inline std::vector<Field> declaredFields = {};
 	static inline std::vector<Method> declaredMethods = {};
@@ -40,7 +43,8 @@ public:
 		AllFieldsDTO::declaredFields.emplace_back("s","string",6,"AllFieldsDTO",(int*)(&_allfieldsdto_->s) - (int*)_allfieldsdto_);
 		AllFieldsDTO::declaredFields.emplace_back("vec","vector<int>",10,"AllFieldsDTO",(int*)(&_allfieldsdto_->vec) - (int*)_allfieldsdto_);
 		AllFieldsDTO::declaredFields.emplace_back("innerClassPtr","InnerClass*",8,"AllFieldsDTO",(int*)(&_allfieldsdto_->innerClassPtr) - (int*)_allfieldsdto_);
-		free(_allfieldsdto_);
+        AllFieldsDTO::declaredFields.emplace_back("innerClassObj","InnerClass",7,"AllFieldsDTO",(int*)(&_allfieldsdto_->innerClassObj) - (int*)_allfieldsdto_);
+        free(_allfieldsdto_);
 	}
 };
 

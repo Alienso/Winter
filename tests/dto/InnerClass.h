@@ -15,6 +15,8 @@ public:
     double y;
     string c;
 
+    InnerClass() : x(0), y(0), c() {}
+
     InnerClass(float x_, double y_, string c_) : x(x_), y(y_), c(std::move(c_)){}
 
 	static inline std::vector<Field> declaredFields = {};
