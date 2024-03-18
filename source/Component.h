@@ -5,6 +5,11 @@
 #ifndef WINTER_COMPONENT_H
 #define WINTER_COMPONENT_H
 
+/**
+ * Spring like Component class. All components are automatically registered to components map by preprocessor.
+ * @Autowiring is done for those instances only
+ */
+
 #include <vector>
 #include <iostream>
 #include "Logger.h"

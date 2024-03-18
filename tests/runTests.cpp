@@ -8,3 +8,4 @@
 
 #include "loggerTests.h"
 #include "httpRequestParseTests.h"
+#include "deserializationTests.h"

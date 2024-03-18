@@ -3,6 +3,12 @@ project(Winter)
 
 set(CMAKE_CXX_STANDARD 17)
 
+#USAGE:
+#Run preprocessor in order to generate target folder which can be used to run the program(Reloading cmake project will be necessary)
+#When Target build is being generated, sources list is transformed to target/* instead of source/*. That means that TESTS
+#are being run on target sources!
+#Also since all libraries are added to include_directories from source_dir, after transform, the target/* is being used instead
+
 if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0")
 endif (WIN32)

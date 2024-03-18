@@ -5,6 +5,12 @@
 #ifndef WINTER_COMPONENTPASS_H
 #define WINTER_COMPONENTPASS_H
 
+/**
+ * This pass is used for registering all classes that extend Component, so we can generate data that is needed for
+ * Spring-like @Autowiring. It fills an array with instances of each component which can later be used to get that
+ * instance
+ */
+
 #include "Pass.h"
 
 #include <vector>

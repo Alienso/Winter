@@ -2,6 +2,11 @@
 // Created by Alienson on 4.2.2024..
 //
 
+/**
+ * Given input and output directory, executes all 'Passes' on the files from the source directory and writes the output
+ * to the output directory
+ */
+
 #include <iostream>
 #include <filesystem>
 
@@ -19,13 +24,30 @@ std::string inputDirectory;
 PreProcessor preProcessor;
 
 int main(int argc, char** argv) {
+
     if (argc != 3) {
-        std::cout << "Please provide source and target directory\n";
+        std::cout << "Please use 'clean [dir]' or provide source and target directory\n";
         return -1;
+    }
+
+    if (argv[1] == string("clean")){
+        auto path = std::filesystem::absolute(argv[2]);
+        std::cout << "Are you sure you want to delete: " << path << " (y/n)\n";
+        char c = (char)getchar();
+        if (c == 'y' || c == 'Y'){
+            std::filesystem::remove_all(path);
+            std::cout << "Deleted " << path << '\n';
+            return 0;
+        }
+        std::cout << "Cancelling cleaning\n";
+        return 0;
     }
 
     std::cout << "source is: " << argv[1] << '\n';
     std::cout << "target is: " << argv[2] << '\n';
+
+    if (!std::filesystem::exists(argv[2]))
+        std::filesystem::create_directory(argv[2]);
 
     inputDirectory = std::string (argv[1]);
     outputDirectory = std::string(argv[2]);

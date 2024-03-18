@@ -5,6 +5,13 @@
 #ifndef WINTER_JSONDESERIALIZER_H
 #define WINTER_JSONDESERIALIZER_H
 
+/**
+ * Deserializes a json to a provided class of type Reflect
+ * It is recommended to use pointers instead of objects for inner levels of deserialization since currently only a shallow
+ * copy is made when copying the data. This is not an issue when pointers are made since function deserialize takes a
+ * Reflect* pointer(to which the data is being written to), so no copying is required.
+ */
+
 #include <string>
 
 #include "Reflect.h"
@@ -17,7 +24,7 @@ using namespace std;
 
 class JsonDeserializer {
 public:
-    [[nodiscard]] Reflect* deserialize(const string& s, Reflect* response);
+    Reflect* deserialize(const string& s, Reflect* response);
 
 private:
     void setFieldValue(const string& fieldValue, FieldType fieldType, Reflect* obj, const Field* f, const string& typeStr);

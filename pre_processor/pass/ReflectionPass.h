@@ -5,6 +5,10 @@
 #ifndef WINTER_REFLECTIONPASS_H
 #define WINTER_REFLECTIONPASS_H
 
+/**
+ * This pass is used to generate Reflection data for each Reflect class. Modifications are done on class level.
+ * Also modifies Reflect.cpp file to generate map of classes and class instance generators
+ */
 
 #include "Pass.h"
 

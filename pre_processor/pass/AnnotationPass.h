@@ -5,6 +5,10 @@
 #ifndef WINTER_ANNOTATIONPASS_H
 #define WINTER_ANNOTATIONPASS_H
 
+/**
+ * General purpose pass that recognized $Annotation and acts accordingly
+ */
+
 #include "Pass.h"
 #include <vector>
 

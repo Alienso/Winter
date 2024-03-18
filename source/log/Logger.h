@@ -5,6 +5,11 @@
 #ifndef WINTER_LOGGER_H
 #define WINTER_LOGGER_H
 
+/**
+ * For given set of Appenders, logs to each of them
+ * Each appender is a stream with printing format
+ */
+
 #include <string>
 #include <vector>
 #include <mutex>
