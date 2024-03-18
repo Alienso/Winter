@@ -63,7 +63,6 @@ string HttpResponse::writeRequestHeaders() const {
     }
 
     result.push_back('\n');
-    result.push_back('\0');
     return result;
 }
 
