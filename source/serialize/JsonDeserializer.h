@@ -9,7 +9,8 @@
  * Deserializes a json to a provided class of type Reflect
  * It is recommended to use pointers instead of objects for inner levels of deserialization since currently only a shallow
  * copy is made when copying the data. This is not an issue when pointers are made since function deserialize takes a
- * Reflect* pointer(to which the data is being written to), so no copying is required.
+ * Reflect* pointer(to which the data is being written to), so no copying is required. Also, pointers can be null, objects
+ * can not.
  */
 
 #include <string>
