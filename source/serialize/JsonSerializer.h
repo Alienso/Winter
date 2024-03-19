@@ -23,6 +23,7 @@ private:
 
     [[nodiscard]] static string vectorToString(const vector<char>& source);
     [[nodiscard]] static string vectorToString(const vector<string>& source);
+    [[nodiscard]] string vectorToString(const vector<Reflect*>& source);
 
     //TODO add reference to U for objects
     template<typename U>
@@ -44,7 +45,6 @@ private:
     vector<double>* vecDouble = nullptr;
     vector<char>* vecChar = nullptr;
     vector<string>* vecString = nullptr;
-    vector<Reflect*>* vecObj = nullptr;
 };
 
 

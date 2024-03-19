@@ -111,7 +111,7 @@ public:
         bool inStr = false;
         while (startIndex < s.size()){
             endIndex = string::npos;
-            for (i=startIndex; i<s.size(); i++){
+            for (i=startIndex; i<s.size(); i++){ //TODO !inStr should be check for brackets too
                 if (s[i] == '[' || s[i] == '{')
                     bracketCounter+=s[i];
                 if (s[i] == ']' || s[i] == '}')
@@ -126,6 +126,40 @@ public:
 
             if (endIndex == string::npos || endIndex >= s.size())
                 endIndex = hasBrackets ? s.size() -1 : s.size();
+
+            res->push_back(s.substr(startIndex, endIndex - startIndex));
+            startIndex = endIndex + 1; //TODO startIndex is first char this is not blank space
+        }
+
+        return res;
+    }
+
+    [[nodiscard]] static vector<string>* splitObjectArray(const string& s, const char c = ','){
+        auto* res = new vector<string>();
+        size_t startIndex = 0, endIndex;
+        size_t i;
+        int bracketCounter = 0;
+        bool inStr = false;
+
+        while(s[startIndex] != '{' && startIndex < s.size()) startIndex++;
+
+        while (startIndex < s.size()){
+            endIndex = string::npos;
+            for (i=startIndex; i<s.size(); i++){
+                if (s[i] == '{')
+                    bracketCounter++;
+                if (s[i] == '}')
+                    bracketCounter--;
+                if (s[i] == '"' && s[i-1] != '\\')
+                    inStr = !inStr;
+                if (bracketCounter == 0 && !inStr && s[i] == c) {
+                    endIndex = i;
+                    break;
+                }
+            }
+
+            if (endIndex == string::npos || endIndex >= s.size())
+                endIndex = s.size();
 
             res->push_back(s.substr(startIndex, endIndex - startIndex));
             startIndex = endIndex + 1;

@@ -56,4 +56,16 @@ TEST_CASE("Serialization Tests", "[JsonSerializer::serialize]"){
 
 }
 
+TEST_CASE("Vector Serialization Tests", "[JsonSerializer::serialize]"){ //TODO
+
+    JsonSerializer serializer{};
+    auto* allFieldsVecDto = new AllFieldsVecDTO();
+
+    SECTION("Serializing vec<int>") {
+        string expected = "{}";
+        string *s = serializer.serialize(allFieldsVecDto);
+        REQUIRE(*s == expected);
+    }
+}
+
 #endif //WINTER_SERIALIZATIONTESTS_H

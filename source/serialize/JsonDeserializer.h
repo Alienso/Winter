@@ -29,7 +29,9 @@ public:
 
 private:
     void setFieldValue(const string& fieldValue, FieldType fieldType, Reflect* obj, const Field* f, const string& typeStr);
-    void setFieldValueArray(const string& fieldValue, FieldType fieldType, FieldType subType, Reflect* obj, const Field* f);
+    void setFieldValueArray(const string& fieldValue, FieldType fieldType, FieldType subType, Reflect* obj, const Field* f, const string& typeStr);
+
+    void insertVectorData(const string& source,  vector<Reflect*> *dest, const string &typeStr);
 
     template<typename U>
     void insertVectorData(const string& source, U (*parseFunc)(string& val), vector<U> *dest) const{

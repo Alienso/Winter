@@ -85,8 +85,10 @@ Reflect* JsonDeserializer::deserialize(const string& s, Reflect* response){
                 fieldValue = fieldValue.substr(1, fieldValue.size() - 2);
 
             if (fieldType == JSON_FIELD_TYPE_ARRAY) {
-                FieldType subType = getArraySubType(f->typeStr);
-                setFieldValueArray(fieldValue, expectedType, subType, response, f);
+                FieldType subType = getArraySubFieldType(f->typeStr);
+                string subTypeStr = getArraySubType(f->typeStr);
+                string typeStr = subTypeStr.find('*') != string::npos ? subTypeStr.substr(0,subTypeStr.size() - 1) : subTypeStr;
+                setFieldValueArray(fieldValue, expectedType, subType, response, f, typeStr);
             }
             else {
                 string typeStr = expectedType == FIELD_TYPE_PTR ? f->typeStr.substr(0,f->typeStr.size() - 1) : f->typeStr;
@@ -137,7 +139,7 @@ void JsonDeserializer::setFieldValue(const string& fieldValue, const FieldType f
     }
 }
 
-void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldType fieldType, const FieldType subType, Reflect* obj, const Field* f){
+void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldType fieldType, const FieldType subType, Reflect* obj, const Field* f, const string& typeStr){
     switch(subType){
         case FIELD_TYPE_INT:
             if (fieldType == FIELD_TYPE_VECTOR){
@@ -151,30 +153,59 @@ void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldT
             }
             break;
         case FIELD_TYPE_SHORT:
-            f->setShort(obj, (short)stoi(fieldValue));
+            if (fieldType == FIELD_TYPE_VECTOR){
+                auto* data = static_cast<vector<short> *>(f->getAddress(obj));
+                insertVectorData<short>(fieldValue, [](string &val){ return (short)stoi(val);}, data);
+            }
             break;
         case FIELD_TYPE_LONG:
-            f->setLong(obj, stol(fieldValue));
+            if (fieldType == FIELD_TYPE_VECTOR){
+                auto* data = static_cast<vector<long> *>(f->getAddress(obj));
+                insertVectorData<long>(fieldValue, [](string &val){ return stol(val);}, data);
+            }
             break;
         case FIELD_TYPE_CHAR:
+            if (fieldType == FIELD_TYPE_VECTOR){
+                auto* data = static_cast<vector<char> *>(f->getAddress(obj));
+                insertVectorData<char>(fieldValue, [](string &val){ return val[0]; }, data);
+            }
             f->setChar(obj, fieldValue[0]);
             break;
         case FIELD_TYPE_FLOAT:
-            f->setFloat(obj, stof(fieldValue));
+            if (fieldType == FIELD_TYPE_VECTOR){
+                auto* data = static_cast<vector<float> *>(f->getAddress(obj));
+                insertVectorData<float>(fieldValue, [](string &val){ return stof(val);}, data);
+            }
             break;
         case FIELD_TYPE_DOUBLE:
-            f->setDouble(obj, stod(fieldValue));
+            if (fieldType == FIELD_TYPE_VECTOR){
+                auto* data = static_cast<vector<double> *>(f->getAddress(obj));
+                insertVectorData<double>(fieldValue, [](string &val){ return stod(val);}, data);
+            }
             break;
-        case FIELD_TYPE_STRING:
-            f->setString(obj, fieldValue);
+        case FIELD_TYPE_STRING: //TODO optimize
+            if (fieldType == FIELD_TYPE_VECTOR){
+                auto* data = static_cast<vector<string> *>(f->getAddress(obj));
+                insertVectorData<string>(fieldValue, [](string &val){ return val.substr(1, val.size() - 2); }, data);
+            }
             break;
         case FIELD_TYPE_OBJ:
-            //serialize field
-            f->setValue(obj, &fieldValue, sizeof(fieldValue)); //TODO
+            if (fieldType == FIELD_TYPE_VECTOR){
+                auto* data = static_cast<vector<Reflect*> *>(f->getAddress(obj));
+                insertVectorData(fieldValue, data, typeStr);
+            }
             break;
         default:
             wtLogError("Unknown FieldType Type %d in vec", subType);
             f->setInt(obj, 0);
             break;
+    }
+}
+
+void JsonDeserializer::insertVectorData(const string& source,  vector<Reflect*> *dest, const string &typeStr){
+    vector<string>* vec = StringUtils::splitObjectArray(source);
+    for(string& s : *vec){
+        Reflect* r = deserialize(s, (Reflect*) Reflect::getClassInstanceByName(typeStr));
+        dest->push_back(r);
     }
 }

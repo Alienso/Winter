@@ -49,8 +49,6 @@ string JsonSerializer::convertToJsonString(const Field &field, Reflect* obj){
         //case FIELD_TYPE_ARRAY:
         case FIELD_TYPE_VECTOR:
             return convertVectorToJsonString(field, obj);
-            //return "[" + convertToJsonString(field, obj) + "]"; TODO
-            return "[]";
         default:
             wtLogError("Unknown fieldType: %d", field.type);
             return "\"\"";
@@ -62,7 +60,8 @@ string to_string(short x){
 }
 
 string JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) {
-    FieldType subType = getArraySubType(f.typeStr);
+    FieldType subType = getArraySubFieldType(f.typeStr);
+    vector<Reflect*>* vecObj = nullptr;
     switch (subType) {
         case FIELD_TYPE_INT:
             vecInt = static_cast<vector<int> *>(f.getAddress(obj));
@@ -91,16 +90,26 @@ string JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) {
             vecString = static_cast<vector<string> *>(f.getAddress(obj));
             return vectorToString(*vecString);
             break;
+        case FIELD_TYPE_PTR:
+            vecObj = static_cast<vector<Reflect*> *>(f.getAddress(obj));
+            return vectorToString(*vecObj);
         case FIELD_TYPE_OBJ:
-            //serialize field
-            //vecObj = static_cast<vector<Reflect*> *>(f.getAddress(obj));
-            //return serialize() //TODO
-            break;
+            //TODO
         default:
             wtLogError("Unknown FieldType Type %d in vec", subType);
             return "\"\"";
     }
 
+}
+
+string JsonSerializer::vectorToString(const vector<Reflect*>& source) {
+    string res = "[";
+    for(Reflect* x : source){
+        res+=*serialize(x);
+        res+=',';
+    }
+    res[res.size()-1] = ']';
+    return res;
 }
 
 string JsonSerializer::vectorToString(const vector<char>& source) {

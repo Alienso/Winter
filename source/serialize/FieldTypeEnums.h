@@ -52,7 +52,7 @@ enum FieldType{
     return FIELD_TYPE_OBJ;
 }
 
-[[nodiscard]] inline FieldType getArraySubType(const string& s){
+[[nodiscard]] inline FieldType getArraySubFieldType(const string& s){
     size_t index;
 
     //array check
@@ -71,6 +71,27 @@ enum FieldType{
 
     std::cout << "Error! Unknown ArraySubType: " << s << '\n';
     return FIELD_TYPE_INT;
+}
+
+[[nodiscard]] inline string getArraySubType(const string& s){
+    size_t index;
+
+    //array check
+    index = s.find_last_of(']');
+    if (index != string::npos){
+        index = s.find(' ');
+        return s.substr(0,index-1);
+    }
+
+    //vector check
+    index = s.find('<');
+    if (index != string::npos) {
+        size_t endIndex = s.find('>', index);
+        return s.substr(index + 1,endIndex - index - 1);
+    }
+
+    std::cout << "Error! Unknown ArraySubType: " << s << '\n';
+    return "int";
 }
 
 [[nodiscard]] inline JsonFieldType convertToJsonFieldType(const string& s) {
