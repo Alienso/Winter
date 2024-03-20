@@ -25,7 +25,6 @@ private:
     [[nodiscard]] static string vectorToString(const vector<string>& source);
     [[nodiscard]] string vectorToString(const vector<Reflect*>& source);
 
-    //TODO add reference to U for objects
     template<typename U>
     [[nodiscard]] static string vectorToString(const vector<U>& source, string (*parseFunc)(U val)){
 

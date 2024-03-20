@@ -10,6 +10,7 @@
 #include <string>
 #include <chrono>
 
+
 namespace wt{
     [[nodiscard]] inline std::string current_datetime(){
         auto end = std::chrono::system_clock::now();
@@ -19,8 +20,8 @@ namespace wt{
         return timeStr;
     }
 
-    [[nodiscard]] inline std::string urlDecode(string_view text){
-        string escaped;
+    [[nodiscard]] inline std::string urlDecode(std::string_view text){
+        std::string escaped;
         for (auto i = text.begin(), nd = text.end(); i < nd; ++i){
             auto c = *i;
             switch(c){

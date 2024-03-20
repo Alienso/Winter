@@ -56,7 +56,7 @@ TEST_CASE("Serialization Tests", "[JsonSerializer::serialize]"){
 
 }
 
-TEST_CASE("Vector Serialization Tests", "[JsonSerializer::serialize]"){ //TODO
+TEST_CASE("Vector Serialization Tests", "[JsonSerializer::serialize]"){
 
     JsonSerializer serializer{};
     auto* allFieldsVecDto = new AllFieldsVecDTO();
