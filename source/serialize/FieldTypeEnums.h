@@ -32,23 +32,25 @@ enum FieldType{
     FIELD_TYPE_VECTOR
 };
 
-[[nodiscard]] inline FieldType convertToFieldType(const char* s){
-    if (strcmp(s, "int") == 0)
+[[nodiscard]] inline FieldType convertToFieldType(const string& s){
+    if (s == "int")
         return FIELD_TYPE_INT;
-    if (strcmp(s, "float") == 0)
+    if (s == "float")
         return FIELD_TYPE_FLOAT;
-    if (strcmp(s, "double") == 0)
+    if (s == "double")
         return FIELD_TYPE_DOUBLE;
-    if (strcmp(s, "char") == 0)
+    if (s == "char")
         return FIELD_TYPE_CHAR;
-    if (strcmp(s, "long") == 0)
+    if (s == "long")
         return FIELD_TYPE_LONG;
-    if (strcmp(s, "short") == 0)
+    if (s == "short")
         return FIELD_TYPE_SHORT;
     if (StringUtils::startsWith(s, "stdvec") || StringUtils::startsWith(s, "vec")) //TODO have single name
         return FIELD_TYPE_VECTOR;
     if (StringUtils::startsWith(s, "stdstring") || StringUtils::startsWith(s, "string"))
         return FIELD_TYPE_STRING;
+    if (s.rfind('*') != string::npos)
+        return FIELD_TYPE_PTR;
     return FIELD_TYPE_OBJ;
 }
 

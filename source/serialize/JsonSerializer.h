@@ -28,6 +28,10 @@ private:
     //TODO add reference to U for objects
     template<typename U>
     [[nodiscard]] static string vectorToString(const vector<U>& source, string (*parseFunc)(U val)){
+
+        if (source.empty())
+            return "[]";
+
         string res = "[";
         for(U u : source){
             string s = parseFunc(u);

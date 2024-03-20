@@ -61,8 +61,38 @@ TEST_CASE("Vector Serialization Tests", "[JsonSerializer::serialize]"){ //TODO
     JsonSerializer serializer{};
     auto* allFieldsVecDto = new AllFieldsVecDTO();
 
+    SECTION("Serializing empty vec-s") {
+        string expected = "{\n\"i\":[],\n\"f\":[],\n\"s\":[],\n\"innerClassPtr\":[]\n}";
+        string *s = serializer.serialize(allFieldsVecDto);
+        REQUIRE(*s == expected);
+    }
+
     SECTION("Serializing vec<int>") {
-        string expected = "{}";
+        allFieldsVecDto->i = {1,2,3};
+        string expected = "{\n\"i\":[1,2,3],\n\"f\":[],\n\"s\":[],\n\"innerClassPtr\":[]\n}";
+        string *s = serializer.serialize(allFieldsVecDto);
+        REQUIRE(*s == expected);
+    }
+
+    SECTION("Serializing vec<float>") {
+        allFieldsVecDto->f = {1.0f,2.5f,0.5f};
+        string expected = "{\n\"i\":[],\n\"f\":[1.000000,2.500000,0.500000],\n\"s\":[],\n\"innerClassPtr\":[]\n}";
+        string *s = serializer.serialize(allFieldsVecDto);
+        REQUIRE(*s == expected);
+    }
+
+    SECTION("Serializing vec<string>") {
+        allFieldsVecDto->s = {"Hello", "world"};
+        string expected = "{\n\"i\":[],\n\"f\":[],\n\"s\":[\"Hello\",\"world\"],\n\"innerClassPtr\":[]\n}";
+        string *s = serializer.serialize(allFieldsVecDto);
+        REQUIRE(*s == expected);
+    }
+
+    SECTION("Serializing vec<Reflect*>") {
+        auto* clazz1 = new InnerClass(5,2.5,"c");
+        auto* clazz2 = new InnerClass(0,0.125,"SA");
+        allFieldsVecDto->innerClassPtr = {clazz1, clazz2};
+        string expected = "{\n\"i\":[],\n\"f\":[],\n\"s\":[],\n\"innerClassPtr\":[{\n\"x\":5.000000,\n\"y\":2.500000,\n\"c\":\"c\"\n},{\n\"x\":0.000000,\n\"y\":0.125000,\n\"c\":\"SA\"\n}]\n}";
         string *s = serializer.serialize(allFieldsVecDto);
         REQUIRE(*s == expected);
     }

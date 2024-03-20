@@ -103,6 +103,10 @@ string JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) {
 }
 
 string JsonSerializer::vectorToString(const vector<Reflect*>& source) {
+
+    if (source.empty())
+        return "[]";
+
     string res = "[";
     for(Reflect* x : source){
         res+=*serialize(x);
@@ -113,6 +117,10 @@ string JsonSerializer::vectorToString(const vector<Reflect*>& source) {
 }
 
 string JsonSerializer::vectorToString(const vector<char>& source) {
+
+    if (source.empty())
+        return "[]";
+
     string res = "[";
     for(char c : source){
         res += "\"";
@@ -124,6 +132,10 @@ string JsonSerializer::vectorToString(const vector<char>& source) {
 }
 
 string JsonSerializer::vectorToString(const vector<string>& source) {
+
+    if (source.empty())
+        return "[]";
+
     string res = "[";
     for(const string& s : source){
         res += "\"" + s + "\",";
