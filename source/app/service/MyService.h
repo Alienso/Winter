@@ -6,7 +6,14 @@
 #define WINTER_MYSERVICE_H
 
 
-class MyService {
+#include <source/Component.h>
+
+class MyService : public Component {
+
+public:
+    float getSquare(float x){
+        return x*x;
+    }
 
 };
 

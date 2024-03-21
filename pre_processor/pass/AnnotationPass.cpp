@@ -146,7 +146,7 @@ void AnnotationPass::registerEndpoints(std::ofstream &outputFile) {
         outputFile << "\t\tHttpMethod* method = HttpMethod::fromString(\"" << endpoint.method.data() << "\");\n";
 
         outputFile << "\t\tauto* endpoint = new Endpoint();\n";
-        outputFile << "\t\tendpoint->func = &" << endpoint.functionName <<";\n";
+        outputFile << "\t\tendpoint->func = std::function([this](HttpRequest* req){ return " << endpoint.functionName << "(req);});\n";
         outputFile << "\t\tendpoint->method = method;\n";
         outputFile << "\t\tendpoint->uri = uri;\n";
         outputFile << "\t\tRouter::getInstance()->registerEndpoint(endpoint);\n";
@@ -171,6 +171,7 @@ bool AnnotationPass::shouldProcess(string &fileName) const {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
 }
 
+//Not in use currently
 void AnnotationPass::processingFinished() {
 
     //TODO how to get method reference?
@@ -196,7 +197,7 @@ void AnnotationPass::processingFinished() {
         outputFile << "\tmethod = HttpMethod::fromString(\"" << endpoint.method.data() << "\");\n";
 
         outputFile << "\tendpoint = new Endpoint();\n";
-        outputFile << "\tendpoint->func = &" << endpoint.functionName <<";\n";
+        outputFile << "\tendpoint->func = std::function([this](HttpRequest* req){return" << endpoint.functionName << "(req);});";
         outputFile << "\tendpoint->method = method;\n";
         outputFile << "\tendpoint->uri = uri;\n";
         outputFile << "\tRouter::getInstance()->registerEndpoint(endpoint);\n";

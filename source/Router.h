@@ -12,6 +12,7 @@
  */
 
 #include <memory>
+#include <utility>
 #include "http/HttpRequest.h"
 #include "Reflect.h"
 #include "mutex"
@@ -21,10 +22,10 @@
 class Endpoint{
 public:
     Endpoint() : method(nullptr), func(nullptr){}
-    Endpoint(const char* url, HttpMethod* _method, HttpResponse* (*f)(HttpRequest* request)) : method(_method), uri(url), func(f){}
+    Endpoint(const char* url, HttpMethod* _method, std::function<HttpResponse*(HttpRequest*)>& f) : method(_method), uri(url), func(std::move(f)){}
     HttpMethod* method;
     URI uri;
-    HttpResponse* (*func)(HttpRequest* request);
+    std::function<HttpResponse*(HttpRequest*)> func;
 };
 
 class Router {
@@ -35,7 +36,7 @@ public:
 
     void routeRequest(shared_ptr<HttpRequest> &request);
     void registerEndpoint(Endpoint* endpoint);
-    void registerEndpoint(const char* url, HttpMethod* _method, HttpResponse* (*f)(HttpRequest* request));
+    void registerEndpoint(const char* url, HttpMethod* _method, std::function<HttpResponse*(HttpRequest*)> f);
     void initializeEndpoints(){}
 
     vector<Endpoint*> endpoints;

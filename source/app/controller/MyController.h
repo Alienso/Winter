@@ -6,6 +6,7 @@
 #define WINTER_MYCONTROLLER_H
 
 
+#include "../../app/service/MyService.h"
 #include "../../http/ControllerMapping.h"
 
 
@@ -13,15 +14,10 @@
 $RestController
 class MyController : public Component {
 
-    MyController* myController = (MyController *)(getById(MyController::_componentId_));
+    MyService* myService = (MyService *)(Component:: getById(MyService::_componentId_));
 
     $GET("/home")
-    static HttpResponse* home(HttpRequest* request);
-
-    /*$PostConstruct
-    void postConstruct(){
-        myController = (MyController *)(getById(MyController::_componentId_));
-    }*/
+    HttpResponse* home(HttpRequest* request);
 
 private:
     static JsonDeserializer deserializer;

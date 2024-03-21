@@ -89,9 +89,9 @@ if (${sourceLen} STREQUAL  ${targetLen})
         target_link_libraries(Target wsock32 ws2_32)
     endif (WIN32)
 
-    add_custom_command(TARGET Target PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${PROJECT_SOURCE_DIR}/source/app $<TARGET_FILE_DIR:Target>/app)
+    #add_custom_command(TARGET Target PRE_BUILD
+    #    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    #    ${PROJECT_SOURCE_DIR}/source/app $<TARGET_FILE_DIR:Target>/app)
 
 
     #---------------------------------------------

@@ -45,7 +45,7 @@ void Router::registerEndpoint(Endpoint *endpoint) {
     endpoints.push_back(endpoint);
 }
 
-void Router::registerEndpoint(const char *url, HttpMethod *method, HttpResponse *(*f)(HttpRequest *)) {
+void Router::registerEndpoint(const char *url, HttpMethod *method, std::function<HttpResponse*(HttpRequest*)> f) {
     wtLogTrace("Registered endpoint %s", url);
     auto* endpoint = new Endpoint(url, method, f);
     endpoints.push_back(endpoint);

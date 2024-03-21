@@ -17,8 +17,8 @@ HttpResponse *MyController::home(HttpRequest *httpRequest) {
     wtLogInfo("List: ", request->values);
 
     InnerClass* inner = new InnerClass();
-    inner->x = request->innerClass->x * 2;
-    inner->y = request->innerClass->y * 2;
+    inner->x = myService->getSquare(request->innerClass->x);
+    inner->y = myService->getSquare(request->innerClass->y);
     inner->c = request->innerClass->c + "X2";
 
     int sum = 0;
