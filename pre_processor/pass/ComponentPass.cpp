@@ -10,6 +10,7 @@
 void ComponentPass::begin(std::string &fileName) {
     bracketCounter = 0;
     className = {};
+    isClassComponent = false;
 
     size_t start = fileName.rfind("Component.h");
     if (start != string::npos) {
@@ -29,8 +30,10 @@ void ComponentPass::process(std::ifstream &inputFile, std::ofstream &outputFile,
             size_t semicolonIndex = line.find(':');
             if (semicolonIndex != string::npos) {
                 size_t componentIndex = line.find("Component", semicolonIndex);
-                if (componentIndex != string::npos)
+                if (componentIndex != string::npos) {
                     componentClasses.emplace_back("", className, "_" + className + "_");
+                    isClassComponent = true;
+                }
             }
         }
     }
@@ -41,6 +44,11 @@ void ComponentPass::process(std::ifstream &inputFile, std::ofstream &outputFile,
                 bracketCounter++;
                 break;
             case '}':
+                //We finished reading a class
+                if (bracketCounter == 1 && isClassComponent){
+                    generateComponentId(outputFile);
+                    isClassComponent = false;
+                }
                 bracketCounter--;
                 break;
             default:
@@ -77,15 +85,21 @@ void ComponentPass::processingFinished() {
     //generate initializeComponents()
     outputFile << "void Component::initializeComponents() {\n";
     outputFile << "\twtLogTrace(\"Initializing components\");\n";
+    outputFile << "\tcomponents.resize(" << componentClasses.size() << ");\n";
     outputFile << "\tint i=0;\n\n";
     for (auto &x: componentClasses){
         outputFile << "\tauto* " << x.alternativeName << " = new " << x.className << "();\n";
-        outputFile << "\t" << x.alternativeName << "->_componentId_ = i++;\n";
-        outputFile << "\tcomponents.push_back((Component*)" << x.alternativeName << ");\n\n";
+        outputFile << "\t" << x.className << "::_componentId_ = i++;\n";
+        outputFile << "\tcomponents[i-1] = ((Component*)" << x.alternativeName << ");\n\n";
     }
     outputFile << "}";
 }
 
 bool ComponentPass::shouldProcess(std::string &fileName) const {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
+}
+
+void ComponentPass::generateComponentId(ofstream &outputFile) {
+    outputFile << "public:\n";
+    outputFile << "\tstatic inline int _componentId_ = 0;\n";
 }

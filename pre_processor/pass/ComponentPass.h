@@ -26,6 +26,7 @@ public:
 
 private:
     int bracketCounter = 0;
+    bool isClassComponent;
     std::string className;
     std::string componentCppFile;
 
@@ -37,6 +38,8 @@ private:
         filePath(std::move(path)), className(std::move(className_)), alternativeName(std::move(alt)) {}
     };
     std::vector<componentFileData> componentClasses;
+
+    void generateComponentId(std::ofstream &outputFile);
 };
 
 

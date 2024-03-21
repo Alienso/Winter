@@ -36,8 +36,7 @@ public:
         return components[id];
     }
 
-    //since this should be singleton, ids can be non-static
-    int _componentId_ = 0;
+    static inline int _componentId_ = 0;
 
 private:
     static vector<Component*> components;

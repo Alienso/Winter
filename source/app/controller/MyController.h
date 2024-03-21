@@ -13,16 +13,15 @@
 $RestController
 class MyController : public Component {
 
-    //this needs to be done post init since as components are being initialized and added to the array these assignments are happening
-    MyController* myController;
+    MyController* myController = (MyController *)(getById(MyController::_componentId_));
 
     $GET("/home")
     static HttpResponse* home(HttpRequest* request);
 
-    //$PostConstruct
+    /*$PostConstruct
     void postConstruct(){
         myController = (MyController *)(getById(MyController::_componentId_));
-    }
+    }*/
 
 private:
     static JsonDeserializer deserializer;
