@@ -14,7 +14,7 @@
 $RestController
 class MyController : public Component {
 
-    $Autowire
+    $Autowired
     MyService* myService;
 
     $GET("/home")

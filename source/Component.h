@@ -6,7 +6,7 @@
 #define WINTER_COMPONENT_H
 
 #define $PostConstruct
-#define $Autowire
+#define $Autowired
 
 /**
  * Spring like Component class. All components are automatically registered to components map by preprocessor.

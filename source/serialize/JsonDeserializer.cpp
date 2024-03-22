@@ -195,6 +195,12 @@ void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldT
                 insertVectorData(fieldValue, data, typeStr);
             }
             break;
+        case FIELD_TYPE_PTR:
+            if (fieldType == FIELD_TYPE_VECTOR){
+                auto* data = static_cast<vector<Reflect*> *>(f->getAddress(obj));
+                insertVectorData(fieldValue, data, typeStr);
+            }
+            break;
         default:
             wtLogError("Unknown FieldType Type %d in vec", subType);
             f->setInt(obj, 0);

@@ -27,7 +27,7 @@ bool AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
     if (bracketCounter == 1){
         if (StringUtils::trim(previousLine) == "$PostConstruct")
             handlePostConstruct(line);
-        else if (StringUtils::trim(previousLine) == "$Autowire")
+        else if (StringUtils::trim(previousLine) == "$Autowired")
             return handleAutoWire(line, outputFile);
     }
 
