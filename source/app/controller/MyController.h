@@ -14,7 +14,8 @@
 $RestController
 class MyController : public Component {
 
-    MyService* myService = (MyService *)(Component:: getById(MyService::_componentId_));
+    $Autowire
+    MyService* myService;
 
     $GET("/home")
     HttpResponse* home(HttpRequest* request);

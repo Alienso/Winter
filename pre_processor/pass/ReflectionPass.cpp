@@ -36,7 +36,7 @@ bool ReflectionPass::shouldProcess(string &fileName) const {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
 }
 
-void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) {
+bool ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) {
 
     //TODO add comments support
     declaringMethod = false;
@@ -89,7 +89,7 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
     }
 
     if (!shouldAddReflection)
-        return;
+        return false;
 
     //If we are not in a function body
     if (bracketCounter == 1 && !declaringClass && hasSpace && StringUtils::trim(line).size() > 2) {
@@ -118,7 +118,7 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
                 //Temp solution, find last ' ' separating type from name
                 size_t blank = line.find_last_of(' ');
                 if (blank == string::npos)
-                    return;
+                    return false;
                 //Read all * or & that may be put together with the name
                 while (line[blank + 1] == '*' || line[blank + 1] == '&')
                     blank++;
@@ -137,6 +137,8 @@ void ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
             }
         }
     }
+
+    return false;
 }
 
 void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {

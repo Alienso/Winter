@@ -20,7 +20,7 @@
 class ReflectionPass : public Pass{
 public:
     void begin(std::string& fileName) override;
-    void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) override;
+    bool process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) override;
     void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) override;
     void processingFinished() override;
     [[nodiscard]] bool shouldProcess(string &fileName) const override;

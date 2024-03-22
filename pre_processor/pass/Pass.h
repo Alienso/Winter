@@ -12,7 +12,7 @@
 class Pass {
 public:
     virtual void begin(std::string& fileName) = 0;
-    virtual void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) = 0;
+    virtual bool process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) = 0;
     virtual void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) = 0;
     virtual void processingFinished() = 0;
 

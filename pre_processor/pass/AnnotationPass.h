@@ -15,7 +15,7 @@
 class AnnotationPass : public Pass{
 public:
     void begin(std::string& fileName) override;
-    void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) override;
+    bool process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) override;
     void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) override;
     void processingFinished() override;
 
@@ -41,6 +41,8 @@ private:
     int bracketCounter;
     std::string routerCppFile;
     std::string postConstructMethodName;
+
+    bool handleAutoWire(std::string &line, std::ofstream &outputFile);
 };
 
 

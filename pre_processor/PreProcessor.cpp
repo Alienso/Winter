@@ -16,10 +16,15 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile, 
         pass->begin(fileName);
     }
 
+    bool lineConsumed = false;
     while (std::getline(inputFile, line)) {
-        for(auto pass : requiredPasses)
-            pass->process(inputFile, outputFile, line, lastLine);
-        outputFile << line << std::endl;
+        for(auto pass : requiredPasses) {
+            lineConsumed = pass->process(inputFile, outputFile, line, lastLine);
+            if (lineConsumed) break;
+        }
+
+        if (!lineConsumed)
+            outputFile << line << std::endl;
         lastLine = line;
     }
 

@@ -19,7 +19,7 @@ void ComponentPass::begin(std::string &fileName) {
     }
 }
 
-void ComponentPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) {
+bool ComponentPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) {
     if (bracketCounter == 0) {
         size_t index = line.find("class");
         if (index != std::string::npos) {
@@ -55,6 +55,8 @@ void ComponentPass::process(std::ifstream &inputFile, std::ofstream &outputFile,
                 break;
         }
     }
+
+    return false;
 }
 
 void ComponentPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std::string &fileName) {

@@ -17,7 +17,7 @@ void AnnotationPass::begin(std::string& fileName) {
     }
 }
 
-void AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) {
+bool AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) {
 
     if (bracketCounter == 0) {
         if (StringUtils::trim(previousLine) == "$RestController")
@@ -27,6 +27,8 @@ void AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
     if (bracketCounter == 1){
         if (StringUtils::trim(previousLine) == "$PostConstruct")
             handlePostConstruct(line);
+        else if (StringUtils::trim(previousLine) == "$Autowire")
+            return handleAutoWire(line, outputFile);
     }
 
     for (char c: line) {
@@ -45,44 +47,46 @@ void AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
     }
 
     if (bracketCounter != 1)
-        return;
+        return false;
 
     //Endpoint annotation
     size_t beginIndex = previousLine.find('$');
     if (beginIndex == string::npos)
-        return;
+        return false;
     size_t endIndex = previousLine.find('(', beginIndex);
     if (endIndex == string::npos)
-        return;
+        return false;
 
     string methodName = previousLine.substr(beginIndex + 1, endIndex - beginIndex - 1);
 
     beginIndex = previousLine.find('"', endIndex);
     endIndex = previousLine.find_last_of('"');
     if (beginIndex == string::npos || endIndex == string::npos || beginIndex == endIndex)
-        return;
+        return false;
 
     string path = previousLine.substr(beginIndex + 1, endIndex - beginIndex - 1);
 
     endIndex = line.find('(');
     if (endIndex == string::npos)
-        return;
+        return false;
     beginIndex = line.rfind(' ', endIndex);
     if (beginIndex == string::npos)
-        return;
+        return false;
 
     string functionName = line.substr(beginIndex + 1, endIndex - beginIndex - 1);
 
     beginIndex = endIndex;
     endIndex = line.find('*', endIndex);
     if (endIndex == string::npos)
-        return;
+        return false;
 
     string bodyType = line.substr(beginIndex + 1, endIndex - beginIndex - 1);
     bodyType = StringUtils::trim(bodyType);
 
     EndpointData endpoint(methodName, path, functionName, bodyType);
     endpointData.push_back(endpoint);
+
+    return false;
 }
 
 void AnnotationPass::handleRestController(string &line) {
@@ -135,6 +139,31 @@ void AnnotationPass::handlePostConstruct(string &line) {
         return;
 
     postConstructMethodName = line.substr(beginIndex + 1, endIndex - beginIndex - 1);
+}
+
+bool AnnotationPass::handleAutoWire(string &line, std::ofstream &outputFile) {
+    size_t startIndex = 0, endIndex = 0;
+    while(startIndex<line.size() && isspace(line[startIndex])) startIndex++;
+    endIndex = line.find('*', startIndex + 1);
+    if (endIndex == string::npos)
+        return false;
+
+    string classNamePtr = line.substr(startIndex, endIndex - startIndex + 1);
+    while(endIndex > startIndex && !isalnum(line[endIndex])) endIndex--;
+    if (endIndex == startIndex)
+        return false;
+    string className = line.substr(startIndex, endIndex - startIndex + 1);
+
+    endIndex = line.rfind(';');
+    if (endIndex == string::npos)
+        return false;
+    endIndex--;
+    startIndex = endIndex - 1;
+    while(startIndex > 0 && isalnum(line[startIndex])) startIndex--;
+    string varName = line.substr(startIndex, endIndex - startIndex + 1);
+
+    outputFile << '\t' << classNamePtr << ' ' << varName << " = (" << classNamePtr << ")(Component::getById(" << className << "::_componentId_));\n";
+    return true;
 }
 
 void AnnotationPass::registerEndpoints(std::ofstream &outputFile) {

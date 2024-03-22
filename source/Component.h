@@ -5,6 +5,9 @@
 #ifndef WINTER_COMPONENT_H
 #define WINTER_COMPONENT_H
 
+#define $PostConstruct
+#define $Autowire
+
 /**
  * Spring like Component class. All components are automatically registered to components map by preprocessor.
  * @Autowiring is done for those instances only
