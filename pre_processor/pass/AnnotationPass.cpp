@@ -157,6 +157,7 @@ bool AnnotationPass::handleAutoWire(string &line, std::ofstream &outputFile) {
     endIndex = line.rfind(';');
     if (endIndex == string::npos)
         return false;
+
     endIndex--;
     startIndex = endIndex - 1;
     while(startIndex > 0 && isalnum(line[startIndex])) startIndex--;
