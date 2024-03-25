@@ -11,7 +11,12 @@
 using namespace std;
 
 class ResultSet{
+public:
+    virtual Reflect* getResult() = 0;
+    virtual vector<Reflect*>* getResultList() = 0;
     virtual bool next() = 0;
+
+protected:
     virtual int getInt(int columnIndex) = 0;
     virtual long getLong(int columnIndex) = 0;
     virtual float getFloat(int columnIndex) = 0;
@@ -24,9 +29,6 @@ class ResultSet{
     virtual string getTime(int columnIndex) = 0;
     virtual string getDateTime(int columnIndex) = 0;
     virtual string getBlob(int columnIndex) = 0;
-    virtual Reflect* getResult(int columnIndex) = 0;
-    virtual vector<Reflect*> getResultList(int columnIndex) = 0;
-
 };
 
 #endif //WINTER_RESULTSET_H

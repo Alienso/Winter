@@ -9,6 +9,9 @@
 #include "Logger.h"
 #include "http/HttpResponse.h"
 #include "Component.h"
+#include "Configuration.h"
+
+#include "./sql/postgres/PgConnection.h"
 
 
 void Winter::run() {

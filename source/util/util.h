@@ -41,5 +41,26 @@ namespace wt{
         }
         return escaped;
     }
+
+    template<typename T, typename U>
+    vector<U*> vector_cast(vector<T*>* source){
+        vector<U*> dest;
+        dest.reserve(source->size());
+        for (T* t : *source){
+            dest.push_back((U*)t);
+        }
+        return dest;
+    }
+
+    template<typename T, typename U>
+    vector<U*>* vector_ptr_cast(vector<T*>* source){
+        auto* dest = new vector<U*>();
+        dest->reserve(source->size());
+        for (T* t : *source){
+            dest->push_back((U*)t);
+        }
+        return dest;
+    }
+
 }
 

@@ -16,6 +16,10 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0 -fuse-ld=mold")
 endif(UNIX)
 
+#Postgres
+include_directories(/usr/include/postgresql/)
+link_directories(/usr/local/pgsql/lib/)
+
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/include/)
 include_directories(${PROJECT_SOURCE_DIR}/include/postgreSQL)
@@ -53,7 +57,15 @@ set(SOURCES source/Winter.cpp source/Winter.h
         source/serialize/FieldTypeEnums.h source/http/ControllerMapping.h
         source/util/ThreadPool.h source/util/util.h
         source/Component.cpp source/Component.h
-        source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h source/app/dto/InnerClass.h source/sql/Connection.h source/sql/Statement.h source/sql/postgres/PgConnection.cpp source/sql/postgres/PgConnection.h source/sql/postgres/PgStatement.cpp source/sql/postgres/PgStatement.h source/sql/postgres/PgPreparedStatement.cpp source/sql/postgres/PgPreparedStatement.h source/sql/ResultSet.h source/sql/postgres/PgResultSet.cpp source/sql/postgres/PgResultSet.h)
+        source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h
+        source/app/dto/InnerClass.h
+        source/sql/Connection.h
+        source/sql/Statement.h
+        source/sql/postgres/PgConnection.cpp source/sql/postgres/PgConnection.h
+        source/sql/postgres/PgStatement.cpp source/sql/postgres/PgStatement.h
+        source/sql/ResultSet.h
+        source/sql/postgres/PgResultSet.cpp source/sql/postgres/PgResultSet.h
+        source/sql/Repository.h source/sql/Repository.cpp)
 
 #add_executable(Winter ${SOURCES})
 
@@ -86,8 +98,11 @@ if (${sourceLen} STREQUAL  ${targetLen})
     add_executable(Target target/main.cpp ${SOURCES} )
 
     if (WIN32)
-        target_link_libraries(Target wsock32 ws2_32)
+        target_link_libraries(Target wsock32 ws2_32 pg)
     endif (WIN32)
+    if (UNIX)
+        target_link_libraries(Target pq)
+    endif(UNIX)
 
     #add_custom_command(TARGET Target PRE_BUILD
     #    COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -105,6 +120,10 @@ if (${sourceLen} STREQUAL  ${targetLen})
     if (WIN32)
         target_link_libraries(Tests wsock32 ws2_32)
     endif (WIN32)
+    if (UNIX)
+        target_link_libraries(Tests pq)
+    endif(UNIX)
+
 
 endif()
 
@@ -134,4 +153,4 @@ add_executable(PreProcessor pre_processor/main.cpp
 #---------------------------------------
 #Temp
 #add_executable(Temp ./temp/main.cpp)
-#target_link_libraries(Temp)
+#target_link_libraries(Temp pq)

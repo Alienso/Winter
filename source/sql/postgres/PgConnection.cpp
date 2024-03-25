@@ -3,17 +3,29 @@
 //
 
 #include "PgConnection.h"
+#include "Logger.h"
+#include "PgStatement.h"
 
-shared_ptr<Statement> PgConnection::createStatement() {
-    return shared_ptr<Statement>();
+PgConnection::PgConnection(const string& connectionString) {
+    PGconn *conn;
+    conn = PQconnectdb(connectionString.data());
+    if (PQstatus(conn) != CONNECTION_OK){
+        wtLogError("%s", PQerrorMessage(conn));
+        PQfinish(conn);
+    }
+    postgresConn = conn;
 }
 
-shared_ptr<Statement> PgConnection::prepareStatement(string s) {
-    return shared_ptr<Statement>();
+PgConnection::~PgConnection() {
+    PQfinish(postgresConn);
 }
 
-shared_ptr<Statement> PgConnection::prepareStatement(const char *s) {
-    return shared_ptr<Statement>();
+shared_ptr<Statement> PgConnection::createStatement(shared_ptr<Connection> connection) {
+    return make_shared<PgStatement>(connection); //'this' and connection are the same
+}
+
+shared_ptr<Statement> PgConnection::createStatement(shared_ptr<Connection> connection, const char *s) {
+    return make_shared<PgStatement>(connection); //'this' and connection are the same
 }
 
 void PgConnection::commit() {

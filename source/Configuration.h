@@ -5,11 +5,16 @@
 #ifndef WINTER_CONFIGURATION_H
 #define WINTER_CONFIGURATION_H
 
+#include "Logger.h"
+
 class Configuration {
 public:
-    static const int serverPort;
-    static const int serverMaxConnections;
-    static const int logLevel;
+    static const inline int serverPort = 8080;
+    static const inline int serverMaxConnections = 20;
+    static const inline int logLevel = LOG_LEVEL_TRACE;
+
+    static const inline int dbConnectionPoolSize = 20;
+    static const inline string dbConnectionString = "postgresql://postgres:postgres@localhost:5432/postgres";
 
     Configuration() = default;
 };

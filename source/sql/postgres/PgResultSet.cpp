@@ -5,7 +5,37 @@
 #include "PgResultSet.h"
 
 bool PgResultSet::next() {
+    return false;
+}
 
+Reflect* PgResultSet::getResult(){
+    return new Reflect();
+}
+
+vector<Reflect*>* PgResultSet::getResultList(){
+
+    int nFields, i, j;
+
+    /* first, print out the attribute names */
+    nFields = PQnfields(pgResult);
+    for (i = 0; i < nFields; i++)
+        printf("%-15s", PQfname(pgResult, i));
+    printf("\n\n");
+
+    /* next, print out the rows */
+    for (i = 0; i < PQntuples(pgResult); i++){
+        for (j = 0; j < nFields; j++)
+            printf("%-15s", PQgetvalue(pgResult, i, j));
+        printf("\n");
+    }
+
+    PQclear(pgResult);
+
+    /* end the transaction */
+    pgResult = PQexec(pgConn, "END");
+    PQclear(pgResult);
+
+    return new vector<Reflect*>();
 }
 
 int PgResultSet::getInt(int columnIndex) {
@@ -33,7 +63,7 @@ bool PgResultSet::getBool(int columnIndex) {
 }
 
 byte PgResultSet::getByte(int columnIndex) {
-    byte result;
+    byte result = static_cast<byte>(0);
     return result;
 }
 
@@ -55,12 +85,4 @@ string PgResultSet::getDateTime(int columnIndex) {
 
 string PgResultSet::getBlob(int columnIndex) {
     return std::string();
-}
-
-Reflect* PgResultSet::getResult(int columnIndex){
-    return nullptr;
-}
-
-vector<Reflect*> PgResultSet::getResultList(int columnIndex){
-    return {};
 }

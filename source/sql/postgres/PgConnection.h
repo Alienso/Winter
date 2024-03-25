@@ -7,15 +7,17 @@
 
 
 #include "../Connection.h"
+#include <libpq-fe.h>
 
 class PgConnection : public Connection{
 
 public:
-    shared_ptr<Statement> createStatement() override;
+    explicit PgConnection(const string& connectionString);
+    virtual ~PgConnection();
 
-    shared_ptr<Statement> prepareStatement(string s) override;
+    shared_ptr<Statement> createStatement(shared_ptr<Connection> connection) override;
 
-    shared_ptr<Statement> prepareStatement(const char *s) override;
+    shared_ptr<Statement> createStatement(shared_ptr<Connection> connection, const char *s) override;
 
     void commit() override;
 
@@ -23,6 +25,9 @@ public:
 
     void close() override;
 
+private:
+    friend class PgStatement;
+    PGconn *postgresConn;
 };
 
 

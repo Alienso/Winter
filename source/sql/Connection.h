@@ -13,9 +13,8 @@ using namespace std;
 
 class Connection {
 public:
-    virtual shared_ptr<Statement> createStatement() = 0;
-    virtual shared_ptr<Statement> prepareStatement(string s) = 0;
-    virtual shared_ptr<Statement> prepareStatement(const char* s) = 0;
+    virtual shared_ptr<Statement> createStatement(shared_ptr<Connection> connection) = 0;
+    virtual shared_ptr<Statement> createStatement(shared_ptr<Connection> connection, const char* s) = 0;
 
     virtual void commit() = 0;
     virtual void rollback() = 0;

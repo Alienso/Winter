@@ -6,6 +6,7 @@
 #define WINTER_MYCONTROLLER_H
 
 
+#include "../../app/repository/PlayerRepository.h"
 #include "../../app/service/MyService.h"
 #include "../../http/ControllerMapping.h"
 
@@ -16,6 +17,8 @@ class MyController : public Component {
 
     $Autowired
     MyService* myService;
+    $Autowired
+    PlayerRepository* playerRepository;
 
     $GET("/home")
     HttpResponse* home(HttpRequest* request);

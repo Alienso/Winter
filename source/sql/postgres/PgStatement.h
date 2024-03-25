@@ -8,19 +8,34 @@
 
 #include "../Statement.h"
 
+#include <utility>
+#include "PgConnection.h"
+
 class PgStatement : public Statement {
 public:
-    void executeQuery(const char *s) override;
 
-    void executeQuery(string &s) override;
+    PgStatement()= default;
+    /*explicit PgStatement(const char* query_){
+        query = query_;
+    }*/
+    explicit PgStatement(shared_ptr<Connection> connection_){
+        connection = std::move(connection_);
+    }
+
+    ~PgStatement() override{
+
+    }
+
+    ResultSet* executeQuery(const char *s) override;
 
     int executeUpdate(const char *s) override;
-
-    int executeUpdate(string &s) override;
 
     void setQueryTimeout(int seconds) override;
 
     void close() override;
+
+private:
+    shared_ptr<Connection> connection = nullptr;
 };
 
 
