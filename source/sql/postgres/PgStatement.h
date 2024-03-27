@@ -15,18 +15,12 @@ class PgStatement : public Statement {
 public:
 
     PgStatement()= default;
-    /*explicit PgStatement(const char* query_){
-        query = query_;
-    }*/
     explicit PgStatement(shared_ptr<Connection> connection_){
         connection = std::move(connection_);
     }
+    ~PgStatement() override = default;
 
-    ~PgStatement() override{
-
-    }
-
-    ResultSet* executeQuery(const char *s) override;
+    shared_ptr<ResultSet> executeQuery(const char *s) override;
 
     int executeUpdate(const char *s) override;
 

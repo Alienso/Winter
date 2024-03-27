@@ -29,6 +29,8 @@ public:
     [[nodiscard]] virtual int getClassSize();
     [[nodiscard]] static void* getClassInstanceByName(const string& name);
 
+    [[nodiscard]] static Reflect* getInstance();
+
     static void initializeReflection();
     static void initializeClassMap();
 

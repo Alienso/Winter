@@ -38,6 +38,8 @@ string JsonSerializer::convertToJsonString(const Field &field, Reflect* obj){
             return to_string(field.getDouble(obj));
         case FIELD_TYPE_CHAR:
             return "\"" + to_string(field.getChar(obj)) + "\"";
+        case FIELD_TYPE_BOOL:
+            return to_string(field.getBool(obj));
         case FIELD_TYPE_STRING:
             return "\"" + field.getString(obj) + "\"";
         case FIELD_TYPE_OBJ:
@@ -58,6 +60,9 @@ string JsonSerializer::convertToJsonString(const Field &field, Reflect* obj){
 string to_string(short x){
     return to_string((int)x);
 }
+string to_string(bool x){
+    return std::to_string(x);
+}
 
 string JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) {
     FieldType subType = getArraySubFieldType(f.typeStr);
@@ -69,27 +74,24 @@ string JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) {
         case FIELD_TYPE_SHORT:
             vecShort = static_cast<vector<short> *>(f.getAddress(obj));
             return vectorToString(*vecShort, to_string);
-            break;
         case FIELD_TYPE_LONG:
             vecLong = static_cast<vector<long> *>(f.getAddress(obj));
             return vectorToString(*vecLong, to_string);
-            break;
         case FIELD_TYPE_CHAR:
             vecChar = static_cast<vector<char> *>(f.getAddress(obj));
             return vectorToString(*vecChar);
-            break;
         case FIELD_TYPE_FLOAT:
             vecFloat = static_cast<vector<float> *>(f.getAddress(obj));
             return vectorToString(*vecFloat, to_string);
-            break;
         case FIELD_TYPE_DOUBLE:
             vecDouble = static_cast<vector<double> *>(f.getAddress(obj));
             return vectorToString(*vecDouble, to_string);
-            break;
+        case FIELD_TYPE_BOOL:
+            vecBool = static_cast<vector<bool> *>(f.getAddress(obj));
+            return vectorToString(*vecBool, to_string);
         case FIELD_TYPE_STRING:
             vecString = static_cast<vector<string> *>(f.getAddress(obj));
             return vectorToString(*vecString);
-            break;
         case FIELD_TYPE_PTR:
             vecObj = static_cast<vector<Reflect*> *>(f.getAddress(obj));
             return vectorToString(*vecObj);

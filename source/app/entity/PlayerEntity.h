@@ -8,11 +8,12 @@
 #endif //WINTER_PLAYERENTITY_H
 
 #include <string>
-#include <../reflect/Reflect.h>
+#include <Reflect.h>
 
+//TODO type* defaults to reflect* in deserializer
 class PlayerEntity : public Reflect {
 public:
     long id;
-    std::string* name;
-    std::string* createdOn;
+    std::string name;
+    std::string createdOn;
 };

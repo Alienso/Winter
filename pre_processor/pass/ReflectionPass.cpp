@@ -131,7 +131,7 @@ bool ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
                 if (typeStr[typeStr.size()-1] == '*')
                     type = FIELD_TYPE_PTR;
                 else
-                    type = convertToFieldType(StringUtils::stripSpecialCharacters(typeStr).data());
+                    type = convertToFieldType(StringUtils::stripSpecialCharacters(typeStr));
                 Field f(name, typeStr, type, className, 0);
                 fields.push_back(f);
             }
@@ -161,7 +161,10 @@ void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
                   "    }\n\n"
                   "    int getClassSize() override{\n"
                   "        return sizeof(" << className << ");\n"
-                                                           "\t}\n\n";
+                                                           "\t}\n"
+                  "\tstatic Reflect* getInstance(){\n"
+                  "    \treturn new " << className << "();\n"
+                  "\t}\n\n";
 
 
     outputFile << '\n';
@@ -190,17 +193,10 @@ void ReflectionPass::processingFinished() {
     }
     outputFile << '\n';
 
-    //generate class generators
-    for (auto &x: reflectClasses){
-        outputFile << "Reflect* " << x.alternativeName << "(){\n"
-        << "\treturn new " << x.className << "();\n"
-        << "}\n\n";
-    }
-
     //generate initializeClassMap()
     outputFile << "void Reflect::initializeClassMap(){\n";
     for (auto &x : reflectClasses){
-        outputFile << "\tReflect::classMap[\"" << x.className << "\"] = &" << x.alternativeName << ";\n";
+        outputFile << "\tReflect::classMap[\"" << x.className << "\"] = &" << x.className << "::getInstance;\n";
     }
     outputFile << "}\n";
 

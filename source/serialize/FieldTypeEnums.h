@@ -15,7 +15,8 @@ enum JsonFieldType{
     JSON_FILED_TYPE_REAL_NUMBER,
     JSON_FILED_TYPE_STRING,
     JSON_FIELD_TYPE_ARRAY,
-    JSON_FILED_TYPE_OBJ
+    JSON_FILED_TYPE_OBJ,
+    JSON_FIELD_TYPE_BOOL
 };
 
 enum FieldType{
@@ -29,9 +30,12 @@ enum FieldType{
     FIELD_TYPE_OBJ, // 7
     FIELD_TYPE_PTR,
     FIELD_TYPE_ARRAY,
-    FIELD_TYPE_VECTOR
+    FIELD_TYPE_VECTOR,
+    FIELD_TYPE_BOOL, // 11
+    FIELD_TYPE_BYTE
 };
 
+//TODO have map for this?
 [[nodiscard]] inline FieldType convertToFieldType(const string& s){
     if (s == "int")
         return FIELD_TYPE_INT;
@@ -45,6 +49,10 @@ enum FieldType{
         return FIELD_TYPE_LONG;
     if (s == "short")
         return FIELD_TYPE_SHORT;
+    if (s == "bool")
+        return FIELD_TYPE_BOOL;
+    if (s == "byte")
+        return FIELD_TYPE_BYTE;
     if (StringUtils::startsWith(s, "stdvec") || StringUtils::startsWith(s, "vec")) //TODO have single name
         return FIELD_TYPE_VECTOR;
     if (StringUtils::startsWith(s, "stdstring") || StringUtils::startsWith(s, "string"))
@@ -61,14 +69,14 @@ enum FieldType{
     index = s.find_last_of(']');
     if (index != string::npos){
         index = s.find(' ');
-        return convertToFieldType(s.substr(0,index-1).data());
+        return convertToFieldType(s.substr(0,index-1));
     }
 
     //vector check
     index = s.find('<');
     if (index != string::npos) {
         size_t endIndex = s.find('>', index);
-        return convertToFieldType(s.substr(index + 1,endIndex - index - 1).data());
+        return convertToFieldType(s.substr(index + 1,endIndex - index - 1));
     }
 
     std::cout << "Error! Unknown ArraySubType: " << s << '\n';
@@ -104,6 +112,11 @@ enum FieldType{
             return JSON_FILED_TYPE_OBJ;
         case '[':
             return JSON_FIELD_TYPE_ARRAY;
+        case 't':
+        case 'T':
+        case 'f':
+        case 'F':
+            return JSON_FIELD_TYPE_BOOL;
         default:
             if (s.find('.') != string::npos)
                 return JSON_FILED_TYPE_REAL_NUMBER;
@@ -131,6 +144,10 @@ enum FieldType{
             return false;
         case JSON_FIELD_TYPE_ARRAY:
             if (fieldType == FIELD_TYPE_ARRAY || fieldType == FIELD_TYPE_VECTOR)
+                return true;
+            return false;
+        case JSON_FIELD_TYPE_BOOL:
+            if (fieldType == FIELD_TYPE_BOOL)
                 return true;
             return false;
         default:

@@ -5,9 +5,10 @@
 #ifndef WINTER_STATEMENT_H
 #define WINTER_STATEMENT_H
 
-#include <string>
-#include <../reflect/Reflect.h>
+#include <Reflect.h>
 #include "ResultSet.h"
+
+#include <memory>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ public:
     Statement() = default;
     virtual ~Statement() = default;
 
-    virtual ResultSet* executeQuery(const char* s) = 0;
+    virtual shared_ptr<ResultSet> executeQuery(const char* s) = 0;
     virtual int executeUpdate(const char* s) = 0;
 
     virtual void setQueryTimeout(int seconds) = 0;

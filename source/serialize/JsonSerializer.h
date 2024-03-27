@@ -46,6 +46,7 @@ private:
     vector<long>* vecLong = nullptr;
     vector<float>* vecFloat = nullptr;
     vector<double>* vecDouble = nullptr;
+    vector<bool>* vecBool = nullptr;
     vector<char>* vecChar = nullptr;
     vector<string>* vecString = nullptr;
 };

@@ -17,12 +17,12 @@ using namespace std;
 class PlayerRepository : public Repository {
 public:
     vector<PlayerEntity*>* getAllPlayers(){
+        /*return wt::vector_ptr_cast<Reflect, PlayerEntity>(
+                createStatement()->executeQuery("select * from player")->getResultList());*/
         shared_ptr<Statement> statement = Repository::createStatement();
         vector<PlayerEntity*>* players = wt::vector_ptr_cast<Reflect, PlayerEntity>(
-                statement->executeQuery("select * from player")->getResultList());
+                statement->executeQuery("select * from player")->getResultList(PlayerEntity::getInstance));
         return players;
-        //players = statement->executeQuery("select * from player");
-        //getResultList //getResultListAsInt //getSingleResultAsInt ...
     }
 };
 

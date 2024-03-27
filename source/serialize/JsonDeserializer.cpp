@@ -120,6 +120,9 @@ void JsonDeserializer::setFieldValue(const string& fieldValue, const FieldType f
         case FIELD_TYPE_DOUBLE:
             f->setDouble(obj, stod(fieldValue));
             break;
+        case FIELD_TYPE_BOOL:
+            f->setBool(obj, StringUtils::parseBoolean(fieldValue.data()));
+            break;
         case FIELD_TYPE_STRING:
             f->setString(obj, fieldValue);
             break;
@@ -181,6 +184,12 @@ void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldT
             if (fieldType == FIELD_TYPE_VECTOR){
                 auto* data = static_cast<vector<double> *>(f->getAddress(obj));
                 insertVectorData<double>(fieldValue, [](string &val){ return stod(val);}, data);
+            }
+            break;
+        case FIELD_TYPE_BOOL:
+            if (fieldType == FIELD_TYPE_VECTOR){
+                auto* data = static_cast<vector<bool> *>(f->getAddress(obj));
+                insertVectorData<bool>(fieldValue, [](string &val){ return StringUtils::parseBoolean(val.data());}, data);
             }
             break;
         case FIELD_TYPE_STRING: //TODO optimize

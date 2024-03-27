@@ -37,3 +37,8 @@ void* Reflect::getClassInstanceByName(const string& name){
         return nullptr;
     return i->second();
 }
+
+Reflect* Reflect::getInstance(){
+    wtLogError("getInstance called for Reflect*");
+    return nullptr;
+}

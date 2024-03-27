@@ -65,7 +65,8 @@ set(SOURCES source/Winter.cpp source/Winter.h
         source/sql/postgres/PgStatement.cpp source/sql/postgres/PgStatement.h
         source/sql/ResultSet.h
         source/sql/postgres/PgResultSet.cpp source/sql/postgres/PgResultSet.h
-        source/sql/Repository.h source/sql/Repository.cpp)
+        source/sql/Repository.h source/sql/Repository.cpp
+        source/map/Mapper.h source/map/Mapper.cpp)
 
 #add_executable(Winter ${SOURCES})
 

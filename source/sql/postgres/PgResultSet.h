@@ -14,10 +14,11 @@ class PgResultSet : public ResultSet {
 public:
 
     PgResultSet(PGresult* pgResult_, PGconn* conn) : pgResult(pgResult_), pgConn(conn){}
+    virtual ~PgResultSet();
 
     bool next() override;
     Reflect *getResult() override;
-    vector<Reflect*>* getResultList() override;
+    vector<Reflect*>* getResultList(Reflect* (*allocator)()) override;
 
 protected:
     int getInt(int columnIndex) override;

@@ -4,6 +4,11 @@
 
 #include "PgResultSet.h"
 
+PgResultSet::~PgResultSet() {
+    pgResult = PQexec(pgConn, "END");
+    PQclear(pgResult);
+}
+
 bool PgResultSet::next() {
     return false;
 }
@@ -12,30 +17,41 @@ Reflect* PgResultSet::getResult(){
     return new Reflect();
 }
 
-vector<Reflect*>* PgResultSet::getResultList(){
+vector<Reflect*>* PgResultSet::getResultList(Reflect* (*allocator)()){
 
-    int nFields, i, j;
+    int fieldsSize = PQnfields(pgResult);
+    int resultSize = PQntuples(pgResult);
+    int j = 0;
 
-    /* first, print out the attribute names */
-    nFields = PQnfields(pgResult);
-    for (i = 0; i < nFields; i++)
-        printf("%-15s", PQfname(pgResult, i));
-    printf("\n\n");
+    auto* response = new vector<Reflect*>();
 
-    /* next, print out the rows */
-    for (i = 0; i < PQntuples(pgResult); i++){
-        for (j = 0; j < nFields; j++)
-            printf("%-15s", PQgetvalue(pgResult, i, j));
-        printf("\n");
+    if (resultSize == 0){
+        return response;
+    }
+
+    response->resize(resultSize);
+
+    unordered_map<string, int> tupleMapping{};
+
+    for (int i = 0; i < fieldsSize; i++)
+        tupleMapping[StringUtils::toCamelCase(string{PQfname(pgResult, i)})] = i;
+
+    auto it = tupleMapping.begin();
+
+    for (int i = 0; i < resultSize; i++){
+        Reflect* entity = allocator();
+        for (auto& f : entity->getDeclaredFields()) {
+            it = tupleMapping.find(StringUtils::toCamelCase(f.name)); //TODO add field match type to method signature
+            if (it != tupleMapping.end()) {
+                char *s = PQgetvalue(pgResult, i, it->second);
+                f.set(entity, s);
+            }
+        }
+        (*response)[j++] = entity;
     }
 
     PQclear(pgResult);
-
-    /* end the transaction */
-    pgResult = PQexec(pgConn, "END");
-    PQclear(pgResult);
-
-    return new vector<Reflect*>();
+    return response;
 }
 
 int PgResultSet::getInt(int columnIndex) {

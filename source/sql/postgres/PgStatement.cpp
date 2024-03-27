@@ -5,7 +5,7 @@
 #include "PgStatement.h"
 #include "PgResultSet.h"
 
-ResultSet* PgStatement::executeQuery(const char *s) {
+shared_ptr<ResultSet> PgStatement::executeQuery(const char *s) {
     PGconn* conn = ((PgConnection*)connection.get())->postgresConn;
     PGresult *res;
 
@@ -18,7 +18,7 @@ ResultSet* PgStatement::executeQuery(const char *s) {
     PQclear(res);
 
     res = PQexec(conn, s);
-    return new PgResultSet(res, conn);
+    return shared_ptr<ResultSet>(new PgResultSet(res, conn));
 }
 
 int PgStatement::executeUpdate(const char *s) {

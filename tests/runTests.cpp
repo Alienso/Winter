@@ -10,3 +10,4 @@
 #include "httpRequestParseTests.h"
 #include "deserializationTests.h"
 #include "serializationTests.h"
+#include "stringUtilsTests.h"

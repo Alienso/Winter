@@ -8,6 +8,8 @@
 #include <vector>
 #include <string>
 #include <string_view>
+#include <cstring>
+#include <iostream>
 
 using namespace std;
 
@@ -15,7 +17,7 @@ class StringUtils{
 public:
 
     [[nodiscard]] static string trim(const string& s){
-        size_t start = 0, end = s.size();
+        size_t start = s.size(), end = s.size();
         for(size_t i=0; i < s.size(); i++){
             if (!isspace(s[i])){
                 start = i;
@@ -219,6 +221,56 @@ public:
             start = end + 1;
         }
         return res;
+    }
+
+    [[nodiscard]] static string toLowerCase(const string& s){
+        string res = {s};
+        for (char &c : res){
+            if (islower(c))
+                c = (char)toupper(c);
+        }
+        return res;
+    }
+
+    [[nodiscard]] static string toUpperCase(const string& s){
+        string res = {s};
+        for (char &c : res){
+            if (isupper(c))
+                c = (char)tolower(c);
+        }
+        return res;
+    }
+
+    [[nodiscard]] static bool parseBoolean(const char *value) {
+        string s{value};
+        s = toLowerCase(s);
+        if (s == "true")
+            return true;
+        if (s == "false")
+            return false;
+        std::cerr << "Received invalid bool value: " << value;
+        return false;
+    }
+
+    [[nodiscard]] static string toCamelCase(const string& value){
+        string s;
+        s.resize(value.size());
+
+        int j = 0;
+        for (size_t i=0; i<value.size(); i++){
+            if (value[i] == ' ' || value[i] == '_'){
+                i++;
+                if (i <value.size() && isalpha(value[i])){
+                    s[j++] = toupper(value[i]);
+                    continue;
+                }else{ //We copy '_' or ' '
+                    i--;
+                    s[j++] = value[i];
+                }
+            }else s[j++] = value[i];
+        }
+        s.resize(j);
+        return s;
     }
 };
 

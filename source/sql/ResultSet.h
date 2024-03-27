@@ -13,7 +13,7 @@ using namespace std;
 class ResultSet{
 public:
     virtual Reflect* getResult() = 0;
-    virtual vector<Reflect*>* getResultList() = 0;
+    virtual vector<Reflect*>* getResultList(Reflect* (*allocator)()) = 0;
     virtual bool next() = 0;
 
 protected:
