@@ -29,17 +29,30 @@ public:
         return declaredFields;
     }
 
-    int getClassSize() override{
+    int getClassSize() const override{
         return sizeof(BaseRequest);
 	}
 
+	static Reflect* getInstance(){
+    	return new BaseRequest();
+	}
+
+
+	[[nodiscard]] Reflect* clone(CopyType copyType) const override{
+		BaseRequest* copy = new BaseRequest();
+		copy->number = this->number;
+		copy->type = this->type;
+		copy->innerClass = this->innerClass;
+		copy->values = this->values;
+	return copy;
+	}
 
 	static void initializeReflection(){
 		BaseRequest* _baserequest_ = (BaseRequest*) malloc(sizeof(BaseRequest));
-		BaseRequest::declaredFields.emplace_back("number","int",1,"BaseRequest",(int*)(&_baserequest_->number) - (int*)_baserequest_);
-		BaseRequest::declaredFields.emplace_back("type","string",6,"BaseRequest",(int*)(&_baserequest_->type) - (int*)_baserequest_);
-		BaseRequest::declaredFields.emplace_back("innerClass","InnerClass*",8,"BaseRequest",(int*)(&_baserequest_->innerClass) - (int*)_baserequest_);
-		BaseRequest::declaredFields.emplace_back("values","vector<int>",10,"BaseRequest",(int*)(&_baserequest_->values) - (int*)_baserequest_);
+		BaseRequest::declaredFields.emplace_back("number","int",1,"BaseRequest",(int*)(&_baserequest_->number) - (int*)_baserequest_,0,0);
+		BaseRequest::declaredFields.emplace_back("type","string",8,"BaseRequest",(int*)(&_baserequest_->type) - (int*)_baserequest_,0,0);
+		BaseRequest::declaredFields.emplace_back("innerClass","InnerClass*",10,"BaseRequest",(int*)(&_baserequest_->innerClass) - (int*)_baserequest_,1,0);
+		BaseRequest::declaredFields.emplace_back("values","vector<int>",9,"BaseRequest",(int*)(&_baserequest_->values) - (int*)_baserequest_,0,1);
 		free(_baserequest_);
 	}
 };

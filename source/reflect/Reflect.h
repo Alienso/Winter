@@ -18,6 +18,7 @@
 class Reflect {
 public:
 
+    Reflect() = default;
     virtual ~Reflect()= default;
 
     [[nodiscard]] virtual std::vector<Field>& getDeclaredFields();
@@ -26,10 +27,11 @@ public:
     [[nodiscard]] virtual std::vector<Method>& getDeclaredMethods();
     [[nodiscard]] virtual Method& getMethod(const char* methodName);
 
-    [[nodiscard]] virtual int getClassSize();
-    [[nodiscard]] static void* getClassInstanceByName(const string& name);
+    [[nodiscard]] virtual int getClassSize() const;
+    [[nodiscard]] static Reflect* getClassInstanceByName(const string& name);
 
     [[nodiscard]] static Reflect* getInstance();
+    [[nodiscard]] virtual Reflect* clone(CopyType copyType) const;
 
     static void initializeReflection();
     static void initializeClassMap();

@@ -9,124 +9,72 @@
 
 #include "./target/reflect/Reflect.h"
 
-#include "./source/serialize/JsonDeserializer.h"
+#include "JsonDeserializer.h"
 #include "./dto/AllFieldsDTO.h"
 #include "./dto/AllFieldsVecDTO.h"
 #include "./dto/BaseRequest.h"
 
-Reflect* _AllFieldsDTO_(){
-    return new AllFieldsDTO();
-}
 
-Reflect* _AllFieldsVecDTO_(){
-    return new AllFieldsVecDTO();
-}
-
-static int x = []{
-    Reflect::initializeReflection();
-    AllFieldsDTO::initializeReflection();
-    AllFieldsVecDTO::initializeReflection();
-    Reflect::classMap["AllFieldsDTO"] = &_AllFieldsDTO_;
-    Reflect::classMap["AllFieldsVecDTO"] = &_AllFieldsVecDTO_;
-    return 0;
-}();
+//TODO add type or name missMatch cases
 
 TEST_CASE("Deserialization Tests", "[JsonDeserializer::deserialize]"){
 
     auto* request = new AllFieldsDTO();
     JsonDeserializer deserializer{};
 
-    SECTION("Deserialization int"){
-        string s = "{\"i\":5}";
+    SECTION("Deserialization allTypes"){
+        string s = R"({"s":1, "l":2, "i":5, "f":5.5, "d":1.5, "b": true, "str": "Hello World", "vec": [1,2,3], "innerClass":{"x":7.5, "y": 0.5, "c":"str"}, "innerClassPtr":{"x":5.0, "y": 2.5, "c":"c"}})";
         deserializer.deserialize(s, request);
+
+        REQUIRE(request->s == 1);
         REQUIRE(request->i == 5);
-    }
-
-    SECTION("Deserialization float"){
-        string s = "{\"f\":1.25}";
-        deserializer.deserialize(s, request);
-        REQUIRE(request->f == 1.25);
-    }
-
-    SECTION("Deserialization string"){
-        string s = R"({"s":"Hello World"})";
-        deserializer.deserialize(s, request);
-        REQUIRE(request->s == "Hello World");
-    }
-
-    SECTION("Deserialization array"){
-        string s = "{\"vec\":[1,2,3]}";
-        deserializer.deserialize(s, request);
-        REQUIRE(request->vec == std::vector<int>{1,2,3});
-    }
-
-    SECTION("Deserialization object ptr"){
-        string s = R"({"innerClassPtr":{"x":5.0, "y":2.5, "c":"c"}})";
-        InnerClass clazz{5,2.5,"c"};
-        deserializer.deserialize(s, request);
-        REQUIRE(request->innerClassPtr->x == clazz.x);
-        REQUIRE(request->innerClassPtr->y == clazz.y);
-        REQUIRE(request->innerClassPtr->c == clazz.c);
-    }
-
-    SECTION("Deserialization allTypes with ptr"){
-        string s = R"({"i":5, "f":5.5, "s": "Hello World", "vec": [1,2,3] ,"innerClassPtr":{"x":5.0, "y": 2.5, "c":"c"}})";
-        AllFieldsDTO dto;
-        dto.i = 5;
-        dto.f = 5.5;
-        dto.s = "Hello World";
-        dto.vec = {1,2,3};
-        InnerClass clazz{5,2.5,"c"};
-        dto.innerClassPtr = &clazz;
-
-        deserializer.deserialize(s, request);
-        REQUIRE(request->i == 5);
+        REQUIRE(request->l == 2);
         REQUIRE(request->f == 5.5);
-        REQUIRE(request->s == "Hello World");
+        REQUIRE(request->d == 1.5);
+        REQUIRE(request->b);
+        REQUIRE(request->str == "Hello World");
         REQUIRE(request->vec == std::vector<int>{1,2,3});
-        REQUIRE(request->innerClassPtr->x == clazz.x);
-        REQUIRE(request->innerClassPtr->y == clazz.y);
-        REQUIRE(request->innerClassPtr->c == clazz.c);
+        REQUIRE(request->innerClass.x == 7.5);
+        REQUIRE(request->innerClass.y == 0.5);
+        REQUIRE(request->innerClass.c == "str");
+        REQUIRE(request->innerClassPtr->x == 5);
+        REQUIRE(request->innerClassPtr->y == 2.5);
+        REQUIRE(request->innerClassPtr->c == "c");
     }
 
-    SECTION("Deserialization allTypes with obj"){
-        string s = R"({"i":5, "f":5.5, "s": "Hello World", "vec": [1,2,3] ,"innerClassObj":{"x":5.0, "y": 2.5, "c":"c"}})";
-        AllFieldsDTO dto;
-        dto.i = 5;
-        dto.f = 5.5;
-        dto.s = "Hello World";
-        dto.vec = {1,2,3};
-        InnerClass clazz{5,2.5,"c"};
-        dto.innerClassObj = clazz;
-
+    SECTION("Deserialization allTypes Ptr"){
+        string s = R"({"sPtr":1, "lPtr":2, "iPtr":5, "fPtr":5.5, "dPtr":1.5, "bPtr": true, "strPtr": "Hello World", "vecPtr": [1,2,3]})";
         deserializer.deserialize(s, request);
-        REQUIRE(request->i == 5);
-        REQUIRE(request->f == 5.5);
-        REQUIRE(request->s == "Hello World");
-        REQUIRE(request->vec == std::vector<int>{1,2,3});
-        REQUIRE(request->innerClassObj.x == clazz.x);
-        REQUIRE(request->innerClassObj.y == clazz.y);
-        REQUIRE(request->innerClassObj.c == clazz.c);
+
+        REQUIRE(*request->sPtr == 1);
+        REQUIRE(*request->iPtr == 5);
+        REQUIRE(*request->lPtr == 2);
+        REQUIRE(*request->fPtr == 5.5);
+        REQUIRE(*request->dPtr == 1.5);
+        REQUIRE(*request->bPtr);
+        REQUIRE(*request->strPtr == "Hello World");
+        REQUIRE(*request->vecPtr == std::vector<int>{1,2,3});
+    }
+
+    SECTION("Deserialization float/double natural number check"){
+        string s = R"({"f": 1, "d": 5})";
+        deserializer.deserialize(s, request);
+
+        REQUIRE(request->f == 1.0f);
+        REQUIRE(request->d == 5.0);
     }
 
     SECTION("Deserialization spaces check"){
-        string s = R"({"i" : 5, "f" :5.5,"s": "Hello World", "vec"  :  [1,2,3] ,"innerClassPtr":{ "x":5.0, "y": 2.5, "c":"c"  } })";
-        AllFieldsDTO dto;
-        dto.i = 5;
-        dto.f = 5.5;
-        dto.s = "Hello World";
-        dto.vec = {1,2,3};
-        InnerClass clazz{5,2.5,"c"};
-        dto.innerClassPtr = &clazz;
+        string s = R"({"i" : 5, "f" :5.5,"str": "Hello World", "vec"  :  [1,2,3] ,"innerClassPtr":{ "x":5.0, "y": 2.5, "c":"c"  } })";
 
         deserializer.deserialize(s, request);
         REQUIRE(request->i == 5);
         REQUIRE(request->f == 5.5);
-        REQUIRE(request->s == "Hello World");
+        REQUIRE(request->str == "Hello World");
         REQUIRE(request->vec == std::vector<int>{1,2,3});
-        REQUIRE(request->innerClassPtr->x == clazz.x);
-        REQUIRE(request->innerClassPtr->y == clazz.y);
-        REQUIRE(request->innerClassPtr->c == clazz.c);
+        REQUIRE(request->innerClassPtr->x == 5);
+        REQUIRE(request->innerClassPtr->y == 2.5);
+        REQUIRE(request->innerClassPtr->c == "c");
     }
 }
 
@@ -135,10 +83,22 @@ TEST_CASE("Vector Deserialization Tests", "[JsonDeserializer::deserialize]"){
     auto* request = new AllFieldsVecDTO();
     JsonDeserializer deserializer{};
 
+    SECTION("Deserialization of vec<short>"){
+        string s = R"({"s":[1,2,8,4,5]})";
+        deserializer.deserialize(s,request);
+        REQUIRE(request->s == std::vector<short>{1,2,8,4,5});
+    }
+
     SECTION("Deserialization of vec<int>"){
         string s = R"({"i":[1,2,3,4,5]})";
         deserializer.deserialize(s,request);
         REQUIRE(request->i == std::vector<int>{1,2,3,4,5});
+    }
+
+    SECTION("Deserialization of vec<long>"){
+        string s = R"({"l":[5,4,3,2,1]})";
+        deserializer.deserialize(s,request);
+        REQUIRE(request->l == std::vector<long>{5,4,3,2,1});
     }
 
     SECTION("Deserialization of vec<float>"){
@@ -147,27 +107,199 @@ TEST_CASE("Vector Deserialization Tests", "[JsonDeserializer::deserialize]"){
         REQUIRE(request->f == std::vector<float>{1.5f,2.25f,3.125f,4.0f,5.667f});
     }
 
-    SECTION("Deserialization of vec<string>"){
-        string s = R"({"s":["Hello","World"]})";
+    SECTION("Deserialization of vec<double>"){
+        string s = R"({"d":[1,2.25,3.125,4.0,5.667]})";
         deserializer.deserialize(s,request);
-        REQUIRE(request->s[0] == "Hello");
-        REQUIRE(request->s[1] == "World");
+        REQUIRE(request->d == std::vector<double>{1.0,2.25,3.125,4.0,5.667});
+    }
+
+    SECTION("Deserialization of vec<string>"){
+        string s = R"({"str":["Hello","World"]})";
+        deserializer.deserialize(s,request);
+        REQUIRE(request->str[0] == "Hello");
+        REQUIRE(request->str[1] == "World");
+    }
+
+    SECTION("Deserialization of vec<bool>"){
+        string s = R"({"b":[true, false, false]})";
+        deserializer.deserialize(s,request);
+        REQUIRE(request->b == std::vector<bool>{true, false, false});
+    }
+
+    SECTION("Deserialization of vec<InnerClass>"){
+        string s = R"({"innerClass":[{"x":1.0, "y": 2.0, "c":"char"},{"x":5.5, "y": 8.5, "c":"str"}]})";
+        deserializer.deserialize(s,request);
+
+        REQUIRE(request->innerClass[0].x == 1.0);
+        REQUIRE(request->innerClass[0].y == 2.0);
+        REQUIRE(request->innerClass[0].c == "char");
+        REQUIRE(request->innerClass[1].x == 5.5);
+        REQUIRE(request->innerClass[1].y == 8.5);
+        REQUIRE(request->innerClass[1].c == "str");
     }
 
     SECTION("Deserialization of vec<Reflect*>"){
         string s = R"({"innerClassPtr":[{"x":1.0, "y": 2.0, "c":"char"},{"x":5.5, "y": 8.5, "c":"str"}]})";
-
-        auto* innerClass1 = new InnerClass(1.0f,2.0f,"char");
-        auto* innerClass2 = new InnerClass(5.5f,8.5f,"str");
-
         deserializer.deserialize(s,request);
 
-        REQUIRE(request->innerClassPtr[0]->x == innerClass1->x);
-        REQUIRE(request->innerClassPtr[0]->y == innerClass1->y);
-        REQUIRE(request->innerClassPtr[0]->c == innerClass1->c);
-        REQUIRE(request->innerClassPtr[1]->x == innerClass2->x);
-        REQUIRE(request->innerClassPtr[1]->y == innerClass2->y);
-        REQUIRE(request->innerClassPtr[1]->c == innerClass2->c);
+        REQUIRE(request->innerClassPtr[0]->x == 1.0);
+        REQUIRE(request->innerClassPtr[0]->y == 2.0);
+        REQUIRE(request->innerClassPtr[0]->c == "char");
+        REQUIRE(request->innerClassPtr[1]->x == 5.5);
+        REQUIRE(request->innerClassPtr[1]->y == 8.5);
+        REQUIRE(request->innerClassPtr[1]->c == "str");
     }
+
+}
+
+
+template<typename T>
+bool areVectorsEqual(vector<T*> vec, vector<T>& other){
+    if (vec.size() != other.size())
+        return false;
+    for(size_t i=0; i<vec.size(); i++){
+        if (*(vec[i]) != other[i])
+            return false;
+    }
+    return true;
+}
+
+TEST_CASE("Vector Ptr Deserialization Tests", "[JsonDeserializer::deserialize]"){
+
+    auto* request = new AllFieldsVecDTO();
+    JsonDeserializer deserializer{};
+
+    SECTION("Deserialization of vec<short*>"){
+        string s = R"({"sPtr":[1,2,8,4,5]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<short>{1,2,8,4,5};
+        REQUIRE(areVectorsEqual(request->sPtr, vec));
+    }
+
+    SECTION("Deserialization of vec<int*>"){
+        string s = R"({"iPtr":[1,2,3,4,5]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<int>{1,2,3,4,5};
+        REQUIRE(areVectorsEqual(request->iPtr, vec));
+    }
+
+    SECTION("Deserialization of vec<long*>"){
+        string s = R"({"lPtr":[5,4,3,2,1]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<long>{5,4,3,2,1};
+        REQUIRE(areVectorsEqual(request->lPtr, vec));
+    }
+
+    SECTION("Deserialization of vec<float*>"){
+        string s = R"({"fPtr":[1.5,2.25,3.125,4.0,5.667]})";
+        deserializer.deserialize(s,request);
+
+        auto vec =  std::vector<float>{1.5f,2.25f,3.125f,4.0f,5.667f};
+        REQUIRE(areVectorsEqual(request->fPtr, vec));
+    }
+
+    SECTION("Deserialization of vec<double*>"){
+        string s = R"({"dPtr":[1,2.25,3.125,4.0,5.667]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<double>{1.0,2.25,3.125,4.0,5.667};
+        REQUIRE(areVectorsEqual(request->dPtr, vec));
+    }
+
+    SECTION("Deserialization of vec<string*>"){
+        string s = R"({"strPtr":["Hello","World"]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<string>{"Hello", "World"};
+        REQUIRE(areVectorsEqual(request->strPtr, vec));
+    }
+
+    SECTION("Deserialization of vec<bool*>"){
+        string s = R"({"bPtr":[true, false, false]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<bool>{true, false, false};
+        REQUIRE(areVectorsEqual(request->bPtr, vec));
+    }
+
+    SECTION("Deserialization of vec<Reflect*>"){
+        string s = R"({"innerClassPtr":[{"x":1.0, "y": 2.0, "c":"char"},{"x":5.5, "y": 8.5, "c":"str"}]})";
+        deserializer.deserialize(s,request);
+
+        REQUIRE(request->innerClassPtr[0]->x == 1.0);
+        REQUIRE(request->innerClassPtr[0]->y == 2.0);
+        REQUIRE(request->innerClassPtr[0]->c == "char");
+        REQUIRE(request->innerClassPtr[1]->x == 5.5);
+        REQUIRE(request->innerClassPtr[1]->y == 8.5);
+        REQUIRE(request->innerClassPtr[1]->c == "str");
+    }
+
+}
+
+
+TEST_CASE("Vector Ptr Ptr Deserialization Tests", "[JsonDeserializer::deserialize]") {
+
+    auto *request = new AllFieldsVecDTO();
+    JsonDeserializer deserializer{};
+
+    SECTION("Deserialization of vec<int>*"){
+        string s = R"({"vecPtrInt":[1,2,8,4,5]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<int>{1,2,8,4,5};
+        REQUIRE(*request->vecPtrInt == vec);
+    }
+
+    SECTION("Deserialization of vec<int*>*"){
+        string s = R"({"vecPtrIntPtr":[1,2,8,4,5]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<int>{1,2,8,4,5};
+        REQUIRE(areVectorsEqual(*request->vecPtrIntPtr, vec));
+    }
+
+    SECTION("Deserialization of vec<string>*"){
+        string s = R"({"vecPtrString":["Hello", "World"]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<string>{"Hello", "World"};
+        REQUIRE(*request->vecPtrString == vec);
+    }
+
+    SECTION("Deserialization of vec<string*>*"){
+        string s = R"({"vecPtrStringPtr":["Hello", "World"]})";
+        deserializer.deserialize(s,request);
+
+        auto vec = std::vector<string>{"Hello", "World"};
+        REQUIRE(areVectorsEqual(*request->vecPtrStringPtr, vec));
+    }
+
+    SECTION("Deserialization of vec<string>*"){
+        string s = R"({"vecPtrInnerClass":[{"x":1.0, "y": 2.0, "c":"char"},{"x":5.5, "y": 8.5, "c":"str"}]})";
+        deserializer.deserialize(s,request);
+
+        REQUIRE((*request->vecPtrInnerClass)[0].x == 1.0);
+        REQUIRE((*request->vecPtrInnerClass)[0].y == 2.0);
+        REQUIRE((*request->vecPtrInnerClass)[0].c == "char");
+        REQUIRE((*request->vecPtrInnerClass)[1].x == 5.5);
+        REQUIRE((*request->vecPtrInnerClass)[1].y == 8.5);
+        REQUIRE((*request->vecPtrInnerClass)[1].c == "str");
+    }
+
+    SECTION("Deserialization of vec<string*>*"){
+        string s = R"({"vecPtrInnerClassPtr":[{"x":1.0, "y": 2.0, "c":"char"},{"x":5.5, "y": 8.5, "c":"str"}]})";
+        deserializer.deserialize(s,request);
+
+        REQUIRE((*request->vecPtrInnerClassPtr)[0]->x == 1.0);
+        REQUIRE((*request->vecPtrInnerClassPtr)[0]->y == 2.0);
+        REQUIRE((*request->vecPtrInnerClassPtr)[0]->c == "char");
+        REQUIRE((*request->vecPtrInnerClassPtr)[1]->x == 5.5);
+        REQUIRE((*request->vecPtrInnerClassPtr)[1]->y == 8.5);
+        REQUIRE((*request->vecPtrInnerClassPtr)[1]->c == "str");
+    }
+
 
 }

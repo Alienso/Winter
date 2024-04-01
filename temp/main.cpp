@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <libpq-fe.h>
 
+#include "vector"
+
 static void exit_nicely(PGconn *conn) {
     PQfinish(conn);
     exit(1);
@@ -37,6 +39,7 @@ int main(int argc, char **argv){
     int         nFields;
     int         i,
             j;
+
 
     /*
      * If the user supplies a parameter on the command line, use it as the

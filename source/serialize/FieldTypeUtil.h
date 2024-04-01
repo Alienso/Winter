@@ -2,8 +2,8 @@
 // Created by Alienson on 12.2.2024..
 //
 
-#ifndef WINTER_FIELDTYPEENUMS_H
-#define WINTER_FIELDTYPEENUMS_H
+#ifndef WINTER_FIELDTYPEUTIL_H
+#define WINTER_FIELDTYPEUTIL_H
 
 #include "stringUtils.h"
 
@@ -26,13 +26,12 @@ enum FieldType{
     FIELD_TYPE_FLOAT, // 3
     FIELD_TYPE_DOUBLE,
     FIELD_TYPE_CHAR,
+    FIELD_TYPE_BOOL,
+    FIELD_TYPE_BYTE, // 7
     FIELD_TYPE_STRING,
-    FIELD_TYPE_OBJ, // 7
-    FIELD_TYPE_PTR,
-    FIELD_TYPE_ARRAY,
     FIELD_TYPE_VECTOR,
-    FIELD_TYPE_BOOL, // 11
-    FIELD_TYPE_BYTE
+    FIELD_TYPE_OBJ,
+    FIELD_TYPE_ARRAY,//11
 };
 
 //TODO have map for this?
@@ -53,59 +52,78 @@ enum FieldType{
         return FIELD_TYPE_BOOL;
     if (s == "byte")
         return FIELD_TYPE_BYTE;
-    if (StringUtils::startsWith(s, "stdvec") || StringUtils::startsWith(s, "vec")) //TODO have single name
+    if (StringUtils::startsWith(s, "vector"))
         return FIELD_TYPE_VECTOR;
-    if (StringUtils::startsWith(s, "stdstring") || StringUtils::startsWith(s, "string"))
+    if (StringUtils::startsWith(s, "string"))
         return FIELD_TYPE_STRING;
-    if (s.rfind('*') != string::npos)
-        return FIELD_TYPE_PTR;
     return FIELD_TYPE_OBJ;
 }
 
-[[nodiscard]] inline FieldType getArraySubFieldType(const string& s){
+
+inline void getArraySubType(const string& s, string& type, bool* isPtr){
     size_t index;
 
     //array check
-    index = s.find_last_of(']');
+    /*index = s.find_last_of(']');
     if (index != string::npos){
         index = s.find(' ');
-        return convertToFieldType(s.substr(0,index-1));
-    }
+        type = s.substr(0,index-1);
+        *isPtr = false;
+        return;
+    }*/
 
     //vector check
     index = s.find('<');
     if (index != string::npos) {
         size_t endIndex = s.find('>', index);
-        return convertToFieldType(s.substr(index + 1,endIndex - index - 1));
+        if (s[endIndex - 1] == '*'){
+            type = s.substr(index + 1,endIndex - index - 2);
+            *isPtr = true;
+            return;
+        }else{
+            type = s.substr(index + 1,endIndex - index - 1);
+            *isPtr = false;
+            return;
+        }
     }
 
     std::cout << "Error! Unknown ArraySubType: " << s << '\n';
-    return FIELD_TYPE_INT;
+    type = "int";
+    *isPtr = false;
 }
 
-[[nodiscard]] inline string getArraySubType(const string& s){
-    size_t index;
-
-    //array check
-    index = s.find_last_of(']');
-    if (index != string::npos){
-        index = s.find(' ');
-        return s.substr(0,index-1);
-    }
-
-    //vector check
-    index = s.find('<');
-    if (index != string::npos) {
-        size_t endIndex = s.find('>', index);
-        return s.substr(index + 1,endIndex - index - 1);
-    }
-
-    std::cout << "Error! Unknown ArraySubType: " << s << '\n';
-    return "int";
+[[nodiscard]] inline FieldType getArraySubType(const string& s){
+    string type;
+    bool isPtr;
+    getArraySubType(s, type, &isPtr);
+    return convertToFieldType(type);
 }
 
-[[nodiscard]] inline JsonFieldType convertToJsonFieldType(const string& s) {
+[[nodiscard]] inline JsonFieldType getJsonFieldType(const string& s) {
     switch(s[0]){
+        case '"':
+            return JSON_FILED_TYPE_STRING;
+        case '{':
+            return JSON_FILED_TYPE_OBJ;
+        case '[':
+            return JSON_FIELD_TYPE_ARRAY;
+        case 't':
+        case 'T':
+        case 'f':
+        case 'F':
+            return JSON_FIELD_TYPE_BOOL;
+        default:
+            if (s.find('.') != string::npos)
+                return JSON_FILED_TYPE_REAL_NUMBER;
+            return JSON_FILED_TYPE_NATURAL_NUMBER;
+    }
+}
+
+[[nodiscard]] inline JsonFieldType getJsonFieldSubType(const string& s) {
+    size_t i = 1;
+    while (i < s.size() && isspace(s[i])) i++;
+
+    switch(s[i]){
         case '"':
             return JSON_FILED_TYPE_STRING;
         case '{':
@@ -127,7 +145,8 @@ enum FieldType{
 [[nodiscard]] inline bool areTypesCompatible(const JsonFieldType jsonType, const FieldType fieldType) {
     switch (jsonType) {
         case JSON_FILED_TYPE_NATURAL_NUMBER:
-            if (fieldType == FIELD_TYPE_SHORT || fieldType == FIELD_TYPE_INT || fieldType == FIELD_TYPE_LONG)
+            if (fieldType == FIELD_TYPE_SHORT || fieldType == FIELD_TYPE_INT || fieldType == FIELD_TYPE_LONG ||
+            fieldType == FIELD_TYPE_FLOAT || fieldType == FIELD_TYPE_DOUBLE) // natural number is a valid float/double
                 return true;
             return false;
         case JSON_FILED_TYPE_REAL_NUMBER:
@@ -139,7 +158,7 @@ enum FieldType{
                 return true;
             return false;
         case JSON_FILED_TYPE_OBJ:
-            if (fieldType == FIELD_TYPE_OBJ || fieldType == FIELD_TYPE_PTR)
+            if (fieldType == FIELD_TYPE_OBJ)
                 return true;
             return false;
         case JSON_FIELD_TYPE_ARRAY:
@@ -155,4 +174,4 @@ enum FieldType{
     }
 }
 
-#endif //WINTER_FIELDTYPEENUMS_H
+#endif //WINTER_FIELDTYPEUTIL_H

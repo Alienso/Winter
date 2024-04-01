@@ -3,15 +3,14 @@
 //
 
 #include "Field.h"
-#include "Logger.h"
 #include "Reflect.h"
 
 #include "stringUtils.h"
 
-Field Field::INVALID = {"","",FIELD_TYPE_INT, "", 0};
+Field Field::INVALID = {"","",FIELD_TYPE_INT, "", 0, false, false};
 
 void Field::setValue(void *object, const void* data, const unsigned int size) const {
-    memcpy(getAddress(object), data, size); //TODO this is shallow copy!
+    memcpy(getAddress(object), data, size);
 }
 
 void Field::setInt(void *object, const int value) const {
@@ -107,78 +106,116 @@ string Field::getString(void* object) const{
 void Field::set(void *object, const char *value) const {
     switch (type) {
         case FIELD_TYPE_SHORT:
-            setShort(object, (short)stoi(value));
+            setValueInternal<short>((short)stoi(value), object, &Field::setShort);
             break;
         case FIELD_TYPE_INT:
-            setInt(object, stoi(value));
+            setValueInternal<int>(stoi(value), object, &Field::setInt);
             break;
         case FIELD_TYPE_LONG:
-            setLong(object, stol(value));
+            setValueInternal<long>(stol(value), object, &Field::setLong);
             break;
         case FIELD_TYPE_FLOAT:
-            setFloat(object, stof(value));
+            setValueInternal<float>(stof(value), object, &Field::setFloat);
             break;
         case FIELD_TYPE_DOUBLE:
-            setDouble(object, stod(value));
+            setValueInternal<double>(stod(value), object, &Field::setDouble);
             break;
         case FIELD_TYPE_CHAR:
-            setChar(object, value[0]);
-            break;
-        case FIELD_TYPE_STRING:
-            setString(object, value);
+            setValueInternal<char>(value[0], object, &Field::setChar);
             break;
         case FIELD_TYPE_BOOL:
-            setBool(object, StringUtils::parseBoolean(value));
+            setValueInternal<bool>(StringUtils::parseBoolean(value), object, &Field::setBool);
             break;
         case FIELD_TYPE_BYTE:
-            setByte(object, (byte)value[0]);
+            setValueInternal<byte>((byte)value[0], object, &Field::setByte);
+            break;
+        case FIELD_TYPE_STRING:
+            if (this->isPtr){
+                auto *valuePtr = new string(value);
+                this->setPtr(object, valuePtr);
+            }
+            else
+                this->setString(object, value);
             break;
         default:
             wtLogError("Unknown type encountered: ", type);
     }
 }
 
-void Field::copyValue(Reflect *source, Field &sourceField, Reflect *dest, Field &destField) {
+void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, const Field &destField, CopyType copyType) {
     if (sourceField.type != destField.type){
         wtLogError("Source and Field types dont match!. Source: %d, Dest: %d", sourceField.type, destField.type);
         return;
     }
 
+    //all_types_helper types;
+    copyDetails copyDetails(source, sourceField, dest, destField, copyType);
+
     switch (destField.type) {
         case FIELD_TYPE_SHORT:
-            destField.setShort(dest, sourceField.getShort(source));
+            copyValue<short>(copyDetails, &Field::getShort, &Field::setShort);
             break;
         case FIELD_TYPE_INT:
-            destField.setInt(dest, sourceField.getInt(source));
+            copyValue<int>(copyDetails, &Field::getInt, &Field::setInt);
             break;
         case FIELD_TYPE_LONG:
-            destField.setLong(dest, sourceField.getLong(source));
+            copyValue<long>(copyDetails, &Field::getLong, &Field::setLong);
             break;
         case FIELD_TYPE_FLOAT:
-            destField.setFloat(dest, sourceField.getFloat(source));
+            copyValue<float>(copyDetails, &Field::getFloat, &Field::setFloat);
             break;
         case FIELD_TYPE_DOUBLE:
-            destField.setDouble(dest, sourceField.getDouble(source));
+            copyValue<double>(copyDetails, &Field::getDouble, &Field::setDouble);
             break;
         case FIELD_TYPE_CHAR:
-            destField.setChar(dest, sourceField.getChar(source));
-            break;
-        case FIELD_TYPE_STRING:
-            destField.setString(dest, sourceField.getString(source));
+            copyValue<char>(copyDetails, &Field::getChar, &Field::setChar);
             break;
         case FIELD_TYPE_BOOL:
-            destField.setBool(dest, sourceField.getBool(source));
+            copyValue<bool>(copyDetails, &Field::getBool, &Field::setBool);
             break;
         case FIELD_TYPE_BYTE:
-            destField.setByte(dest, sourceField.getByte(source));
+            copyValue<byte>(copyDetails, &Field::getByte, &Field::setByte);
             break;
-        case FIELD_TYPE_PTR:
-            destField.setPtr(dest, sourceField.getPtr(source)); //TODO allocate new ptr?
+        case FIELD_TYPE_STRING:
+            if (sourceField.isPtr) {
+                string helper = **((string **) sourceField.getPtr(source));
+                if (destField.isPtr) {
+                    auto* sptr = new string(helper);
+                    destField.setPtr(dest, sptr);
+                }
+                else destField.setString(dest, helper);
+            }
+            else {
+                string helper = sourceField.getString(source);
+                if (destField.isPtr) {
+                    auto* sptr = new string(helper);
+                    destField.setPtr(dest, sptr);
+                }
+                else destField.setString(dest, helper);
+            }
             break;
         case FIELD_TYPE_VECTOR:
-        case FIELD_TYPE_ARRAY:
+            destField.setValue(dest, sourceField.getAddress(source), 1); //TODO try getting size from vector<int> s
             break; //TODO!
         case FIELD_TYPE_OBJ:
+            /*auto* sourceObj = static_cast<Reflect *>(sourceField.getAddress(source));
+            auto* destObj = static_cast<Reflect *>(destField.getAddress(dest));
+            *destObj = *sourceObj;*/
+            //TODO call clone() here;
+            if (sourceField.isPtr){
+                if (destField.isPtr)
+                    **((Reflect**)sourceField.getPtr(source)) = **((Reflect**)destField.getPtr(dest));
+                else
+                    **((Reflect**)sourceField.getPtr(source)) = *((Reflect*)destField.getAddress(dest));
+            }else{
+                if (destField.isPtr)
+                    *((Reflect*)sourceField.getAddress(source)) = **((Reflect**)destField.getPtr(dest));
+                else
+                    *((Reflect*)sourceField.getAddress(source)) = *((Reflect*)destField.getAddress(dest));
+            }
+            //*((Reflect*)sourceField.getAddress(source)) = *((Reflect*)destField.getAddress(dest));
+            break; //TODO which copy constructor is called
+        case FIELD_TYPE_ARRAY:
             break; //TODO
         default:
             wtLogError("Unknown type encountered: ", destField.type);

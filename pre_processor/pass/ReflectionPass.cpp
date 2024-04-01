@@ -127,12 +127,16 @@ bool ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
                 name = StringUtils::trim(name);
                 std::string typeStr = line.substr(0, blank);
                 typeStr = StringUtils::stripBlankCharacters(typeStr);
-                FieldType type;
+                if (StringUtils::startsWith(typeStr,"std::"))
+                    typeStr = typeStr.substr(5,typeStr.size() - 5);
+                FieldType type = convertToFieldType(StringUtils::stripSpecialCharacters(typeStr));
+
+                bool isPtr = false, isVec = false;
                 if (typeStr[typeStr.size()-1] == '*')
-                    type = FIELD_TYPE_PTR;
-                else
-                    type = convertToFieldType(StringUtils::stripSpecialCharacters(typeStr));
-                Field f(name, typeStr, type, className, 0);
+                    isPtr = true;
+                if (type == FIELD_TYPE_ARRAY || type == FIELD_TYPE_VECTOR)
+                    isVec = true;
+                Field f(name.data(), typeStr.data(), type, className.data(), 0, isPtr, isVec);
                 fields.push_back(f);
             }
         }
@@ -145,6 +149,7 @@ void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
 
     string variableName = "_" + StringUtils::uncapitalize(className) + "_";
 
+    //declaredFields,...
     outputFile << "\n\tstatic inline std::vector<Field> declaredFields = {};\n" <<
                "\tstatic inline std::vector<Method> declaredMethods = {};\n";
 
@@ -159,21 +164,37 @@ void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
                   "    std::vector<Field> &getDeclaredFields() override {\n"
                   "        return declaredFields;\n"
                   "    }\n\n"
-                  "    int getClassSize() override{\n"
+                  "    int getClassSize() const override{\n"
                   "        return sizeof(" << className << ");\n"
-                                                           "\t}\n"
+                                                           "\t}\n\n"
                   "\tstatic Reflect* getInstance(){\n"
                   "    \treturn new " << className << "();\n"
                   "\t}\n\n";
 
 
+    //clone
+    outputFile << '\n';
+    outputFile << "\t[[nodiscard]] Reflect* clone(CopyType copyType) const override{\n";
+    outputFile << "\t\t" << className << "* copy = new " << className << "();\n";
+    for (Field& f : fields){
+        if (f.isPtr){
+            //outputFile << "\t\tif (copyType == COPY_TYPE_DEEP){\n"; //TODO
+            outputFile << "\t\tcopy->" << f.name << " = this->" << f.name << ";\n";
+        }
+        else
+            outputFile << "\t\tcopy->" << f.name << " = this->" << f.name << ";\n";
+    }
+    outputFile << "\treturn copy;\n";
+    outputFile << "\t}\n";
+
+    //initialize reflection
     outputFile << '\n';
     outputFile << "\tstatic void initializeReflection(){\n";
     outputFile << "\t\t" << className << "* " << variableName << " = (" << className << "*) malloc(sizeof(" << className << "));\n";
 
     for (Field& x : fields){
         outputFile << "\t\t" << className << "::declaredFields.emplace_back(\"" << x.name << "\",\"" << x.typeStr << "\"," << x.type << ",\"" << x.className << "\","
-                   << "(int*)(&" << variableName << "->" << x.name << ") - (int*)" << variableName << ");\n";
+                   << "(int*)(&" << variableName << "->" << x.name << ") - (int*)" << variableName << ',' << x.isPtr << ',' << x.isVec <<  ");\n";
     }
     outputFile << "\t\tfree(" << variableName << ");\n";
     outputFile << "\t}\n";

@@ -223,7 +223,7 @@ public:
         return res;
     }
 
-    [[nodiscard]] static string toLowerCase(const string& s){
+    [[nodiscard]] static string toUpperCase(const string& s){
         string res = {s};
         for (char &c : res){
             if (islower(c))
@@ -232,7 +232,7 @@ public:
         return res;
     }
 
-    [[nodiscard]] static string toUpperCase(const string& s){
+    [[nodiscard]] static string toLowerCase(const string& s){
         string res = {s};
         for (char &c : res){
             if (isupper(c))

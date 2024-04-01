@@ -54,7 +54,7 @@ set(SOURCES source/Winter.cpp source/Winter.h
         source/reflect/Method.cpp source/reflect/Method.h
         source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
         source/serialize/JsonSerializer.cpp source/serialize/JsonSerializer.h
-        source/serialize/FieldTypeEnums.h source/http/ControllerMapping.h
+        source/serialize/FieldTypeUtil.h source/http/ControllerMapping.h
         source/util/ThreadPool.h source/util/util.h
         source/Component.cpp source/Component.h
         source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h

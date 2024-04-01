@@ -6,18 +6,22 @@
 #define WINTER_FIELD_H
 
 #include <string>
-#include "FieldTypeEnums.h"
+#include "FieldTypeUtil.h"
+#include "Logger.h"
+
+enum CopyType{
+    COPY_TYPE_SHALLOW,
+    COPY_TYPE_DEEP
+};
 
 class Reflect;
 
 class Field {
 public:
-    Field() : type(FIELD_TYPE_INT), offset(0) {}
-    Field(std::string& _name, std::string& _typeStr, int _type, std::string& _className, int _offset) :
-    name(_name), typeStr(_typeStr), type(static_cast<FieldType>(_type)), className(_className), offset(_offset){}
+    Field() : type(FIELD_TYPE_INT), offset(0), isPtr(false), isVec(false) {}
 
-    Field(const char* _name, const char* _typeStr, int _type, const char* _className, int _offset) :
-            name(_name), typeStr(_typeStr), type(static_cast<FieldType>(_type)), className(_className), offset(_offset){}
+    Field(const char* _name, const char* _typeStr, int _type, const char* _className, int _offset, bool _isPtr, bool _isVec) :
+            name(_name), typeStr(_typeStr), type(static_cast<FieldType>(_type)), className(_className), offset(_offset), isPtr(_isPtr), isVec(_isVec){}
 
     void* getAddress(void* object) const;
 
@@ -46,15 +50,68 @@ public:
     [[nodiscard]] string getString(void* object) const;
     [[nodiscard]] void** getPtr(void *object) const;
 
-    static void copyValue(Reflect *source, Field &sourceField, Reflect *dest, Field &destField);
+    static void copyValue(Reflect *source, const Field &sourceField, Reflect *dest, const Field &destField, CopyType copyType = COPY_TYPE_DEEP);
 
     std::string name;
     std::string typeStr;
     FieldType type;
     std::string className;
     int offset;
+    bool isPtr;
+    bool isVec;
 
     static Field INVALID;
+
+private:
+    typedef struct copyDetails{
+        Reflect *source;
+        const Field &sourceField;
+        Reflect *dest;
+        const Field &destField;
+        CopyType copyType;
+
+        copyDetails(Reflect *source_, const Field &sourceField_, Reflect *dest_, const Field &destField_, CopyType copyType_) :
+        source(source_), sourceField(sourceField_), dest(dest_), destField(destField_), copyType(copyType_) {}
+    } copyDetails;
+
+    template<typename T>
+    static void copyValue(copyDetails cp, T (Field::*getFunc)(void*) const, void (Field::*setFunc)(void*, T) const){
+        T copyValue;
+        if (cp.sourceField.isPtr)
+            copyValue = **((T **) cp.sourceField.getPtr(cp.source));
+        else
+            copyValue = ((cp.sourceField).*getFunc)(cp.source);
+
+        if (cp.destField.isPtr) {
+            if (cp.copyType == COPY_TYPE_DEEP){
+                if (cp.sourceField.isPtr) {
+                    cp.destField.setPtr(cp.dest, *((T **) cp.sourceField.getPtr(cp.source)));
+                }else{
+                    wtLogError("Can not make DEEP copy of non pointer! FieldName: %s", cp.sourceField.name.data());
+                }
+            }else {
+                auto *valuePtr = new T();
+                *valuePtr = copyValue;
+                cp.destField.setPtr(cp.dest, valuePtr);
+            }
+        }
+        else {
+            ((cp.destField).*setFunc)(cp.dest, copyValue);
+        }
+    }
+
+    template<typename T>
+    void setValueInternal(T t, void* obj, void (Field::*setFunc)(void*, T) const) const{
+        if (this->isPtr){
+            auto *valuePtr = new T();
+            *valuePtr = t;
+            this->setPtr(obj, valuePtr);
+        }
+        else{
+            (this->*setFunc)(obj, t);
+        }
+    }
+
 };
 
 

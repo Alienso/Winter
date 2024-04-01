@@ -26,16 +26,21 @@ Method &Reflect::getMethod(const char *methodName) {
     return declaredMethods[0];
 }
 
-int Reflect::getClassSize() {
+int Reflect::getClassSize() const{
     wtLogError("getClassSize called for Reflect*!");
     return 0;
 }
 
-void* Reflect::getClassInstanceByName(const string& name){
+Reflect* Reflect::getClassInstanceByName(const string& name){
     auto i = classMap.find(name);
     if (i == classMap.end())
         return nullptr;
     return i->second();
+}
+
+Reflect* Reflect::clone(CopyType copyType) const{
+    wtLogError("Clone called for Reflect*!");
+    return nullptr;
 }
 
 Reflect* Reflect::getInstance(){

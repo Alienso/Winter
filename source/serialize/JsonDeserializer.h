@@ -17,7 +17,7 @@
 
 #include "Reflect.h"
 #include "Logger.h"
-#include "FieldTypeEnums.h"
+#include "FieldTypeUtil.h"
 #include "stringUtils.h"
 #include <cstdlib>
 
@@ -28,16 +28,31 @@ public:
     Reflect* deserialize(const string& s, Reflect* response);
 
 private:
-    void setFieldValue(const string& fieldValue, FieldType fieldType, Reflect* obj, const Field* f, const string& typeStr);
-    void setFieldValueArray(const string& fieldValue, FieldType fieldType, FieldType subType, Reflect* obj, const Field* f, const string& typeStr);
+    void setObjectValue(Field* f, const string& fieldValue, Reflect* response);
+    void setFieldValueArray(const string& fieldValue, FieldType fieldType, Reflect* obj, const Field* f);
 
-    void insertVectorData(const string& source,  vector<Reflect*> *dest, const string &typeStr);
+    void insertVectorData(const string& source, vector<byte> *dest, const string &typeStr);
+    void insertVectorPtrData(const string& source, vector<Reflect*> *dest, const string &typeStr);
 
     template<typename U>
     void insertVectorData(const string& source, U (*parseFunc)(string& val), vector<U> *dest) const{
         vector<string>* vec = StringUtils::splitArray(source);
+        for (string& s : *vec)
+            s = StringUtils::trim(s);
         for(string& s : *vec){
             U u = parseFunc(s);
+            dest->push_back(u);
+        }
+    }
+
+    template<typename U>
+    void insertVectorPtrData(const string& source, U (*parseFunc)(string& val), vector<U*> *dest) const{
+        vector<string>* vec = StringUtils::splitArray(source);
+        for (string& s : *vec)
+            s = StringUtils::trim(s);
+        for(string& s : *vec){
+            U* u = new U();
+            *u = parseFunc(s);
             dest->push_back(u);
         }
     }
@@ -53,7 +68,28 @@ private:
         }
     }
 
-    Reflect* tempObj;
+    template<typename T>
+    void handleVecData(const Field* f, Reflect* obj, const bool isElemPtr, const string& fieldValue, T (*transformFunc)(string&)){
+        if (!f->isPtr){
+            if (!isElemPtr){
+                auto* data = static_cast<vector<T>*>(f->getAddress(obj));
+                insertVectorData<T>(fieldValue, transformFunc, data);
+            }else{
+                auto* data = static_cast<vector<T*>*>(f->getAddress(obj));
+                insertVectorPtrData<T>(fieldValue, transformFunc, data);
+            }
+        }else{
+            if (!isElemPtr){
+                auto* data = new vector<T>(); //static_cast<vector<T>*>(*(f->getPtr(obj)));
+                insertVectorData<T>(fieldValue, transformFunc, data);
+                f->setPtr(obj, data);
+            }else{
+                auto* data = new vector<T*>(); //static_cast<vector<T*>*>(*(f->getPtr(obj)));
+                insertVectorPtrData<T>(fieldValue, transformFunc, data);
+                f->setPtr(obj, data);
+            }
+        }
+    }
 };
 
 
