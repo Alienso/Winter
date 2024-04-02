@@ -18,13 +18,19 @@ public:
     explicit PgStatement(shared_ptr<Connection> connection_){
         connection = std::move(connection_);
     }
-    ~PgStatement() override = default;
+    PgStatement(shared_ptr<Connection> connection_, const char* s){
+        connection = std::move(connection_);
+        query = s;
+    }
+    ~PgStatement() override;
+
+    shared_ptr<ResultSet> execute() override;
 
     shared_ptr<ResultSet> executeQuery(const char *s) override;
 
     int executeUpdate(const char *s) override;
 
-    void setQueryTimeout(int seconds) override;
+    void setQueryTimeout(int milliseconds) override;
 
     void close() override;
 

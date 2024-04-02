@@ -12,11 +12,10 @@ using namespace std;
 
 class ResultSet{
 public:
-    virtual Reflect* getResult() = 0;
+    virtual Reflect* getResult(Reflect* (*allocator)()) = 0;
     virtual vector<Reflect*>* getResultList(Reflect* (*allocator)()) = 0;
     virtual bool next() = 0;
 
-protected:
     virtual int getInt(int columnIndex) = 0;
     virtual long getLong(int columnIndex) = 0;
     virtual float getFloat(int columnIndex) = 0;

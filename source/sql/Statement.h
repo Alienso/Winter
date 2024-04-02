@@ -16,12 +16,14 @@ class Statement {
 public:
 
     Statement() = default;
+    Statement(const char* s) : query(s){}
     virtual ~Statement() = default;
 
+    virtual shared_ptr<ResultSet> execute() = 0;
     virtual shared_ptr<ResultSet> executeQuery(const char* s) = 0;
     virtual int executeUpdate(const char* s) = 0;
 
-    virtual void setQueryTimeout(int seconds) = 0;
+    virtual void setQueryTimeout(int milliseconds) = 0;
     virtual void close() = 0;
 
     Statement* setInt(int x, int pos);

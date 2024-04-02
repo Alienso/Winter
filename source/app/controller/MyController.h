@@ -23,6 +23,9 @@ class MyController : public Component {
     $GET("/home")
     HttpResponse* home(HttpRequest* request);
 
+    $GET("/player")
+    HttpResponse* player(HttpRequest* request);
+
 private:
     static JsonDeserializer deserializer;
 

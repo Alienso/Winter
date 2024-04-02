@@ -9,6 +9,17 @@
 #include "../Connection.h"
 #include <libpq-fe.h>
 
+inline bool validateResponse(const PGconn *conn, PGresult *res, const char *message){
+    auto code = PQresultStatus(res);
+    if (code != PGRES_COMMAND_OK && code != PGRES_TUPLES_OK){
+        wtLogError(message);
+        wtLogError("SQLERROR: %s", PQerrorMessage(conn));
+        PQclear(res);
+        return false;
+    }
+    return true;
+}
+
 class PgConnection : public Connection{
 
 public:

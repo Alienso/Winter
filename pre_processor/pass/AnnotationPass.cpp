@@ -168,21 +168,27 @@ bool AnnotationPass::handleAutoWire(string &line, std::ofstream &outputFile) {
 }
 
 void AnnotationPass::registerEndpoints(std::ofstream &outputFile) {
+
+    if (endpointData.empty())
+        return;
+
+    outputFile << '\n';
+    outputFile << "\tint _endpoint_data__helper_ = ([this]() {\n\n";
+    outputFile << "\t\tURI uri;\n";
+    outputFile << "\t\tHttpMethod* method;\n";
+    outputFile << "\t\tEndpoint* endpoint;\n\n";
+
     for (auto& endpoint: endpointData){
-        outputFile << '\n';
-        outputFile << "\tint _endpoint_data__helper_ = ([this]() {\n";
-
-        outputFile << "\t\tURI uri{\"" << endpoint.uri << "\"};\n";
-        outputFile << "\t\tHttpMethod* method = HttpMethod::fromString(\"" << endpoint.method.data() << "\");\n";
-
-        outputFile << "\t\tauto* endpoint = new Endpoint();\n";
+        outputFile << "\t\turi = URI{\"" << endpoint.uri << "\"};\n";
+        outputFile << "\t\tmethod = HttpMethod::fromString(\"" << endpoint.method.data() << "\");\n";
+        outputFile << "\t\tendpoint = new Endpoint();\n";
         outputFile << "\t\tendpoint->func = std::function([this](HttpRequest* req){ return " << endpoint.functionName << "(req);});\n";
         outputFile << "\t\tendpoint->method = method;\n";
         outputFile << "\t\tendpoint->uri = uri;\n";
-        outputFile << "\t\tRouter::getInstance()->registerEndpoint(endpoint);\n";
-
-        outputFile << "\t\treturn 0;\n" << "\t})();\n";
+        outputFile << "\t\tRouter::getInstance()->registerEndpoint(endpoint);\n\n";
     }
+
+    outputFile << "\t\treturn 0;\n" << "\t})();\n";
 }
 
 void AnnotationPass::addPostConstruct(std::ofstream &outputFile){

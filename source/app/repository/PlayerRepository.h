@@ -24,6 +24,18 @@ public:
                 statement->executeQuery("select * from player")->getResultList(PlayerEntity::getInstance));
         return players;
     }
+
+    PlayerEntity* getSinglePlayer(){
+        return (PlayerEntity*) createStatement()->executeQuery("select * from player limit 1")->getResult(PlayerEntity::getInstance);
+    }
+
+    int getPlayerCount(){
+        return createStatement()->executeQuery("select count(*) from player")->getInt(0);
+    }
+
+    void createPlayer(PlayerEntity p){
+        //createStatement()->executeUpdate("insert into player values ") TODO
+    }
 };
 
 

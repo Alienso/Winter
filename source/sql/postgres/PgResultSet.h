@@ -12,15 +12,13 @@
 class PgResultSet : public ResultSet {
 
 public:
-
-    PgResultSet(PGresult* pgResult_, PGconn* conn) : pgResult(pgResult_), pgConn(conn){}
+    PgResultSet(PGresult* pgResult_, PGconn* conn);
     virtual ~PgResultSet();
 
     bool next() override;
-    Reflect *getResult() override;
+    Reflect *getResult(Reflect* (*allocator)()) override;
     vector<Reflect*>* getResultList(Reflect* (*allocator)()) override;
 
-protected:
     int getInt(int columnIndex) override;
     long getLong(int columnIndex) override;
     float getFloat(int columnIndex) override;
@@ -37,6 +35,9 @@ protected:
 private:
     PGresult *pgResult;
     PGconn* pgConn;
+    size_t resultSize;
+    size_t fieldCount;
+    size_t cursorIndex;
 };
 
 

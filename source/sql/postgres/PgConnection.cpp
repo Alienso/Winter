@@ -29,13 +29,16 @@ shared_ptr<Statement> PgConnection::createStatement(shared_ptr<Connection> conne
 }
 
 void PgConnection::commit() {
-
+    PGresult* res = PQexec(postgresConn, "END");
+    validateResponse(postgresConn, res, "Error while committing transaction");
 }
 
 void PgConnection::rollback() {
-
+    PGresult* res = PQexec(postgresConn, "ROLLBACK");
+    validateResponse(postgresConn, res, "Error while committing transaction");
 }
 
 void PgConnection::close() {
-
+    wtLogInfo("Closing PgConnection!");
+    PQfinish(postgresConn);
 }
