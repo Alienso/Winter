@@ -178,12 +178,12 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
             break;
         case FIELD_TYPE_STRING:
             if (sourceField.isPtr) {
-                string helper = **((string **) sourceField.getPtr(source));
+                string* helper = *((string **) sourceField.getPtr(source));
                 if (destField.isPtr) {
-                    auto* sptr = new string(helper);
+                    auto* sptr = new string(*helper);
                     destField.setPtr(dest, sptr);
                 }
-                else destField.setString(dest, helper);
+                else destField.setString(dest, *helper);
             }
             else {
                 string helper = sourceField.getString(source);
@@ -195,29 +195,54 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
             }
             break;
         case FIELD_TYPE_VECTOR:
-            destField.setValue(dest, sourceField.getAddress(source), 1); //TODO try getting size from vector<int> s
-            break; //TODO!
-        case FIELD_TYPE_OBJ:
-            /*auto* sourceObj = static_cast<Reflect *>(sourceField.getAddress(source));
-            auto* destObj = static_cast<Reflect *>(destField.getAddress(dest));
-            *destObj = *sourceObj;*/
-            //TODO call clone() here;
+            //auto* destVec = (vector<byte>*)destField.getAddress(dest);
+            //auto* sourceVec = (vector<byte>*)sourceField.getAddress(source);
+            //*destVec = *sourceVec;
+            *(vector<byte>*)destField.getAddress(dest) = *(vector<byte>*)sourceField.getAddress(source);
+            break;
+        case FIELD_TYPE_OBJ: //call clone() here?
             if (sourceField.isPtr){
-                if (destField.isPtr)
-                    **((Reflect**)sourceField.getPtr(source)) = **((Reflect**)destField.getPtr(dest));
-                else
-                    **((Reflect**)sourceField.getPtr(source)) = *((Reflect*)destField.getAddress(dest));
+                if (destField.isPtr){
+                    Reflect* sourceObj = *((Reflect**) sourceField.getPtr(source));
+                    Reflect* destObj = *((Reflect**) destField.getPtr(dest));
+                    copyObject(sourceObj, destObj, copyType);
+                }
+                else {
+                    Reflect* sourceObj = *((Reflect**) sourceField.getPtr(source));
+                    Reflect* destObj = ((Reflect*) destField.getAddress(dest));
+                    copyObject(sourceObj, destObj, copyType);
+                }
             }else{
-                if (destField.isPtr)
-                    *((Reflect*)sourceField.getAddress(source)) = **((Reflect**)destField.getPtr(dest));
-                else
-                    *((Reflect*)sourceField.getAddress(source)) = *((Reflect*)destField.getAddress(dest));
+                if (destField.isPtr) {
+                    Reflect* sourceObj = ((Reflect*) sourceField.getAddress(source));
+                    Reflect* destObj = *((Reflect **) destField.getPtr(source));
+                    copyObject(sourceObj, destObj, copyType);
+                }
+                else{
+                    Reflect* sourceObj = ((Reflect*) sourceField.getAddress(source));
+                    Reflect* destObj = ((Reflect*) destField.getAddress(dest));
+                    copyObject(sourceObj, destObj, copyType);
+                }
             }
-            //*((Reflect*)sourceField.getAddress(source)) = *((Reflect*)destField.getAddress(dest));
-            break; //TODO which copy constructor is called
+            break;
         case FIELD_TYPE_ARRAY:
             break; //TODO
         default:
             wtLogError("Unknown type encountered: ", destField.type);
+    }
+}
+
+void Field::copyObject(Reflect *source, Reflect *dest, CopyType copyType) {
+    if (source->getClassSize() != dest->getClassSize()){
+        wtLogError("Class sizes mismatch. Source: %d Dest: %d", source->getClassSize(), dest->getClassSize());
+        return;
+    }
+    for(auto& sourceField : source->getDeclaredFields()){
+        Field* destField = dest->getField(sourceField.name.data());
+        if (destField != &Field::INVALID ) {
+            Field::copyValue(source, sourceField, dest, *destField, copyType);
+        }else{
+            wtLogWarn("Invalid field occurred: %s", sourceField.name.data());
+        }
     }
 }

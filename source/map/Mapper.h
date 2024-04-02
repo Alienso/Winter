@@ -7,16 +7,20 @@
 
 #include "Reflect.h"
 
-enum FIELD_MATCH_TYPE{
+/*
+ * Strict = exact match
+ * Relaxed = letters are the same
+ */
+enum FieldMatchType{
     FIELD_MATCH_TYPE_STRICT,
-    FILED_MATCH_TYPE_RELAXED
+    FIELD_MATCH_TYPE_RELAXED
 };
 
 
 class Mapper {
 public:
     Mapper() : failOnUnknownProperty(false) {}
-    void map(Reflect* source, Reflect* dest) const;
+    void map(Reflect* source, Reflect* dest, FieldMatchType = FIELD_MATCH_TYPE_RELAXED) const;
 
     void failOnUnknownProperties(bool val);
 

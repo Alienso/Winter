@@ -51,6 +51,8 @@ public:
     [[nodiscard]] void** getPtr(void *object) const;
 
     static void copyValue(Reflect *source, const Field &sourceField, Reflect *dest, const Field &destField, CopyType copyType = COPY_TYPE_DEEP);
+    static void copyObject(Reflect *source, Reflect *dest, CopyType copyType = COPY_TYPE_DEEP);
+
 
     std::string name;
     std::string typeStr;

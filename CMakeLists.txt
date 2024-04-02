@@ -117,7 +117,8 @@ if (${sourceLen} STREQUAL  ${targetLen})
             tests/deserializationTests.h
             tests/serializationTests.h
             tests/loggerTests.h
-            tests/httpRequestParseTests.h)
+            tests/httpRequestParseTests.h
+            tests/util/dtoUtils.h)
     if (WIN32)
         target_link_libraries(Tests wsock32 ws2_32)
     endif (WIN32)
