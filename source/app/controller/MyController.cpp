@@ -35,9 +35,14 @@ HttpResponse *MyController::home(HttpRequest *httpRequest) {
 }
 
 HttpResponse *MyController::player(HttpRequest *request) {
+
+    string playerIdStr = (request->getQueryParameters()).find("id")->second;
+    long playerId = stol(playerIdStr);
+
     auto* players = playerRepository->getAllPlayers();
     PlayerEntity* player = playerRepository->getSinglePlayer();
     int playerCount = playerRepository->getPlayerCount();
+    PlayerEntity* player2 = playerRepository->getPlayerById(playerId);
 
     wtLogInfo("There are %d players in database", playerCount);
 
@@ -45,6 +50,7 @@ HttpResponse *MyController::player(HttpRequest *request) {
         delete p;
     delete players;
     delete player;
+    delete player2;
 
     return new HttpResponse(HttpCode::OK);
 }

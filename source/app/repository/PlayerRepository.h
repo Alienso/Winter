@@ -36,6 +36,12 @@ public:
     void createPlayer(PlayerEntity p){
         //createStatement()->executeUpdate("insert into player values ") TODO
     }
+
+    PlayerEntity* getPlayerById(long id){
+        shared_ptr<Statement> statement = createStatement("select * from player where id = :id");
+        statement->setLong(id, "id");
+        return (PlayerEntity*) statement->execute()->getResult(PlayerEntity::getInstance);
+    }
 };
 
 

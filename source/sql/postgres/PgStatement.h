@@ -21,10 +21,9 @@ public:
     PgStatement(shared_ptr<Connection> connection_, const char* s){
         connection = std::move(connection_);
         query = s;
+        generateParameterMap();
     }
     ~PgStatement() override;
-
-    shared_ptr<ResultSet> execute() override;
 
     shared_ptr<ResultSet> executeQuery(const char *s) override;
 

@@ -9,8 +9,6 @@
 ConnectionPool* Repository::dbConnectionPool = new ConnectionPool(2, Configuration::dbConnectionPoolSize,
         []{ return (Connection*) new PgConnection(Configuration::dbConnectionString); }); //TODO
 
-//TODO
-
 shared_ptr<Statement> Repository::createStatement(const char *query) {
     shared_ptr<Connection> connection = dbConnectionPool->getConnection();
     return connection->createStatement(connection, query);

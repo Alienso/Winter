@@ -252,6 +252,10 @@ public:
         return false;
     }
 
+    [[nodiscard]] static string parseBoolean(bool value) {
+        return value ? "true" : "false";
+    }
+
     [[nodiscard]] static string toCamelCase(const string& value){
         string s;
         s.resize(value.size());

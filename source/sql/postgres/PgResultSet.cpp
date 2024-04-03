@@ -11,8 +11,6 @@ PgResultSet::PgResultSet(PGresult *pgResult, PGconn *pgConn) : pgResult(pgResult
 }
 
 PgResultSet::~PgResultSet() {
-    /*pgResult = PQexec(pgConn, "END");
-    PQclear(pgResult);*/
 }
 
 bool PgResultSet::next() {

@@ -19,37 +19,42 @@ public:
     Statement(const char* s) : query(s){}
     virtual ~Statement() = default;
 
-    virtual shared_ptr<ResultSet> execute() = 0;
+    virtual shared_ptr<ResultSet> execute();
     virtual shared_ptr<ResultSet> executeQuery(const char* s) = 0;
     virtual int executeUpdate(const char* s) = 0;
 
     virtual void setQueryTimeout(int milliseconds) = 0;
     virtual void close() = 0;
 
-    Statement* setInt(int x, int pos);
-    Statement* setLong(long x, int pos);
-    Statement* setFloat(float x, int pos);
-    Statement* setDouble(double x, int pos);
-    Statement* setString(string& s, int pos);
-    Statement* setString(const char* s, int pos);
-    Statement* setObject(int o, int pos);
-    Statement* setNull(int pos);
-    Statement* setBool(bool b, int pos);
-    Statement* setByte(byte c, int pos);
-    Statement* setShort(short s, int pos);
+    Statement* setInt(int x, const char* name);
+    Statement* setLong(long x, const char* name);
+    Statement* setFloat(float x, const char* name);
+    Statement* setDouble(double x, const char* name);
+    Statement* setString(string& s, const char* name);
+    Statement* setString(const char* s, const char* name);
+    Statement* setObject(int o, const char* name);
+    Statement* setNull(const char* name);
+    Statement* setBool(bool b, const char* name);
+    Statement* setByte(byte c, const char* name);
+    Statement* setShort(short s, const char* name);
 
-    Statement* setDate(string& s, int pos);
-    Statement* setDate(const char* s, int pos);
-    Statement* setTime(string& s, int pos);
-    Statement* setTime(const char* s, int pos);
-    Statement* setDateTime(string& s, int pos);
-    Statement* setDateTime(const char* s, int pos);
+    Statement* setDate(string& s, const char* name);
+    Statement* setDate(const char* s, const char* name);
+    Statement* setTime(string& s, const char* name);
+    Statement* setTime(const char* s, const char* name);
+    Statement* setDateTime(string& s, const char* name);
+    Statement* setDateTime(const char* s, const char* name);
 
-    Statement* setBlob(string& s, int pos);
-    Statement* setBlob(const char* s, int pos);
+    Statement* setBlob(string& s, const char* name);
+    Statement* setBlob(const char* s, const char* name);
 
 protected:
     string query;
+    unordered_map<string,string> paramsMap{};
+    size_t totalParamsLength = 0;
+
+    void generateParameterMap();
+    string buildQuery();
 };
 
 

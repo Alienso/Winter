@@ -25,7 +25,7 @@ shared_ptr<Statement> PgConnection::createStatement(shared_ptr<Connection> conne
 }
 
 shared_ptr<Statement> PgConnection::createStatement(shared_ptr<Connection> connection, const char *s) {
-    return make_shared<PgStatement>(connection); //'this' and connection are the same
+    return make_shared<PgStatement>(connection, s); //'this' and connection are the same
 }
 
 void PgConnection::commit() {

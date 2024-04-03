@@ -60,7 +60,7 @@ set(SOURCES source/Winter.cpp source/Winter.h
         source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h
         source/app/dto/InnerClass.h
         source/sql/Connection.h
-        source/sql/Statement.h
+        source/sql/Statement.cpp source/sql/Statement.h
         source/sql/postgres/PgConnection.cpp source/sql/postgres/PgConnection.h
         source/sql/postgres/PgStatement.cpp source/sql/postgres/PgStatement.h
         source/sql/ResultSet.h
@@ -96,18 +96,18 @@ message(TARGET LEN=${targetLen})
 
 if (${sourceLen} STREQUAL  ${targetLen})
 
-    add_executable(Target target/main.cpp ${SOURCES} )
+    add_executable(Winter target/main.cpp ${SOURCES} )
 
     if (WIN32)
-        target_link_libraries(Target wsock32 ws2_32 pg)
+        target_link_libraries(Winter wsock32 ws2_32 pg)
     endif (WIN32)
     if (UNIX)
-        target_link_libraries(Target pq)
+        target_link_libraries(Winter pq)
     endif(UNIX)
 
-    #add_custom_command(TARGET Target PRE_BUILD
+    #add_custom_command(TARGET Winter PRE_BUILD
     #    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    #    ${PROJECT_SOURCE_DIR}/source/app $<TARGET_FILE_DIR:Target>/app)
+    #    ${PROJECT_SOURCE_DIR}/source/app $<TARGET_FILE_DIR:Winter>/app)
 
 
     #---------------------------------------------
@@ -150,7 +150,8 @@ add_executable(PreProcessor pre_processor/main.cpp
         pre_processor/PreProcessor.cpp pre_processor/PreProcessor.h
         pre_processor/pass/ReflectionPass.cpp pre_processor/pass/ReflectionPass.h
         pre_processor/pass/Pass.cpp pre_processor/pass/Pass.h
-        pre_processor/pass/AnnotationPass.cpp pre_processor/pass/AnnotationPass.h pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h)
+        pre_processor/pass/AnnotationPass.cpp pre_processor/pass/AnnotationPass.h
+        pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h)
 
 #---------------------------------------
 #Temp

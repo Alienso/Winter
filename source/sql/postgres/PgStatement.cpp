@@ -55,7 +55,3 @@ void PgStatement::setQueryTimeout(int milliseconds) {
 void PgStatement::close() {
     wtLogInfo("Closing PgStatement is not implemented!");
 }
-
-shared_ptr<ResultSet> PgStatement::execute() {
-    return executeQuery(query.data());
-}
