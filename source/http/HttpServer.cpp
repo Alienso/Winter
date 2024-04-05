@@ -5,7 +5,7 @@
 #include <iostream>
 #include <thread>
 #include "HttpServer.h"
-#include "source/core/Configuration.h"
+#include "../core/Configuration.h"
 #include "Logger.h"
 
 HttpServer::HttpServer() :

@@ -191,7 +191,7 @@ void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldT
             if (fieldType == FIELD_TYPE_VECTOR){
                 if (!f->isPtr) {
                     if (!isElemPtr){
-                        auto *data = (vector<byte>*)(f->getAddress(obj));
+                        auto *data = (vector<std::byte>*)(f->getAddress(obj));
                         insertVectorData(fieldValue, data, subTypeStr);
                     }else {
                         auto *data = static_cast<vector<Reflect *> *>(f->getAddress(obj));
@@ -199,7 +199,7 @@ void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldT
                     }
                 }else{
                     if (!isElemPtr){
-                        auto *data = new vector<byte>(); //static_cast<vector<Reflect *> *> (*(f->getPtr(obj)));
+                        auto *data = new vector<std::byte>(); //static_cast<vector<Reflect *> *> (*(f->getPtr(obj)));
                         insertVectorData(fieldValue, data, subTypeStr);
                         f->setPtr(obj, data);
                     }else {
@@ -217,7 +217,7 @@ void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldT
     }
 }
 
-void JsonDeserializer::insertVectorData(const string& source, vector<byte> *dest, const string &typeStr){
+void JsonDeserializer::insertVectorData(const string& source, vector<std::byte> *dest, const string &typeStr){
     /* TLDR we are doing a memcpy into dest vector*/
     vector<string>* vec = StringUtils::splitObjectArray(source);
     *dest = {};
@@ -225,7 +225,7 @@ void JsonDeserializer::insertVectorData(const string& source, vector<byte> *dest
         Reflect* r = deserialize(s, Reflect::getClassInstanceByName(typeStr));
         /*dest->resize(currentSize + r->getClassSize());
         memcpy((void*)(&dest[currentSize]), (const void*)(r), r->getClassSize());*/
-        byte buffer[r->getClassSize()];
+        std::byte buffer[r->getClassSize()];
         memcpy(buffer, (void*)r, r->getClassSize());
         dest->insert(dest->end(), &buffer[0], &buffer[r->getClassSize()]);
     }

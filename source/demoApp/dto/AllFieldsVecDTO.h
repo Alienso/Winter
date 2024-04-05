@@ -17,7 +17,7 @@ public:
     vector<char> c;
     vector<string> str;
     vector<bool> b;
-    vector<byte> bt;
+    vector<std::byte> bt;
 
     vector<short*> sPtr;
     vector<int*> iPtr;
@@ -27,7 +27,7 @@ public:
     vector<char*> cPtr;
     vector<string*> strPtr;
     vector<bool*> bPtr;
-    vector<byte*> btPtr;
+    vector<std::byte*> btPtr;
 
     vector<InnerClass*> innerClassPtr;
     vector<InnerClass> innerClass;

@@ -6,8 +6,8 @@
 #define WINTER_MYCONTROLLER_H
 
 
-#include "../../app/repository/PlayerRepository.h"
-#include "../../app/service/MyService.h"
+#include "../../demoApp/repository/PlayerRepository.h"
+#include "../../demoApp/service/MyService.h"
 #include "../../http/ControllerMapping.h"
 
 

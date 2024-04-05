@@ -68,7 +68,7 @@ Statement *Statement::setBool(bool b, const char *name) {
     return this;
 }
 
-Statement *Statement::setByte(byte c, const char *name) {
+Statement *Statement::setByte(std::byte c, const char *name) {
     wtLogError("Unimplemented method!");
     return nullptr;
 }

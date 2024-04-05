@@ -6,8 +6,8 @@
 #define WINTER_WINTER_H
 
 
-#include <source/util/ConnectionPool.h>
-#include "source/http/HttpServer.h"
+#include <../util/ConnectionPool.h>
+#include "../http/HttpServer.h"
 #include "Router.h"
 
 class Winter {

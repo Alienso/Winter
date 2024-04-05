@@ -16,21 +16,21 @@ public:
     virtual ~PgResultSet();
 
     bool next() override;
-    Reflect *getResult(Reflect* (*allocator)()) override;
-    vector<Reflect*>* getResultList(Reflect* (*allocator)()) override;
+    [[nodiscard]] Reflect *getResult(Reflect* (*allocator)()) const override;
+    [[nodiscard]] vector<Reflect*>* getResultList(Reflect* (*allocator)()) const override;
 
-    int getInt(int columnIndex) override;
-    long getLong(int columnIndex) override;
-    float getFloat(int columnIndex) override;
-    double getDouble(int columnIndex) override;
-    string getString(int columnIndex) override;
-    bool getBool(int columnIndex) override;
-    byte getByte(int columnIndex) override;
-    short getShort(int columnIndex) override;
-    string getDate(int columnIndex) override;
-    string getTime(int columnIndex) override;
-    string getDateTime(int columnIndex) override;
-    string getBlob(int columnIndex) override;
+    [[nodiscard]] int getInt(size_t columnIndex) const override;
+    [[nodiscard]] long getLong(size_t columnIndex) const override;
+    [[nodiscard]] float getFloat(size_t columnIndex) const override;
+    [[nodiscard]] double getDouble(size_t columnIndex) const override;
+    [[nodiscard]] string getString(size_t columnIndex) const override;
+    [[nodiscard]] bool getBool(size_t columnIndex) const override;
+    [[nodiscard]] std::byte getByte(size_t columnIndex) const override;
+    [[nodiscard]] short getShort(size_t columnIndex) const override;
+    [[nodiscard]] string getDate(size_t columnIndex) const override;
+    [[nodiscard]] string getTime(size_t columnIndex) const override;
+    [[nodiscard]] string getDateTime(size_t columnIndex) const override;
+    [[nodiscard]] string getBlob(size_t columnIndex) const override;
 
 private:
     PGresult *pgResult;

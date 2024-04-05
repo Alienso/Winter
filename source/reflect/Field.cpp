@@ -41,8 +41,8 @@ void Field::setBool(void *object, const bool value) const {
     *((bool*)getAddress(object)) = value;
 }
 
-void Field::setByte(void *object, const byte value) const {
-    *((byte*)getAddress(object)) = value;
+void Field::setByte(void *object, const std::byte value) const {
+    *((std::byte*)getAddress(object)) = value;
 }
 
 void Field::setString(void *object, const std::string& value) const {
@@ -94,8 +94,8 @@ bool Field::getBool(void* object) const{
     return *(bool*)getAddress(object);
 }
 
-byte Field::getByte(void* object) const{
-    return *(byte*)getAddress(object);
+std::byte Field::getByte(void* object) const{
+    return *(std::byte*)getAddress(object);
 }
 
 string Field::getString(void* object) const{
@@ -121,7 +121,7 @@ string Field::getAsString(Reflect *object, char stringChar) const {
         case FIELD_TYPE_BOOL:
             return getAsString<bool>(object, &Field::getBool, StringUtils::to_string);
         case FIELD_TYPE_BYTE:
-            return getAsString<byte>(object, &Field::getByte, StringUtils::to_string);
+            return getAsString<std::byte>(object, &Field::getByte, StringUtils::to_string);
         case FIELD_TYPE_STRING:
             if (!isPtr) {
                 if (stringChar == 0) return getString(object);
@@ -167,7 +167,7 @@ void Field::set(void *object, const char *value) const {
             setValueInternal<bool>(StringUtils::parseBoolean(value), object, &Field::setBool);
             break;
         case FIELD_TYPE_BYTE:
-            setValueInternal<byte>((byte)value[0], object, &Field::setByte);
+            setValueInternal<std::byte>((std::byte)value[0], object, &Field::setByte);
             break;
         case FIELD_TYPE_STRING:
             if (this->isPtr){
@@ -214,7 +214,7 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
             copyValue<bool>(copyDetails, &Field::getBool, &Field::setBool);
             break;
         case FIELD_TYPE_BYTE:
-            copyValue<byte>(copyDetails, &Field::getByte, &Field::setByte);
+            copyValue<std::byte>(copyDetails, &Field::getByte, &Field::setByte);
             break;
         case FIELD_TYPE_STRING:
             if (sourceField.isPtr) {
@@ -235,10 +235,10 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
             }
             break;
         case FIELD_TYPE_VECTOR:
-            //auto* destVec = (vector<byte>*)destField.getAddress(dest);
-            //auto* sourceVec = (vector<byte>*)sourceField.getAddress(source);
+            //auto* destVec = (vector<std::byte>*)destField.getAddress(dest);
+            //auto* sourceVec = (vector<std::byte>*)sourceField.getAddress(source);
             //*destVec = *sourceVec;
-            *(vector<byte>*)destField.getAddress(dest) = *(vector<byte>*)sourceField.getAddress(source);
+            *(vector<std::byte>*)destField.getAddress(dest) = *(vector<std::byte>*)sourceField.getAddress(source);
             break;
         case FIELD_TYPE_OBJ: //call clone() here?
             if (sourceField.isPtr){

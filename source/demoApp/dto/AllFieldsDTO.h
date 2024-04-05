@@ -17,7 +17,7 @@ public:
     char c;
     string str;
     bool b;
-    byte bt;
+    std::byte bt;
 
     short* sPtr;
     int* iPtr;
@@ -27,7 +27,7 @@ public:
     char* cPtr;
     string* strPtr;
     bool *bPtr;
-    byte *btPtr;
+    std::byte *btPtr;
 
     InnerClass* innerClassPtr;
     InnerClass innerClass;

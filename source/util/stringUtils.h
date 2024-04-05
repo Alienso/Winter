@@ -283,7 +283,7 @@ public:
     [[nodiscard]] static inline string to_string(bool x){
         return x ? "true" : "false";
     }
-    [[nodiscard]] static inline string to_string(byte x){
+    [[nodiscard]] static inline string to_string(std::byte x){
         return std::to_string((char)x);
     }
     [[nodiscard]] static inline string to_string(char x){

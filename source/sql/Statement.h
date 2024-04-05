@@ -35,7 +35,7 @@ public:
     Statement* setObject(int o, const char* name);
     Statement* setNull(const char* name);
     Statement* setBool(bool b, const char* name);
-    Statement* setByte(byte c, const char* name);
+    Statement* setByte(std::byte c, const char* name);
     Statement* setShort(short s, const char* name);
 
     Statement* setDate(string& s, const char* name);

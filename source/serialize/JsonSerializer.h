@@ -24,7 +24,7 @@ private:
     [[nodiscard]] static string* vectorToString(const vector<char>& source);
     [[nodiscard]] static string* vectorToString(const vector<string>& source);
     [[nodiscard]] static string* vectorToString(const vector<Reflect*>& source);
-    [[nodiscard]] static string* vectorToString(const vector<byte>& source);
+    [[nodiscard]] static string* vectorToString(const vector<std::byte>& source);
 
     [[nodiscard]] static string* vectorPtrToString(const vector<char*>& source);
     [[nodiscard]] static string* vectorPtrToString(const vector<string*>& source);

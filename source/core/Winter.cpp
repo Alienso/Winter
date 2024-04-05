@@ -5,14 +5,8 @@
 #include <thread>
 
 #include "Winter.h"
-#include "source/http/HttpRequest.h"
 #include "Logger.h"
-#include "source/http/HttpResponse.h"
 #include "Component.h"
-#include "Configuration.h"
-
-#include "source/sql/postgres/PgConnection.h"
-
 
 void Winter::run() {
     init();

@@ -17,8 +17,13 @@ if (UNIX)
 endif(UNIX)
 
 #Postgres
-include_directories(/usr/include/postgresql/)
-link_directories(/usr/local/pgsql/lib/)
+if (UNIX)
+    include_directories(/usr/include/postgresql/)
+    link_directories(/usr/local/pgsql/lib/)
+endif(UNIX)
+if (WIN32)
+    link_directories("C:/Program Files/PostgreSQL/12/lib")
+endif(WIN32)
 
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/include/)
@@ -36,29 +41,36 @@ include_directories(${PROJECT_SOURCE_DIR}/source/util)
 #pre-process app dir and use it for compilation
 
 set(SOURCES source/core/Winter.cpp source/core/Winter.h
+        source/core/Configuration.cpp source/core/Configuration.h
+        source/core/Component.cpp source/core/Component.h
+        source/core/Router.cpp source/core/Router.h
+
         source/http/HttpServer.cpp source/http/HttpServer.h
         source/http/HttpRequest.cpp source/http/HttpRequest.h
         source/http/URI.cpp source/http/URI.h
-        source/log/Logger.cpp source/log/Logger.h
-        source/log/Appender.cpp source/log/Appender.h
-        source/core/Configuration.cpp source/core/Configuration.h
-        source/util/tsqueue.h source/util/stringUtils.h
         source/http/Connection.cpp source/http/Connection.h
         source/http/HttpResponse.cpp source/http/HttpResponse.h
         source/http/httpConstants.h source/http/httpConstants.cpp
-        source/core/Router.cpp source/core/Router.h
-        source/app/controller/MyController.cpp source/app/controller/MyController.h
-        source/app/service/MyService.cpp source/app/service/MyService.h
+        source/http/client/HttpClient.cpp source/http/client/HttpClient.h
+
+        source/log/Logger.cpp source/log/Logger.h
+        source/log/Appender.cpp source/log/Appender.h
+
+        source/util/tsqueue.h source/util/stringUtils.h
+        source/util/ThreadPool.h source/util/util.h
+
+        source/demoApp/controller/MyController.cpp source/demoApp/controller/MyController.h
+        source/demoApp/service/MyService.cpp source/demoApp/service/MyService.h
+        source/demoApp/dto/BaseRequest.h source/demoApp/dto/BaseResponse.h
+        source/demoApp/dto/InnerClass.h
+
         source/reflect/Reflect.cpp source/reflect/Reflect.h
         source/reflect/Field.cpp source/reflect/Field.h
         source/reflect/Method.cpp source/reflect/Method.h
         source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
         source/serialize/JsonSerializer.cpp source/serialize/JsonSerializer.h
         source/serialize/FieldTypeUtil.h source/http/ControllerMapping.h
-        source/util/ThreadPool.h source/util/util.h
-        source/core/Component.cpp source/core/Component.h
-        source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h
-        source/app/dto/InnerClass.h
+
         source/sql/Connection.h
         source/sql/Statement.cpp source/sql/Statement.h
         source/sql/postgres/PgConnection.cpp source/sql/postgres/PgConnection.h
@@ -67,15 +79,9 @@ set(SOURCES source/core/Winter.cpp source/core/Winter.h
         source/sql/postgres/PgResultSet.cpp source/sql/postgres/PgResultSet.h
         source/sql/Repository.h source/sql/Repository.cpp
         source/sql/Entity.cpp source/sql/Entity.h
+
         source/map/Mapper.h source/map/Mapper.cpp)
 
-#add_executable(Winter ${SOURCES})
-
-#target_link_libraries(Winter wsock32 ws2_32)
-
-#add_custom_command(TARGET Winter PRE_BUILD
- #       COMMAND ${CMAKE_COMMAND} -E copy_directory
-  #      ${PROJECT_SOURCE_DIR}/source/app $<TARGET_FILE_DIR:Winter>/app)
 
 #---------------------------------------------
 #Target Build
@@ -100,7 +106,7 @@ if (${sourceLen} STREQUAL  ${targetLen})
     add_executable(Winter target/main.cpp ${SOURCES} )
 
     if (WIN32)
-        target_link_libraries(Winter wsock32 ws2_32 pg)
+        target_link_libraries(Winter wsock32 ws2_32 pq)
     endif (WIN32)
     if (UNIX)
         target_link_libraries(Winter pq)
@@ -121,7 +127,7 @@ if (${sourceLen} STREQUAL  ${targetLen})
             tests/httpRequestParseTests.h
             tests/util/dtoUtils.h)
     if (WIN32)
-        target_link_libraries(Tests wsock32 ws2_32)
+        target_link_libraries(Tests wsock32 ws2_32 pq)
     endif (WIN32)
     if (UNIX)
         target_link_libraries(Tests pq)
@@ -129,20 +135,6 @@ if (${sourceLen} STREQUAL  ${targetLen})
 
 
 endif()
-
-#list(TRANSFORM SOURCES PREPEND target/)
-#if (EXISTS ${PROJECT_SOURCE_DIR}/target/main.cpp)
-
-#set(SOURCES target/main.cpp
-#        target/TestClass.cpp target/TestClass.h
-#        source/reflect/Reflect.cpp source/reflect/Reflect.h
-#        source/reflect/Field.cpp source/reflect/Field.h
-#        source/reflect/Method.cpp source/reflect/Method.h
-#        source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
-#        source/serialize/FieldEnums.h
-#        source/serialize/JsonSerializer.cpp source/serialize/JsonSerializer.h
-#        source/util/ThreadPool.h)
-#endif()
 
 #---------------------------------------------
 #PreProcessor
@@ -152,7 +144,8 @@ add_executable(PreProcessor pre_processor/main.cpp
         pre_processor/pass/ReflectionPass.cpp pre_processor/pass/ReflectionPass.h
         pre_processor/pass/Pass.cpp pre_processor/pass/Pass.h
         pre_processor/pass/AnnotationPass.cpp pre_processor/pass/AnnotationPass.h
-        pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h pre_processor/util.h source/http/client/HttpClient.cpp source/http/client/HttpClient.h)
+        pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h
+        pre_processor/util.h)
 
 #---------------------------------------
 #Temp

@@ -3,7 +3,6 @@
 //
 
 #include "Router.h"
-#include "source/http/HttpResponse.h"
 
 Router* Router::instance = nullptr;
 mutex Router::mutex_;

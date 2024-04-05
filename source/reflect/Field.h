@@ -34,7 +34,7 @@ public:
     void setDouble(void* object, double value) const;
     void setShort(void* object, short value) const;
     void setBool(void* object, bool value) const;
-    void setByte(void* object, byte value) const;
+    void setByte(void* object, std::byte value) const;
     void setString(void* object, const std::string& value) const;
     void setString(void* object, const char* value) const;
     void setPtr(void* object, const void* value) const;
@@ -47,7 +47,7 @@ public:
     [[nodiscard]] double getDouble(void* object) const;
     [[nodiscard]] short getShort(void* object) const;
     [[nodiscard]] bool getBool(void* object) const;
-    [[nodiscard]] byte getByte(void* object) const;
+    [[nodiscard]] std::byte getByte(void* object) const;
     [[nodiscard]] string getString(void* object) const;
     [[nodiscard]] void** getPtr(void *object) const;
 

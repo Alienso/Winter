@@ -21,7 +21,7 @@ bool PgResultSet::next() {
 }
 
 //TODO matching? Entity is available now. but Reflect* are also viable
-Reflect* PgResultSet::getResult(Reflect* (*allocator)()){
+Reflect* PgResultSet::getResult(Reflect* (*allocator)()) const{
 
     if (resultSize == 0){
         return nullptr;
@@ -46,7 +46,7 @@ Reflect* PgResultSet::getResult(Reflect* (*allocator)()){
     return entity;
 }
 
-vector<Reflect*>* PgResultSet::getResultList(Reflect* (*allocator)()){
+vector<Reflect*>* PgResultSet::getResultList(Reflect* (*allocator)()) const{
 
     auto* response = new vector<Reflect*>();
     if (resultSize == 0){
@@ -79,50 +79,50 @@ vector<Reflect*>* PgResultSet::getResultList(Reflect* (*allocator)()){
     return response;
 }
 
-int PgResultSet::getInt(int columnIndex) {
+int PgResultSet::getInt(size_t columnIndex) const {
     return stoi(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
-long PgResultSet::getLong(int columnIndex) {
+long PgResultSet::getLong(size_t columnIndex) const {
     return stol(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
-float PgResultSet::getFloat(int columnIndex) {
+float PgResultSet::getFloat(size_t columnIndex) const {
     return stof(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
-double PgResultSet::getDouble(int columnIndex) {
+double PgResultSet::getDouble(size_t columnIndex) const {
     return stod(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
-string PgResultSet::getString(int columnIndex) {
+string PgResultSet::getString(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }
 
-bool PgResultSet::getBool(int columnIndex) {
+bool PgResultSet::getBool(size_t columnIndex) const {
     return StringUtils::parseBoolean(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
-byte PgResultSet::getByte(int columnIndex) {
-    return (byte)PQgetvalue(pgResult, cursorIndex, columnIndex)[0];
+std::byte PgResultSet::getByte(size_t columnIndex) const {
+    return (std::byte)PQgetvalue(pgResult, cursorIndex, columnIndex)[0];
 }
 
-short PgResultSet::getShort(int columnIndex) {
+short PgResultSet::getShort(size_t columnIndex) const {
     return (short)stoi(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
-string PgResultSet::getDate(int columnIndex) {
+string PgResultSet::getDate(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }
 
-string PgResultSet::getTime(int columnIndex) {
+string PgResultSet::getTime(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }
 
-string PgResultSet::getDateTime(int columnIndex) {
+string PgResultSet::getDateTime(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }
 
-string PgResultSet::getBlob(int columnIndex) {
+string PgResultSet::getBlob(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }

@@ -140,7 +140,7 @@ string* JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) 
         case FIELD_TYPE_OBJ:
             if (!f.isPtr) {
                 if (!isElemPtr) {
-                    auto *vecPtr = static_cast<vector<byte> *>(f.getAddress(obj));
+                    auto *vecPtr = static_cast<vector<std::byte> *>(f.getAddress(obj));
                     return vectorToString(*vecPtr);
                 }else{
                     auto *vecPtr = static_cast<vector<Reflect*> *>(f.getAddress(obj));
@@ -148,7 +148,7 @@ string* JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) 
                 }
             }else {
                 if (!isElemPtr){
-                    auto* vecPtr = static_cast<vector<byte> *>(*(f.getPtr(obj)));
+                    auto* vecPtr = static_cast<vector<std::byte> *>(*(f.getPtr(obj)));
                     if (vecPtr == nullptr)
                         return new string("[]");
                     return vectorToString(*vecPtr);
@@ -166,7 +166,7 @@ string* JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) 
 
 }
 
-string* JsonSerializer::vectorToString(const vector<byte>& source) {
+string* JsonSerializer::vectorToString(const vector<std::byte>& source) {
 
     size_t vecSize = source.size();
     if (vecSize == 0){

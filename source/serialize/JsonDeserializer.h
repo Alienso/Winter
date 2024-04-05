@@ -31,7 +31,7 @@ private:
     void setObjectValue(Field* f, const string& fieldValue, Reflect* response);
     void setFieldValueArray(const string& fieldValue, FieldType fieldType, Reflect* obj, const Field* f);
 
-    void insertVectorData(const string& source, vector<byte> *dest, const string &typeStr);
+    void insertVectorData(const string& source, vector<std::byte> *dest, const string &typeStr);
     void insertVectorPtrData(const string& source, vector<Reflect*> *dest, const string &typeStr);
 
     template<typename U>

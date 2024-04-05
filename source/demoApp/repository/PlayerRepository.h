@@ -9,7 +9,6 @@
 #include <../sql/Statement.h>
 #include "../../sql/Repository.h"
 #include "../entity/PlayerEntity.h"
-
 #include "util.h"
 
 using namespace std;
