@@ -49,11 +49,6 @@ private:
         filePath(std::move(path)), className(std::move(className_)), alternativeName(std::move(alt)) {}
     };
     std::vector<reflectFileData> reflectClasses;
-
-    //Support for = ([a-zA-Z]+::)?([a-zA-Z_][a-zA-Z0-9_]*?)\s*(<.+?>)?\s*[\*&\s(const?)]+?\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*(=\s*.+)?\s*(;|,)
-    //TODO will catch syntactically inaccurate declarations (int & const * const & x;)
-    //std::regex fieldDeclarationRegex{R"(([a-zA-Z]+::)?([a-zA-Z_][a-zA-Z0-9_]*?)\s*(<.+?>)?\s*[\*&\s(const?)]+?\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*(;|,))"};
-    //std::smatch match;
 };
 
 

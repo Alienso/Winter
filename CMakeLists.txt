@@ -66,6 +66,7 @@ set(SOURCES source/Winter.cpp source/Winter.h
         source/sql/ResultSet.h
         source/sql/postgres/PgResultSet.cpp source/sql/postgres/PgResultSet.h
         source/sql/Repository.h source/sql/Repository.cpp
+        source/sql/Entity.cpp source/sql/Entity.h
         source/map/Mapper.h source/map/Mapper.cpp)
 
 #add_executable(Winter ${SOURCES})
@@ -151,7 +152,7 @@ add_executable(PreProcessor pre_processor/main.cpp
         pre_processor/pass/ReflectionPass.cpp pre_processor/pass/ReflectionPass.h
         pre_processor/pass/Pass.cpp pre_processor/pass/Pass.h
         pre_processor/pass/AnnotationPass.cpp pre_processor/pass/AnnotationPass.h
-        pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h)
+        pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h pre_processor/util.h)
 
 #---------------------------------------
 #Temp

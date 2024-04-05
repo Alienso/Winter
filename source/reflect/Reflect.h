@@ -22,7 +22,7 @@ public:
     virtual ~Reflect()= default;
 
     [[nodiscard]] virtual std::vector<Field>& getDeclaredFields();
-    [[nodiscard]] virtual Field* getField(const char* fieldName);
+    [[nodiscard]] virtual Field* getField(const char* fieldName) const;
 
     [[nodiscard]] virtual std::vector<Method>& getDeclaredMethods();
     [[nodiscard]] virtual Method& getMethod(const char* methodName);

@@ -44,6 +44,19 @@ HttpResponse *MyController::player(HttpRequest *request) {
     int playerCount = playerRepository->getPlayerCount();
     PlayerEntity* player2 = playerRepository->getPlayerById(playerId);
 
+    int success;
+
+    auto* newPlayer = new PlayerEntity();
+    newPlayer->id = 3;
+    newPlayer->name = "New Player";
+    newPlayer->createdOn = "2024-04-05 12:00:00.000";
+    success = PlayerRepository::insert(newPlayer);
+
+    newPlayer->name = "New New Player";
+    success = PlayerRepository::update(newPlayer);
+
+    success = playerRepository->deleteEntity(newPlayer);
+
     wtLogInfo("There are %d players in database", playerCount);
 
     for (auto* p : *players)
@@ -51,6 +64,7 @@ HttpResponse *MyController::player(HttpRequest *request) {
     delete players;
     delete player;
     delete player2;
+    delete newPlayer;
 
     return new HttpResponse(HttpCode::OK);
 }

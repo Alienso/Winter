@@ -33,16 +33,19 @@ bool ComponentPass::process(std::ifstream &inputFile, std::ofstream &outputFile,
                 if (componentIndex != string::npos) {
                     componentClasses.emplace_back("", className, "_" + className + "_");
                     isClassComponent = true;
-                }else{
-                    componentIndex = line.find("Repository", semicolonIndex);
-                    if (componentIndex != string::npos) {
-                        componentClasses.emplace_back("", className, "_" + className + "_");
-                        isClassComponent = true;
-                    }
+                    goto next;
+                }
+                componentIndex = line.find("Repository", semicolonIndex);
+                if (componentIndex != string::npos) {
+                    componentClasses.emplace_back("", className, "_" + className + "_");
+                    isClassComponent = true;
+                    goto next;
                 }
             }
         }
     }
+
+    next:
 
     for (char c: line) {
         switch (c) {

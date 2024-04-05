@@ -6,6 +6,7 @@
 
 #include "AnnotationPass.h"
 #include "stringUtils.h"
+#include "../util.h"
 
 void AnnotationPass::begin(std::string& fileName) {
     bracketCounter = 0;
@@ -29,6 +30,8 @@ bool AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
             handlePostConstruct(line);
         else if (StringUtils::trim(previousLine) == "$Autowired")
             return handleAutoWire(line, outputFile);
+        else if (StringUtils::startsWith(StringUtils::trim(previousLine), "$Column"))
+            handleEntityColumn(line, previousLine);
     }
 
     for (char c: line) {
@@ -41,6 +44,8 @@ bool AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
                 addPostConstruct(outputFile);
                 endpointData.resize(0);
                 postConstructMethodName = {};
+                generateColumnMappings(outputFile);
+                columnMappings.clear();
             }
             bracketCounter--;
         }
@@ -200,11 +205,18 @@ void AnnotationPass::addPostConstruct(std::ofstream &outputFile){
     outputFile << "\t\treturn 0;\n" << "\t})();\n";
 }
 
-void AnnotationPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {
-}
+void AnnotationPass::handleEntityColumn(string &line, string& previousLine) {
 
-bool AnnotationPass::shouldProcess(string &fileName) const {
-    return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
+    size_t beginIndex, endIndex;
+    beginIndex = previousLine.find('"');
+    endIndex = previousLine.find_last_of('"');
+    if (beginIndex == string::npos || endIndex == string::npos || beginIndex == endIndex)
+        return;
+
+    string columnName = previousLine.substr(beginIndex + 1, endIndex - beginIndex - 1);
+    string fieldName = Util::getFieldName(line);
+
+    columnMappings[fieldName] = columnName;
 }
 
 //Not in use currently
@@ -242,4 +254,33 @@ void AnnotationPass::processingFinished() {
     outputFile << "}\n";
 
     outputFile.close();
+}
+
+void AnnotationPass::generateColumnMappings(ofstream &outputFile) {
+
+    if (columnMappings.empty())
+        return;
+
+    outputFile << "\npublic:\n";
+    outputFile << "\tunordered_map<string, string>& getColumnMappings() const override{\n"
+                  "        return columnMappings;\n"
+                  "    }\n\n"
+                  "\tstatic unordered_map<string,string> generateMappings(){\n"
+                  "\t\tunordered_map<string,string> columnMappings = {};\n";
+
+    for (const auto& it : columnMappings){
+        outputFile << "\t\tcolumnMappings[\"" << it.first << "\"] = \"" << it.second << "\";\n";
+    }
+
+    outputFile << "\t\treturn columnMappings;\n";
+    outputFile << "\t}\n\n";
+
+    outputFile << "\tstatic inline unordered_map<string,string> columnMappings = generateMappings();\n\n";
+}
+
+void AnnotationPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {
+}
+
+bool AnnotationPass::shouldProcess(string &fileName) const {
+    return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
 }

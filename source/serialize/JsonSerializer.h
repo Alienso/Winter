@@ -30,6 +30,7 @@ private:
     [[nodiscard]] static string* vectorPtrToString(const vector<string*>& source);
 
 
+    //TODO this has a copy in field but returning string instead of string*
     template<typename T>
     static string* serializeField(const Field& field, Reflect* obj, T (Field::*getFunc)(void*) const, string (*to_string_func)(T)){
         T t;

@@ -41,6 +41,8 @@ int PgStatement::executeUpdate(const char *s) {
         return -1;
 
     char *rowsAffected = PQgetvalue(res, 0, 0);
+    if (rowsAffected == nullptr)
+        return 1;
     return stoi(rowsAffected);
 }
 

@@ -24,6 +24,7 @@ public:
             name(_name), typeStr(_typeStr), type(static_cast<FieldType>(_type)), className(_className), offset(_offset), isPtr(_isPtr), isVec(_isVec){}
 
     void* getAddress(void* object) const;
+    string getAsString(Reflect* object, char stringChar = 0) const;
 
     void set(void* object, const char* value) const;
     void setInt(void* object, int value) const;
@@ -111,6 +112,22 @@ private:
         }
         else{
             (this->*setFunc)(obj, t);
+        }
+    }
+
+    template<typename T>
+    string getAsString(Reflect* obj, T (Field::*getFunc)(void*) const, string (*to_string_func)(T)) const{
+        T t;
+        if (!isPtr) {
+            t = (this->*getFunc)(obj);
+            return to_string_func(t);
+        }
+        else{
+            void* ptr = *getPtr(obj);
+            if (ptr == nullptr)
+                return "null";
+            t = *(T*)ptr;
+            return to_string_func(t);
         }
     }
 

@@ -25,19 +25,12 @@ string* JsonSerializer::serialize(Reflect* obj){
     return s;
 }
 
-string to_string(short x){
-    return std::to_string((int)x);
-}
-string to_string(bool x){
-    return x ? "true" : "false";
-}
-
 string* JsonSerializer::convertToJsonString(const Field &field, Reflect* obj){
     switch (field.type) {
         case FIELD_TYPE_INT:
             return serializeField<int>(field, obj, &Field::getInt, to_string);
         case FIELD_TYPE_SHORT:
-            return serializeField<short>(field, obj, &Field::getShort, to_string);
+            return serializeField<short>(field, obj, &Field::getShort, StringUtils::to_string);
         case FIELD_TYPE_LONG:
             return serializeField<long>(field, obj, &Field::getLong, to_string);
         case FIELD_TYPE_FLOAT:
@@ -45,7 +38,7 @@ string* JsonSerializer::convertToJsonString(const Field &field, Reflect* obj){
         case FIELD_TYPE_DOUBLE:
             return serializeField<double>(field, obj, &Field::getDouble, to_string);
         case FIELD_TYPE_BOOL:
-            return serializeField<bool>(field, obj, &Field::getBool, to_string);
+            return serializeField<bool>(field, obj, &Field::getBool, StringUtils::to_string);
         case FIELD_TYPE_CHAR:
             if (!field.isPtr) {
                 char c = field.getChar(obj);
@@ -99,7 +92,7 @@ string* JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) 
         case FIELD_TYPE_INT:
             return handleVecData<int>(f, obj, isElemPtr, to_string);
         case FIELD_TYPE_SHORT:
-            return handleVecData<short>(f, obj, isElemPtr, to_string);
+            return handleVecData<short>(f, obj, isElemPtr, StringUtils::to_string);
         case FIELD_TYPE_LONG:
             return handleVecData<long>(f, obj, isElemPtr, to_string);
         case FIELD_TYPE_FLOAT:
@@ -107,7 +100,7 @@ string* JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *obj) 
         case FIELD_TYPE_DOUBLE:
             return handleVecData<double>(f, obj, isElemPtr, to_string);
         case FIELD_TYPE_BOOL:
-            return handleVecData<bool>(f, obj, isElemPtr, to_string);
+            return handleVecData<bool>(f, obj, isElemPtr, StringUtils::to_string);
         case FIELD_TYPE_CHAR:
             if (!f.isPtr) {
                 if (!isElemPtr) {

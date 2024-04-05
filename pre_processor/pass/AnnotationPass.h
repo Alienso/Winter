@@ -10,7 +10,9 @@
  */
 
 #include "Pass.h"
+
 #include <vector>
+#include <unordered_map>
 
 class AnnotationPass : public Pass{
 public:
@@ -33,14 +35,22 @@ private:
 
     void registerEndpoints(std::ofstream &outputFile);
     void addPostConstruct(std::ofstream &outputFile);
+    void generateColumnMappings(std::ofstream &outputFile);
     void handleRestController(std::string &line);
-    void handlePostConstruct(std::string &basicString);
+    void handlePostConstruct(std::string &line);
+    void handleEntityColumn(std::string &line, std::string& previousLine);
+
+    int bracketCounter;
 
     std::vector<EndpointData> endpointData;
     std::vector<std::string> restControllers;
-    int bracketCounter;
+
     std::string routerCppFile;
     std::string postConstructMethodName;
+
+    std::string entityCppFile;
+
+    std::unordered_map<std::string,std::string> columnMappings;
 
     bool handleAutoWire(std::string &line, std::ofstream &outputFile);
 };

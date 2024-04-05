@@ -20,6 +20,7 @@ bool PgResultSet::next() {
     return true;
 }
 
+//TODO matching? Entity is available now. but Reflect* are also viable
 Reflect* PgResultSet::getResult(Reflect* (*allocator)()){
 
     if (resultSize == 0){

@@ -276,6 +276,20 @@ public:
         s.resize(j);
         return s;
     }
+
+    [[nodiscard]] static inline string to_string(short x){
+        return std::to_string((int)x);
+    }
+    [[nodiscard]] static inline string to_string(bool x){
+        return x ? "true" : "false";
+    }
+    [[nodiscard]] static inline string to_string(byte x){
+        return std::to_string((char)x);
+    }
+    [[nodiscard]] static inline string to_string(char x){
+        return std::to_string(x);
+    }
+
 };
 
 #endif //WINTER_STRINGUTILS_H

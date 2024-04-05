@@ -9,11 +9,25 @@
 
 #include <string>
 #include <Reflect.h>
+#include <../sql/Entity.h>
 
-//TODO type* defaults to reflect* in deserializer
-class PlayerEntity : public Reflect {
+class PlayerEntity : public Entity {
 public:
+
+    $Column("id")
     long id;
+
+    $Column("name")
     std::string name;
+
+    $Column("created_on")
     std::string createdOn;
+
+    [[nodiscard]] string getTableName() const override {
+        return "player";
+    }
+
+    [[nodiscard]] string getPrimaryKeyName() const override {
+        return "id";
+    }
 };

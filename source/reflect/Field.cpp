@@ -102,6 +102,46 @@ string Field::getString(void* object) const{
     return *(string*)getAddress(object);
 }
 
+string Field::getAsString(Reflect *object, char stringChar) const {
+    switch (type) {
+        case FIELD_TYPE_SHORT:
+            return getAsString<short>(object, &Field::getShort, StringUtils::to_string);
+        case FIELD_TYPE_INT:
+            return getAsString<int>(object, &Field::getInt, to_string);
+        case FIELD_TYPE_LONG:
+            return getAsString<long>(object, &Field::getLong, to_string);
+        case FIELD_TYPE_FLOAT:
+            return getAsString<float>(object, &Field::getFloat, to_string);
+        case FIELD_TYPE_DOUBLE:
+            return getAsString<double>(object, &Field::getDouble, to_string);
+        case FIELD_TYPE_CHAR:
+            if (stringChar == 0)
+                return getAsString<char>(object, &Field::getChar, StringUtils::to_string);
+            else return stringChar + getAsString<char>(object, &Field::getChar, StringUtils::to_string) + stringChar;
+        case FIELD_TYPE_BOOL:
+            return getAsString<bool>(object, &Field::getBool, StringUtils::to_string);
+        case FIELD_TYPE_BYTE:
+            return getAsString<byte>(object, &Field::getByte, StringUtils::to_string);
+        case FIELD_TYPE_STRING:
+            if (!isPtr) {
+                if (stringChar == 0) return getString(object);
+                else return stringChar + getString(object) + stringChar;
+            }
+            else{
+                void* ptr = *getPtr(object);
+                if (ptr == nullptr) {
+                    if (stringChar == 0) return "null";
+                    else return stringChar + string("null") + stringChar;
+                }
+                if (stringChar == 0) return *(string*)ptr;
+                return stringChar + *(string*)ptr + stringChar;
+            }
+        default:
+            wtLogError("Unknown type encountered: ", type);
+            if (stringChar == 0) return "null";
+            else return stringChar + string("null") + stringChar;
+    }
+}
 
 void Field::set(void *object, const char *value) const {
     switch (type) {

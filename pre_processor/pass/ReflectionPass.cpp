@@ -55,11 +55,25 @@ bool ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
             size_t semicolonIndex = line.find(':');
             if (semicolonIndex != string::npos) {
                 size_t reflectIndex = line.find("Reflect", semicolonIndex);
-                if (reflectIndex != string::npos)
-                    shouldAddReflection = true;
+                if (reflectIndex != string::npos) {
+                    if (className != "Entity") {
+                        shouldAddReflection = true;
+                        goto next;
+                    }
+                }
+
+                if (className != "Entity") {
+                    reflectIndex = line.find("Entity", semicolonIndex);
+                    if (reflectIndex != string::npos) {
+                        shouldAddReflection = true;
+                        goto next;
+                    }
+                }
             }
         }
     }
+
+    next:
 
     //Bracket counters
     for (char c: line) {
@@ -153,7 +167,7 @@ void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
     outputFile << "\n\tstatic inline std::vector<Field> declaredFields = {};\n" <<
                "\tstatic inline std::vector<Method> declaredMethods = {};\n";
 
-    outputFile << "\tField *getField(const char *fieldName) override {\n"
+    outputFile << "\tField *getField(const char *fieldName) const override {\n"
                   "        for (Field& f : declaredFields){\n"
                   "            if (f.name == fieldName)\n"
                   "                return &f;\n"
