@@ -24,7 +24,7 @@ public:
                 break;
             }
         }
-        for(int i=s.size() - 1; i > 0; i--){
+        for(long long i=s.size() - 1; i > 0; i--){
             if (!isspace(s[i])){
                 end = i;
                 break;
@@ -56,12 +56,12 @@ public:
     }
 
     [[nodiscard]] static bool endsWith(const string& s, const char* suffix) {
-        int suffixSize = 0;
+        size_t suffixSize = 0;
         for (;suffix[suffixSize] != '\0'; suffixSize++);
         suffixSize--;
-        unsigned int offset = s.length() - suffixSize - 1;
+        size_t offset = s.length() - suffixSize - 1;
 
-        int i=suffixSize;
+        long long i=suffixSize;
         while (i > 0){
             if (s[offset + i] != suffix[i])
                 return false;
@@ -75,7 +75,7 @@ public:
     }
 
     [[nodiscard]] static bool startsWith(const char*s, const char* prefix) {
-        for (int i=0; true; i++) {
+        for (size_t i=0; true; i++) {
             if (prefix[i] == '\0' || s[i] == '\0')
                 return true;
             else if (s[i] != prefix[i])
@@ -109,7 +109,7 @@ public:
         }
 
         size_t i;
-        int bracketCounter = 0;
+        unsigned int bracketCounter = 0;
         bool inStr = false;
         while (startIndex < s.size()){
             endIndex = string::npos;
@@ -140,7 +140,7 @@ public:
         auto* res = new vector<string>();
         size_t startIndex = 0, endIndex;
         size_t i;
-        int bracketCounter = 0;
+        unsigned int bracketCounter = 0;
         bool inStr = false;
 
         while(s[startIndex] != '{' && startIndex < s.size()) startIndex++;
@@ -180,8 +180,8 @@ public:
     }
 
     [[nodiscard]] static string_view rtrim(const string_view s){
-        int size = s.size();
-        for(int i=size;i>=0; i--){
+        long long size = s.size();
+        for(long long i=size;i>=0; i--){
             if (isspace(s[i]))
                 size--;
             else break;
@@ -260,7 +260,7 @@ public:
         string s;
         s.resize(value.size());
 
-        int j = 0;
+        size_t j = 0;
         for (size_t i=0; i<value.size(); i++){
             if (value[i] == ' ' || value[i] == '_'){
                 i++;

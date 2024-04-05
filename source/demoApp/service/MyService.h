@@ -6,7 +6,7 @@
 #define WINTER_MYSERVICE_H
 
 
-#include <../Component.h>
+#include <source/core/Component.h>
 
 class MyService : public Component {
 

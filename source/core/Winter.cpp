@@ -5,13 +5,13 @@
 #include <thread>
 
 #include "Winter.h"
-#include "http/HttpRequest.h"
+#include "source/http/HttpRequest.h"
 #include "Logger.h"
-#include "http/HttpResponse.h"
+#include "source/http/HttpResponse.h"
 #include "Component.h"
 #include "Configuration.h"
 
-#include "./sql/postgres/PgConnection.h"
+#include "source/sql/postgres/PgConnection.h"
 
 
 void Winter::run() {

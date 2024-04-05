@@ -35,18 +35,18 @@ include_directories(${PROJECT_SOURCE_DIR}/source/util)
 
 #pre-process app dir and use it for compilation
 
-set(SOURCES source/Winter.cpp source/Winter.h
+set(SOURCES source/core/Winter.cpp source/core/Winter.h
         source/http/HttpServer.cpp source/http/HttpServer.h
         source/http/HttpRequest.cpp source/http/HttpRequest.h
         source/http/URI.cpp source/http/URI.h
         source/log/Logger.cpp source/log/Logger.h
         source/log/Appender.cpp source/log/Appender.h
-        source/Configuration.cpp source/Configuration.h
+        source/core/Configuration.cpp source/core/Configuration.h
         source/util/tsqueue.h source/util/stringUtils.h
         source/http/Connection.cpp source/http/Connection.h
         source/http/HttpResponse.cpp source/http/HttpResponse.h
         source/http/httpConstants.h source/http/httpConstants.cpp
-        source/Router.cpp source/Router.h
+        source/core/Router.cpp source/core/Router.h
         source/app/controller/MyController.cpp source/app/controller/MyController.h
         source/app/service/MyService.cpp source/app/service/MyService.h
         source/reflect/Reflect.cpp source/reflect/Reflect.h
@@ -56,7 +56,7 @@ set(SOURCES source/Winter.cpp source/Winter.h
         source/serialize/JsonSerializer.cpp source/serialize/JsonSerializer.h
         source/serialize/FieldTypeUtil.h source/http/ControllerMapping.h
         source/util/ThreadPool.h source/util/util.h
-        source/Component.cpp source/Component.h
+        source/core/Component.cpp source/core/Component.h
         source/app/dto/BaseRequest.h source/app/dto/BaseResponse.h
         source/app/dto/InnerClass.h
         source/sql/Connection.h
@@ -152,7 +152,7 @@ add_executable(PreProcessor pre_processor/main.cpp
         pre_processor/pass/ReflectionPass.cpp pre_processor/pass/ReflectionPass.h
         pre_processor/pass/Pass.cpp pre_processor/pass/Pass.h
         pre_processor/pass/AnnotationPass.cpp pre_processor/pass/AnnotationPass.h
-        pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h pre_processor/util.h)
+        pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h pre_processor/util.h source/http/client/HttpClient.cpp source/http/client/HttpClient.h)
 
 #---------------------------------------
 #Temp

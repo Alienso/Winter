@@ -18,9 +18,6 @@ TEST_CASE("Serialization Tests", "[JsonSerializer::serialize]"){
     fillPtrData(dto);
     InnerClass clazz{5,2.5,"c"};
 
-    std::cout << "FIELD COUNT: " << dto.getDeclaredFields().size() << '\n';
-
-
     SECTION("Serializing InnerClass"){
         string expected = "{\n\"x\":5.000000,\n\"y\":2.500000,\n\"c\":\"c\"\n}";
         string* s = JsonSerializer::serialize(&clazz);

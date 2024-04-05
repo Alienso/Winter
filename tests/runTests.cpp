@@ -24,8 +24,8 @@ Reflect* _InnerClass_(){
 }
 
 static int __init__ = []{
-    AllFieldsDTO::initializeReflection();
-    AllFieldsVecDTO::initializeReflection();
+    /*AllFieldsDTO::initializeReflection();
+    AllFieldsVecDTO::initializeReflection();*/
     InnerClass::initializeReflection();
     Reflect::classMap["AllFieldsDTO"] = &_AllFieldsDTO_;
     Reflect::classMap["AllFieldsVecDTO"] = &_AllFieldsVecDTO_;

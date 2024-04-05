@@ -13,11 +13,11 @@
 
 #include <memory>
 #include <utility>
-#include "http/HttpRequest.h"
+#include "source/http/HttpRequest.h"
 #include "Reflect.h"
 #include "mutex"
-#include "http/HttpResponse.h"
-#include "util/ThreadPool.h"
+#include "source/http/HttpResponse.h"
+#include "source/util/ThreadPool.h"
 
 class Endpoint{
 public:

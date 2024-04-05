@@ -3,7 +3,7 @@
 //
 
 #include "Logger.h"
-#include "../Configuration.h"
+#include "source/core/Configuration.h"
 
 #include <cstdarg>
 
