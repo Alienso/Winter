@@ -5,7 +5,7 @@
 #ifndef WINTER_ALLFIELDSDTO_H
 #define WINTER_ALLFIELDSDTO_H
 
-#include "tests/dto/InnerClass.h"
+#include "InnerClass.h"
 
 class AllFieldsDTO : public Reflect {
 public:
