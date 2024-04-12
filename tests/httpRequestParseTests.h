@@ -14,7 +14,7 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().empty());
+        REQUIRE(request->getHttpHeaders().empty());
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().empty());
@@ -25,7 +25,7 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::POST);
-        REQUIRE(request->getRequestHeaders().empty());
+        REQUIRE(request->getHttpHeaders().empty());
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
     }
@@ -35,7 +35,7 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::PATCH);
-        REQUIRE(request->getRequestHeaders().empty());
+        REQUIRE(request->getHttpHeaders().empty());
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_0);
         REQUIRE(request->getQueryParameters().empty());
@@ -46,7 +46,7 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::DELETE_);
-        REQUIRE(request->getRequestHeaders().empty());
+        REQUIRE(request->getHttpHeaders().empty());
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V2_0);
         REQUIRE(request->getQueryParameters().empty());
@@ -57,7 +57,7 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().empty());
+        REQUIRE(request->getHttpHeaders().empty());
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().size() == 1);
@@ -69,7 +69,7 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().empty());
+        REQUIRE(request->getHttpHeaders().empty());
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().size() == 2);
@@ -87,8 +87,8 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
 
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().size() == 1);
-        REQUIRE(request->getRequestHeaders().at("Content-Type") == "application/json");
+        REQUIRE(request->getHttpHeaders().size() == 1);
+        REQUIRE(request->getHttpHeaders().at("Content-Type") == "application/json");
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().empty());
@@ -99,8 +99,8 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().size() == 1);
-        REQUIRE(request->getRequestHeaders().at("Content-Type") == "application/json");
+        REQUIRE(request->getHttpHeaders().size() == 1);
+        REQUIRE(request->getHttpHeaders().at("Content-Type") == "application/json");
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().empty());
@@ -111,9 +111,9 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().size() == 2);
-        REQUIRE(request->getRequestHeaders().at("Content-Type") == "application/json");
-        REQUIRE(request->getRequestHeaders().at("User-Agent") == "PostmanRuntime/7.37.0");
+        REQUIRE(request->getHttpHeaders().size() == 2);
+        REQUIRE(request->getHttpHeaders().at("Content-Type") == "application/json");
+        REQUIRE(request->getHttpHeaders().at("User-Agent") == "PostmanRuntime/7.37.0");
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().empty());
@@ -124,9 +124,9 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().size() == 2);
-        REQUIRE(request->getRequestHeaders().at("Content-Type") == "application/json");
-        REQUIRE(request->getRequestHeaders().at("User-Agent") == "PostmanRuntime/7.37.0");
+        REQUIRE(request->getHttpHeaders().size() == 2);
+        REQUIRE(request->getHttpHeaders().at("Content-Type") == "application/json");
+        REQUIRE(request->getHttpHeaders().at("User-Agent") == "PostmanRuntime/7.37.0");
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().empty());
@@ -137,9 +137,9 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().size() == 2);
-        REQUIRE(request->getRequestHeaders().at("Content-Type") == "application/json");
-        REQUIRE(request->getRequestHeaders().at("User-Agent") == "PostmanRuntime/7.37.0");
+        REQUIRE(request->getHttpHeaders().size() == 2);
+        REQUIRE(request->getHttpHeaders().at("Content-Type") == "application/json");
+        REQUIRE(request->getHttpHeaders().at("User-Agent") == "PostmanRuntime/7.37.0");
         REQUIRE(request->getRequestBody().empty());
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().empty());
@@ -155,7 +155,7 @@ TEST_CASE("Parsing httpRequest with body", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestStr + "\r\n\r\n" + requestBody);
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().size() == 8);
+        REQUIRE(request->getHttpHeaders().size() == 8);
         REQUIRE(request->getRequestBody() == requestBody);
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().empty());
@@ -165,7 +165,7 @@ TEST_CASE("Parsing httpRequest with body", "[HttpRequest::parseFromString]"){
         shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestStr + "\n\n" + requestBody);
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
-        REQUIRE(request->getRequestHeaders().size() == 8);
+        REQUIRE(request->getHttpHeaders().size() == 8);
         REQUIRE(request->getRequestBody() == requestBody);
         REQUIRE(request->getHttpVersion() == HttpVersion::V1_1);
         REQUIRE(request->getQueryParameters().empty());
