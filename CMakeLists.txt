@@ -37,6 +37,7 @@ include_directories(${PROJECT_SOURCE_DIR}/source/log)
 include_directories(${PROJECT_SOURCE_DIR}/source/reflect)
 include_directories(${PROJECT_SOURCE_DIR}/source/serialize)
 include_directories(${PROJECT_SOURCE_DIR}/source/util)
+include_directories(${PROJECT_SOURCE_DIR}/source/http)
 
 #pre-process app dir and use it for compilation
 
@@ -46,10 +47,11 @@ set(SOURCES source/core/Winter.cpp source/core/Winter.h
         source/core/Router.cpp source/core/Router.h
 
         source/http/HttpServer.cpp source/http/HttpServer.h
+        source/http/HttpBase.cpp source/http/HttpBase.h
         source/http/HttpRequest.cpp source/http/HttpRequest.h
+        source/http/HttpResponse.cpp source/http/HttpResponse.h
         source/http/URI.cpp source/http/URI.h
         source/http/Connection.cpp source/http/Connection.h
-        source/http/HttpResponse.cpp source/http/HttpResponse.h
         source/http/httpConstants.h source/http/httpConstants.cpp
         source/http/client/HttpClient.cpp source/http/client/HttpClient.h
 

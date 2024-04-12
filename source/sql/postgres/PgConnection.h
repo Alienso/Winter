@@ -9,6 +9,8 @@
 #include "../Connection.h"
 #include <libpq-fe.h>
 
+using namespace wt::sql;
+
 inline bool validateResponse(const PGconn *conn, PGresult *res, const char *message){
     auto code = PQresultStatus(res);
     if (code != PGRES_COMMAND_OK && code != PGRES_TUPLES_OK){

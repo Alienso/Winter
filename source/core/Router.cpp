@@ -19,14 +19,18 @@ void Router::routeRequest(shared_ptr<HttpRequest> &request) {
         if (endpoint->uri == request->getUri()){
             if (endpoint->method == request->getMethod()) {
                 threadPool.queueTask([endpoint, request] {
-                    HttpResponse *response = endpoint->func(request.get());
-                    response->setConnection(request->getConnection());
-                    response->send();
-                    delete response;
+                    try {
+                        HttpResponse *response = endpoint->func(request.get());
+                        response->setConnection(request->getConnection());
+                        response->send();
+                        delete response;
+                    } catch(std::exception& e) {
+                        wtLogError("Error occurred! %s", e.what());
+                    }
                 });
                 return;
             } else {
-                HttpResponse httpResponse(HttpCode::METHOD_NOT_ALLOWED);
+                HttpResponse httpResponse(HttpStatus::METHOD_NOT_ALLOWED);
                 httpResponse.setConnection(request->getConnection());
                 httpResponse.send();
                 return;
@@ -34,7 +38,7 @@ void Router::routeRequest(shared_ptr<HttpRequest> &request) {
         }
     }
 
-    HttpResponse httpResponse(HttpCode::NOT_FOUND);
+    HttpResponse httpResponse(HttpStatus::NOT_FOUND);
     httpResponse.setConnection(request->getConnection());
     httpResponse.send();
 }

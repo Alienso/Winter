@@ -3,23 +3,31 @@
 //
 
 #include "Connection.h"
+#include "HttpRequest.h"
 #include "asio/read.hpp"
 #include "Logger.h"
-#include <iostream>
+
 #include <optional>
 #include <thread>
+#include <include/asio/streambuf.hpp>
+#include <include/asio/read_until.hpp>
 
-Connection::Connection(asio::io_context &context, asio::ip::tcp::socket socket_, tsqueue<shared_ptr<HttpRequest>>& queue) :
-     socket(std::move(socket_)), asioContext(context), requestQueue(queue) {}
 
-void Connection::tryParseRequest(){
+wt::web::Connection::Connection(asio::ip::tcp::socket socket_) : socket(std::move(socket_)) {}
+
+
+wt::web::Connection::Connection(asio::ip::tcp::socket socket_, tsqueue<shared_ptr<HttpRequest>>* queue) :
+     socket(std::move(socket_)), requestQueue(queue) {}
+
+void wt::web::Connection::tryParseRequest(){
     shared_ptr<HttpRequest> httpRequest = HttpRequest::parseFromString(requestData);
     httpRequest->setConnection(this);
-    requestQueue.push_back(shared_ptr<HttpRequest>(httpRequest));
+    requestQueue->push_back(shared_ptr<HttpRequest>(httpRequest));
     requestParsed = true;
 }
 
-void Connection::readDataFromSocket(){
+//TODO
+void wt::web::Connection::readDataFromSocket(){
     wtLogTrace("Reading data from socket");
     int bufferSize = sizeof(tempRequestBuffer);
     while (int read = socket.read_some(asio::buffer(tempRequestBuffer))){
@@ -27,7 +35,7 @@ void Connection::readDataFromSocket(){
         requestData.resize(requestData.size() + read);
         memcpy(&(requestData[oldSize]), tempRequestBuffer, read);
         if (read != bufferSize){
-            tryParseRequest();
+            //tryParseRequest();
             break;
         }
     }
@@ -60,11 +68,24 @@ void Connection::readDataFromSocket(){
         socket.cancel();*/
 }
 
-void Connection::createHttpRequest() {
+void wt::web::Connection::createHttpRequest() {
     readDataFromSocket();
+    tryParseRequest();
 }
 
-void Connection::respondToHttpRequest(const string& response){
-    socket.write_some(asio::buffer(response.data(), response.size()));
+string& wt::web::Connection::getDataFromSocket(){
+    readDataFromSocket();
+    return requestData;
+}
+
+void wt::web::Connection::respondToHttpRequest(const string& response){
+    size_t bytesWritten = 0;
+    while(bytesWritten < response.size()) {
+        const char* ptr = &(response[bytesWritten]);
+        bytesWritten += socket.write_some(asio::buffer(ptr, response.size() - bytesWritten));
+    }
+}
+
+void wt::web::Connection::close(){
     socket.close();
 }

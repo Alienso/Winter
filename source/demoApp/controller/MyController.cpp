@@ -5,6 +5,7 @@
 #include "MyController.h"
 #include "../dto/BaseRequest.h"
 #include "../dto/BaseResponse.h"
+#include "client/HttpClient.h"
 
 JsonDeserializer MyController::deserializer = {};
 
@@ -31,7 +32,7 @@ HttpResponse *MyController::home(HttpRequest *httpRequest) {
     response->innerClass = inner;
     response->sum = sum;
 
-    return new HttpResponse(response, HttpCode::OK);
+    return new HttpResponse(response, HttpStatus::OK);
 }
 
 HttpResponse *MyController::player(HttpRequest *request) {
@@ -66,5 +67,16 @@ HttpResponse *MyController::player(HttpRequest *request) {
     delete player2;
     delete newPlayer;
 
-    return new HttpResponse(HttpCode::OK);
+    return new HttpResponse(HttpStatus::OK);
 }
+
+HttpResponse *MyController::clientTest(HttpRequest *request) {
+    shared_ptr<HttpClient> client = HttpClient::builder()
+            .baseUrl("/home")
+            .build();
+
+    InnerClass body(1.0,0.5,"Val");
+    int res = client->get()->uri("/v2").bodyValue(&body).retrieve().block<int>();
+    return new HttpResponse(HttpStatus::OK);
+}
+

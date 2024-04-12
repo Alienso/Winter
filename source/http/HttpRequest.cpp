@@ -3,10 +3,10 @@
 //
 
 #include "HttpRequest.h"
-#include "Connection.h"
 #include "Logger.h"
 #include "stringUtils.h"
 #include "../util/util.h"
+
 
 HttpRequest::HttpRequest() {}
 
@@ -58,7 +58,7 @@ void HttpRequest::parseRequestLine(HttpRequest &request, const string &line) {
 
     endIndex = line.find(' ');
     string_view method(line.data(), endIndex);
-    request.method = HttpMethod::fromString(method.data());
+    request.httpMethod = HttpMethod::fromString(method.data());
 
     startIndex = endIndex + 1;
     size_t queryParamsStart = 0;
@@ -156,20 +156,18 @@ void HttpRequest::parseRequestHeaders(HttpRequest &request, const string &header
             headerValue = headers.substr(startIndex, endIndex - startIndex);
 
         startIndex = endIndex + 1;
-        request.requestHeaders[headerName] = StringUtils::trim(headerValue);
+        request.httpHeaders[headerName] = StringUtils::trim(headerValue);
     }
 }
 
 void HttpRequest::parseRequestBody(HttpRequest &request, string_view body) {
-    request.requestBody = body.substr(0, body.size());
+    request.httpBody = body.substr(0, body.size());
 }
 
-void HttpRequest::setConnection(Connection* _connection) {
-    this->connection = _connection;
-}
-
-Connection *HttpRequest::getConnection() const {
-    return connection;
+void HttpRequest::send() const {
+    string response = toResponseString();
+    connection->respondToHttpRequest(response);
+    connection->close();
 }
 
 const URI &HttpRequest::getUri() const {
@@ -177,21 +175,55 @@ const URI &HttpRequest::getUri() const {
 }
 
 HttpMethod *HttpRequest::getMethod() const {
-    return method;
+    return httpMethod;
+}
+
+
+const unordered_map<string, string> &HttpRequest::getQueryParameters() {
+    return queryParameters;
+}
+
+string HttpRequest::writeRequestLine() const {
+    return httpMethod->name + ' ' + uri.getFullPath() + ' ' + httpVersion->name + '\n';
+}
+
+
+const string &HttpRequest::getBody() const {
+    return httpBody;
+}
+
+void HttpRequest::setConnection(wt::web::Connection * _connection) {
+    this->connection = _connection;
+}
+
+wt::web::Connection *HttpRequest::getConnection() const {
+    return connection;
 }
 
 const string &HttpRequest::getRequestBody() const {
-    return requestBody;
+    return httpBody;
 }
 
-const unordered_map<string, string> &HttpRequest::getRequestHeaders() {
-    return requestHeaders;
+unordered_map<string, string> &HttpRequest::getHttpHeaders() {
+    return httpHeaders;
 }
 
 HttpVersion *HttpRequest::getHttpVersion() const {
     return httpVersion;
 }
 
-const unordered_map<string, string> &HttpRequest::getQueryParameters() {
-    return queryParameters;
+void HttpRequest::setHttpHeaders(const unordered_map<string, string> &headers) {
+    httpHeaders = headers;
+}
+
+void HttpRequest::setBody(const string &body) {
+    httpBody = body;
+}
+
+void HttpRequest::setMethod(HttpMethod *method) {
+    httpMethod = method;
+}
+
+void HttpRequest::setUri(const char *url) {
+    this->uri = URI(url);
 }

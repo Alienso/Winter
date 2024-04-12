@@ -9,17 +9,17 @@
 
 using namespace std;
 
-class HttpCode{
+class HttpStatus{
 public:
-    HttpCode(int _code, const char* _name) : code(_code), name(_name) {}
+    HttpStatus(int _code, const char* _name) : code(_code), name(_name) {}
     const int code;
     const string name;
 
-    static HttpCode* OK;
-    static HttpCode* BAD_REQUEST;
-    static HttpCode* NOT_FOUND;
-    static HttpCode* INTERNAL_SERVER_ERROR;
-    static HttpCode* METHOD_NOT_ALLOWED;
+    static HttpStatus* OK;
+    static HttpStatus* BAD_REQUEST;
+    static HttpStatus* NOT_FOUND;
+    static HttpStatus* INTERNAL_SERVER_ERROR;
+    static HttpStatus* METHOD_NOT_ALLOWED;
 };
 
 class HttpVersion{
@@ -36,8 +36,8 @@ public:
 
 class HttpMethod{
 public:
-    explicit HttpMethod(const char* _method) : method(_method) {}
-    const string method;
+    explicit HttpMethod(const char* _method) : name(_method) {}
+    const string name;
 
     [[nodiscard]] static HttpMethod* fromString(const char* s);
 
@@ -50,6 +50,26 @@ public:
     static HttpMethod* OPTIONS;
     static HttpMethod* TRACE;
     static HttpMethod* PATCH;
+
+};
+
+
+class MediaType{
+public:
+    explicit MediaType(const char* type) : value(type){}
+    const string value;
+
+    static MediaType* APPLICATION_JSON;
+    static MediaType* TEXT_PLAIN;
+    static MediaType* TEXT_HTML;
+    static MediaType* TEXT_JAVASCRIPT;
+    static MediaType* IMAGE_PNG;
+    static MediaType* IMAGE_JPEG;
+    static MediaType* MULTIPART_FORM_DATA;
+    static MediaType* DOCUMENT_PDF;
+    //TODO
+
+private:
 
 };
 

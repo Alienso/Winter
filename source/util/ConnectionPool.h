@@ -12,6 +12,7 @@
 #include "Logger.h"
 
 using namespace std;
+using namespace wt::sql;
 
 
 class ConnectionPool {

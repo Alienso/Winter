@@ -8,7 +8,7 @@
 
 #include "../../demoApp/repository/PlayerRepository.h"
 #include "../../demoApp/service/MyService.h"
-#include "../../http/ControllerMapping.h"
+#include "ControllerMapping.h"
 
 
 
@@ -25,6 +25,9 @@ class MyController : public Component {
 
     $GET("/player")
     HttpResponse* player(HttpRequest* request);
+
+    $GET("/client")
+    HttpResponse* clientTest(HttpRequest* request);
 
 private:
     static JsonDeserializer deserializer;

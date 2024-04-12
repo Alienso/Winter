@@ -7,8 +7,8 @@
 
 #include "../core/Router.h"
 #include "../core/Component.h"
-#include "../http/HttpRequest.h"
-#include "../http/httpConstants.h"
+#include "HttpRequest.h"
+#include "httpConstants.h"
 #include "JsonDeserializer.h"
 #include "JsonSerializer.h"
 

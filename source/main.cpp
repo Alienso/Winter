@@ -4,7 +4,16 @@
 #include <iostream>
 #include "../core/Winter.h"
 
+void sighandler(int signum){
+    size_t threadId = std::hash<std::thread::id>{}(std::this_thread::get_id());
+    printf("Thread %zu got signal %d\n", threadId, signum);
+    std::terminate();
+}
+
+
 int main() {
+
+    signal(SIGSEGV, sighandler);
 
     Winter app;
     try {

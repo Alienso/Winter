@@ -8,11 +8,11 @@
 
 #include <cstring>
 
-HttpCode *HttpCode::OK = new HttpCode(200,"OK");
-HttpCode *HttpCode::BAD_REQUEST = new HttpCode(400,"Bad Request");
-HttpCode *HttpCode::NOT_FOUND = new HttpCode(404,"Not found");
-HttpCode *HttpCode::METHOD_NOT_ALLOWED = new HttpCode(405,"Method not allowed");
-HttpCode *HttpCode::INTERNAL_SERVER_ERROR = new HttpCode(500,"Internal server error");
+HttpStatus *HttpStatus::OK = new HttpStatus(200, "OK");
+HttpStatus *HttpStatus::BAD_REQUEST = new HttpStatus(400, "Bad Request");
+HttpStatus *HttpStatus::NOT_FOUND = new HttpStatus(404, "Not found");
+HttpStatus *HttpStatus::METHOD_NOT_ALLOWED = new HttpStatus(405, "Method not allowed");
+HttpStatus *HttpStatus::INTERNAL_SERVER_ERROR = new HttpStatus(500, "Internal server error");
 
 HttpVersion* HttpVersion::V1_0 = new HttpVersion("HTTP/1.0");
 HttpVersion* HttpVersion::V1_1 = new HttpVersion("HTTP/1.1");
@@ -27,6 +27,15 @@ HttpMethod* HttpMethod::CONNECT = new HttpMethod("CONNECT");
 HttpMethod* HttpMethod::OPTIONS = new HttpMethod("OPTIONS");
 HttpMethod* HttpMethod::TRACE = new HttpMethod("TRACE");
 HttpMethod* HttpMethod::PATCH = new HttpMethod("PATCH");
+
+MediaType* MediaType::TEXT_PLAIN = new MediaType("text/plain");
+MediaType* MediaType::TEXT_HTML = new MediaType("text/html");
+MediaType* MediaType::TEXT_JAVASCRIPT = new MediaType("text/javascript");
+MediaType* MediaType::IMAGE_PNG = new MediaType("image/png");
+MediaType* MediaType::IMAGE_JPEG = new MediaType("image/jpeg");
+MediaType* MediaType::MULTIPART_FORM_DATA = new MediaType("multipart/form-data");
+MediaType* MediaType::APPLICATION_JSON = new MediaType("application/json");
+MediaType* MediaType::DOCUMENT_PDF = new MediaType("document/pdf");
 
 HttpVersion* HttpVersion::fromString(const char* s){
     wtLogTrace("Http version string: %s", s);

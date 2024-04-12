@@ -17,9 +17,9 @@ void HttpServer::listen() {
     asioAcceptor.async_accept([this](std::error_code ec, asio::ip::tcp::socket socket){
         if (!ec){
             wtLogTrace("New Connection: %s", socket.remote_endpoint().address().to_string().data());
-            auto* newConnection = new Connection(asioContext, std::move(socket), requestQueue);
+            auto* newConnection = new wt::web::Connection(std::move(socket), &requestQueue);
             newConnection->createHttpRequest();
-        }else{
+        } else {
             wtLogError("New connection ERROR: %s", ec.message().data());
         }
 

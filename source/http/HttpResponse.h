@@ -14,31 +14,21 @@
 
 using namespace std;
 
-class HttpResponse {
+class HttpResponse : public HttpBase{
 
 public:
     HttpResponse();
-    explicit HttpResponse(HttpCode* code);
-    explicit HttpResponse(Reflect* data, HttpCode* code = HttpCode::OK);
+    explicit HttpResponse(HttpStatus* code);
+    explicit HttpResponse(Reflect* data, HttpStatus* code = HttpStatus::OK);
 
     void send() const;
-    [[nodiscard]] string toResponseString() const;
-    [[nodiscard]] const string& getBody() const;
-    void setConnection(Connection* _connection);
+    void setConnection(wt::web::Connection* _connection);
 
 private:
-    HttpVersion* httpVersion = nullptr;
-    HttpCode* httpCode = nullptr;
-    unordered_map<string,string> responseHeaders;
-    string responseBody;
-
-    Connection* connection = nullptr;
-    JsonSerializer serializer{};
+    HttpStatus* httpCode = nullptr;
     static unordered_map<string,string> baseResponseHeaders;
 
-    [[nodiscard]] string writeRequestLine() const;
-    [[nodiscard]] string writeRequestHeaders() const;
-    [[nodiscard]] string writeRequestBody() const;
+    string writeRequestLine() const override;
 };
 
 

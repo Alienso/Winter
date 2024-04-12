@@ -5,50 +5,64 @@
 #ifndef WINTER_HTTPREQUEST_H
 #define WINTER_HTTPREQUEST_H
 
+#include "URI.h"
+#include "httpConstants.h"
+#include "HttpBase.h"
+
 #include <string>
 #include <unordered_map>
 #include <optional>
 #include <utility>
 #include <vector>
 #include <memory>
-#include "URI.h"
-#include "httpConstants.h"
 
 class Connection;
 
 using namespace std;
 
-class HttpRequest {
+class HttpRequest : public HttpBase{
 
 public:
     HttpRequest();
-    HttpRequest(HttpMethod* _method, URI _uri, HttpVersion* _httpVersion, unordered_map<string,string>& _requestHeaders, string& _requestBody, Connection* _connection ) :
-    method(_method), uri(std::move(_uri)), httpVersion(_httpVersion), requestHeaders(_requestHeaders), requestBody(_requestBody), connection(_connection){}
+    HttpRequest(HttpMethod* _method, URI _uri, HttpVersion* _httpVersion, unordered_map<string,string>& _requestHeaders, string& _requestBody, wt::web::Connection* _connection ) :
+            httpMethod(_method), uri(std::move(_uri)){
+        httpVersion = _httpVersion;
+        httpHeaders = _requestHeaders;
+        httpBody = _requestBody;
+        connection = _connection;
+    }
+
+    void send() const;
 
     [[nodiscard]] static shared_ptr<HttpRequest> parseFromString(const string &data);
 
-    void setConnection(Connection* _connection);
-    [[nodiscard]] Connection* getConnection() const;
     [[nodiscard]] const URI& getUri() const;
     [[nodiscard]] HttpMethod* getMethod() const;
-    [[nodiscard]] HttpVersion* getHttpVersion() const;
     [[nodiscard]] const unordered_map<string,string>& getQueryParameters();
-    [[nodiscard]] const unordered_map<string,string>& getRequestHeaders();
+
+    [[nodiscard]] const string& getBody() const;
+    [[nodiscard]] wt::web::Connection* getConnection() const;
+    [[nodiscard]] HttpVersion* getHttpVersion() const;
+    [[nodiscard]] unordered_map<string,string>& getHttpHeaders();
     [[nodiscard]] const string& getRequestBody() const;
 
+    void setConnection(wt::web::Connection* _connection);
+    void setHttpHeaders(const unordered_map<string,string>& headers);
+    void setBody(const string& body);
+    void setMethod(HttpMethod* method);
+    void setUri(const char* uri);
+
 private:
-    HttpMethod* method;
+    HttpMethod* httpMethod;
     URI uri;
-    HttpVersion* httpVersion;
     unordered_map<string,string> queryParameters;
-    unordered_map<string,string> requestHeaders;
-    string requestBody;
-    Connection* connection;
 
     static void parseRequestLine(HttpRequest& request, const string &line);
     static void parseRequestHeaders(HttpRequest& request, const string &headers);
     static void parseRequestBody(HttpRequest& request, string_view body);
     static void parseQueryParams(HttpRequest &request, const string &basicString, size_t start, size_t index);
+
+    string writeRequestLine() const override;
 };
 
 

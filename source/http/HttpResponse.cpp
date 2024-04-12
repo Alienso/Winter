@@ -11,69 +11,38 @@
 unordered_map<string,string> HttpResponse::baseResponseHeaders = {{"Connection","Closed"},
                                                                   {"Server", "WT/0.0.1"}};
 
-HttpResponse::HttpResponse() : httpVersion(HttpVersion::V1_1) {
-    responseHeaders = baseResponseHeaders;
-    responseHeaders["Date"] = wt::current_datetime();
+HttpResponse::HttpResponse() {
+    httpVersion = HttpVersion::V1_1;
+    httpHeaders = baseResponseHeaders;
+    httpHeaders["Date"] = wt::current_datetime();
 }
 
-HttpResponse::HttpResponse(HttpCode *code) : httpVersion(HttpVersion::V1_1), httpCode(code) {
-    responseHeaders = baseResponseHeaders;
-    responseHeaders["Date"] = wt::current_datetime();
+HttpResponse::HttpResponse(HttpStatus *code) {
+    httpCode = code;
+    httpVersion = HttpVersion::V1_1;
+    httpHeaders = baseResponseHeaders;
+    httpHeaders["Date"] = wt::current_datetime();
 }
 
-HttpResponse::HttpResponse(Reflect *data, HttpCode *code) : httpVersion(HttpVersion::V1_1), httpCode(code) {
-    responseHeaders = baseResponseHeaders;
-    responseHeaders["Date"] = wt::current_datetime();
-    responseHeaders["Content-Type"] = "application/json";
-    responseBody = *(serializer.serialize(data)); //TODO this is a copy
-}
-
-string HttpResponse::toResponseString() const{
-
-    string requestLine = writeRequestLine();
-    string headers = writeRequestHeaders();
-    string body = writeRequestBody();
-
-    return requestLine + headers + body + "\n";
-}
-
-void HttpResponse::send() const {
-    string response = toResponseString();
-    connection->respondToHttpRequest(response);
+HttpResponse::HttpResponse(Reflect *data, HttpStatus *code) {
+    httpCode = code;
+    httpVersion = HttpVersion::V1_1;
+    httpHeaders = baseResponseHeaders;
+    httpHeaders["Date"] = wt::current_datetime();
+    httpHeaders["Content-Type"] = "application/json";
+    httpBody = *(JsonSerializer::serialize(data)); //TODO this is a copy
 }
 
 string HttpResponse::writeRequestLine() const {
     return httpVersion->name + ' ' + to_string(httpCode->code) + ' ' + httpCode->name + '\n';
 }
 
-string HttpResponse::writeRequestHeaders() const {
-    string result;
-    for (const auto& x : responseHeaders){
-
-        for (char c: x.first)
-            result.push_back(c);
-
-        result.push_back(':');
-        result.push_back(' ');
-
-        for (char c: x.second)
-            result.push_back(c);
-
-        result.push_back('\n');
-    }
-
-    result.push_back('\n');
-    return result;
+void HttpResponse::send() const {
+    string response = toResponseString();
+    connection->respondToHttpRequest(response);
+    connection->close();
 }
 
-string HttpResponse::writeRequestBody() const {
-    return responseBody;
-}
-
-const string &HttpResponse::getBody() const {
-    return responseBody;
-}
-
-void HttpResponse::setConnection(Connection * _connection) {
+void HttpResponse::setConnection(wt::web::Connection * _connection) {
     this->connection = _connection;
 }
