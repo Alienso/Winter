@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 25.1.2024..
+// Created by Alienson on 25.1.2024.
 //
 
 #ifndef WINTER_HTTPREQUEST_H
@@ -16,39 +16,37 @@
 
 class Connection;
 
-using namespace std;
-
 class HttpRequest {
 
 public:
     HttpRequest();
-    HttpRequest(HttpMethod* _method, URI _uri, HttpVersion* _httpVersion, unordered_map<string,string>& _requestHeaders, string& _requestBody, Connection* _connection ) :
+    HttpRequest(HttpMethod* _method, URI _uri, HttpVersion* _httpVersion, std::unordered_map<std::string, std::string>& _requestHeaders, std::string& _requestBody, Connection* _connection ) :
     method(_method), uri(std::move(_uri)), httpVersion(_httpVersion), requestHeaders(_requestHeaders), requestBody(_requestBody), connection(_connection){}
 
-    [[nodiscard]] static shared_ptr<HttpRequest> parseFromString(const string &data);
+    [[nodiscard]] static std::shared_ptr<HttpRequest> parseFromString(const std::string &data);
 
     void setConnection(Connection* _connection);
     [[nodiscard]] Connection* getConnection() const;
     [[nodiscard]] const URI& getUri() const;
     [[nodiscard]] HttpMethod* getMethod() const;
     [[nodiscard]] HttpVersion* getHttpVersion() const;
-    [[nodiscard]] const unordered_map<string,string>& getQueryParameters();
-    [[nodiscard]] const unordered_map<string,string>& getRequestHeaders();
-    [[nodiscard]] const string& getRequestBody() const;
+    [[nodiscard]] const std::unordered_map<std::string, std::string>& getQueryParameters();
+    [[nodiscard]] const std::unordered_map<std::string, std::string>& getRequestHeaders();
+    [[nodiscard]] const std::string& getRequestBody() const;
 
 private:
     HttpMethod* method;
     URI uri;
     HttpVersion* httpVersion;
-    unordered_map<string,string> queryParameters;
-    unordered_map<string,string> requestHeaders;
-    string requestBody;
+    std::unordered_map<std::string, std::string> queryParameters;
+    std::unordered_map<std::string, std::string> requestHeaders;
+    std::string requestBody;
     Connection* connection;
 
-    static void parseRequestLine(HttpRequest& request, const string &line);
-    static void parseRequestHeaders(HttpRequest& request, const string &headers);
-    static void parseRequestBody(HttpRequest& request, string_view body);
-    static void parseQueryParams(HttpRequest &request, const string &basicString, size_t start, size_t index);
+    static void parseRequestLine(HttpRequest& request, const std::string &line);
+    static void parseRequestHeaders(HttpRequest& request, const std::string &headers);
+    static void parseRequestBody(HttpRequest& request, std::string_view body);
+    static void parseQueryParams(HttpRequest &request, const std::string &basicString, size_t start, size_t index);
 };
 
 

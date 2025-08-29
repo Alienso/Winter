@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 25.1.2024..
+// Created by Alienson on 25.1.2024.
 //
 
 #include <iostream>
@@ -34,7 +34,7 @@ void HttpServer::update() {
 
 void HttpServer::waitForEvent() {
     while(requestQueue.empty()){
-        unique_lock<mutex> ul(muxBlocking);
+        std::unique_lock<std::mutex> ul(muxBlocking);
         cvBlocking.wait(ul);
     }
 }

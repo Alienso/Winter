@@ -1,5 +1,5 @@
 //
-// Created by alienson on 22.3.24..
+// Created by alienson on 22.3.24.
 //
 
 #ifndef WINTER_PLAYERENTITY_H
@@ -23,11 +23,11 @@ public:
     $Column("created_on")
     std::string createdOn;
 
-    [[nodiscard]] string getTableName() const override {
+    [[nodiscard]] std::string getTableName() const override {
         return "player";
     }
 
-    [[nodiscard]] string getPrimaryKeyName() const override {
+    [[nodiscard]] std::string getPrimaryKeyName() const override {
         return "id";
     }
 };

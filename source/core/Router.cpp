@@ -1,11 +1,11 @@
 //
-// Created by Alienson on 3.2.2024..
+// Created by Alienson on 3.2.2024.
 //
 
 #include "Router.h"
 
 Router* Router::instance = nullptr;
-mutex Router::mutex_;
+std::mutex Router::mutex_;
 
 Router *Router::getInstance() {
     std::lock_guard<std::mutex> lock(mutex_);
@@ -14,7 +14,7 @@ Router *Router::getInstance() {
     return instance;
 }
 
-void Router::routeRequest(shared_ptr<HttpRequest> &request) {
+void Router::routeRequest(std::shared_ptr<HttpRequest> &request) {
     for (auto endpoint : endpoints){
         if (endpoint->uri == request->getUri()){
             if (endpoint->method == request->getMethod()) {

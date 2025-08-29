@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 25.1.2024..
+// Created by Alienson on 25.1.2024.
 //
 
 #include <thread>
@@ -24,7 +24,7 @@ void Winter::init() {
 void Winter::mainLoop() {
     while(!shouldStop){
         httpServer.getRequestQueue().waitForEvent();
-        shared_ptr<HttpRequest> request = httpServer.getRequestQueue().pop_front();
+        std::shared_ptr<HttpRequest> request = httpServer.getRequestQueue().pop_front();
         router->routeRequest(request);
     }
 }

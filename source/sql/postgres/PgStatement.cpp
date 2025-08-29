@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 14.3.2024..
+// Created by Alienson on 14.3.2024.
 //
 
 #include "PgStatement.h"
@@ -12,7 +12,7 @@ PgStatement::~PgStatement() {
         PQclear(res);
 }
 
-shared_ptr<ResultSet> PgStatement::executeQuery(const char *s) {
+std::shared_ptr<ResultSet> PgStatement::executeQuery(const char *s) {
     PGconn* conn = ((PgConnection*)connection.get())->postgresConn;
     PGresult *res;
 
@@ -24,7 +24,7 @@ shared_ptr<ResultSet> PgStatement::executeQuery(const char *s) {
     res = PQexec(conn, s);
     if (!validateResponse(conn, res, "Error while executing query"))
         return nullptr;
-    return shared_ptr<ResultSet>(new PgResultSet(res, conn));
+    return std::shared_ptr<ResultSet>(new PgResultSet(res, conn));
 }
 
 int PgStatement::executeUpdate(const char *s) {
@@ -43,12 +43,12 @@ int PgStatement::executeUpdate(const char *s) {
     char *rowsAffected = PQgetvalue(res, 0, 0);
     if (rowsAffected == nullptr)
         return 1;
-    return stoi(rowsAffected);
+    return std::stoi(rowsAffected);
 }
 
 void PgStatement::setQueryTimeout(int milliseconds) {
     PGconn* conn = ((PgConnection*)connection.get())->postgresConn;
-    PGresult* res = PQexec(conn, ("SET statement_timeout = " + to_string(milliseconds)).data());
+    PGresult* res = PQexec(conn, ("SET statement_timeout = " + std::to_string(milliseconds)).data());
     if (!validateResponse(conn, res, "Error while setting timeout"))
         return;
     PQclear(res);

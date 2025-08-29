@@ -18,10 +18,11 @@ endif(UNIX)
 
 #Postgres
 if (UNIX)
-    include_directories(/usr/include/postgresql/)
+    include_directories(SYSTEM PRIVATE /usr/include/postgresql/)
     link_directories(/usr/local/pgsql/lib/)
 endif(UNIX)
 if (WIN32)
+    #include_directories(SYSTEM PRIVATE "C:/Program Files/PostgreSQL/12/include")
     link_directories("C:/Program Files/PostgreSQL/12/lib")
 endif(WIN32)
 

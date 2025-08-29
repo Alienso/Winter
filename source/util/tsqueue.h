@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 27.1.2024..
+// Created by Alienson on 27.1.2024.
 //
 
 #ifndef WINTER_TSQUEUE_H
@@ -8,8 +8,6 @@
 #include <deque>
 #include <mutex>
 #include <condition_variable>
-
-using namespace std;
 
 template<typename T>
 class tsqueue {
@@ -36,32 +34,32 @@ public:
 
 
 private:
-    deque<T> queue;
-    mutex mutex_;
+    std::deque<T> queue;
+    std::mutex mutex_;
 
-    mutex mutexEmpty;
-    condition_variable cvEmpty;
-    mutex mutexFull;
-    condition_variable cvFull;
+    std::mutex mutexEmpty;
+    std::condition_variable cvEmpty;
+    std::mutex mutexFull;
+    std::condition_variable cvFull;
 };
 
 template<typename T>
 void tsqueue<T>::push_front(const T& val) {
-    scoped_lock lock(mutex_);
+    std::scoped_lock lock(mutex_);
     cvEmpty.notify_one();
     queue.push_front(val);
 }
 
 template<typename T>
 void tsqueue<T>::push_back(const T& val) {
-    scoped_lock lock(mutex_);
+    std::scoped_lock lock(mutex_);
     cvEmpty.notify_one();
     queue.push_back(val);
 }
 
 template<typename T>
 T tsqueue<T>::pop_front() {
-    scoped_lock lock(mutex_);
+    std::scoped_lock lock(mutex_);
     T val = std::move(queue.front());
     queue.pop_front();
     cvFull.notify_one();
@@ -70,7 +68,7 @@ T tsqueue<T>::pop_front() {
 
 template<typename T>
 T tsqueue<T>::pop_back() {
-    scoped_lock lock(mutex_);
+    std::scoped_lock lock(mutex_);
     T val = std::move(queue.back());
     queue.pop_back();
     cvFull.notify_one();
@@ -79,38 +77,38 @@ T tsqueue<T>::pop_back() {
 
 template<typename T>
 const T& tsqueue<T>::front() {
-    scoped_lock lock(mutex_);
+    std::scoped_lock lock(mutex_);
     queue.front();
 }
 
 template<typename T>
 const T& tsqueue<T>::back() {
-    scoped_lock lock(mutex_);
+    std::scoped_lock lock(mutex_);
     queue.back();
 }
 
 template<typename T>
 size_t tsqueue<T>::size() {
-    scoped_lock lock(mutex_);
+    std::scoped_lock lock(mutex_);
     return queue.size();
 }
 
 template<typename T>
 bool tsqueue<T>::empty() {
-    scoped_lock lock(mutex_);
+    std::scoped_lock lock(mutex_);
     return queue.empty();
 }
 
 template<typename T>
 void tsqueue<T>::clear() {
-    scoped_lock lock(mutex_);
+    std::scoped_lock lock(mutex_);
     queue.clear();
 }
 
 template<typename T>
 void tsqueue<T>::waitForEvent() {
     while(empty()){
-        unique_lock<mutex> ul(mutexEmpty);
+        std::unique_lock<std::mutex> ul(mutexEmpty);
         cvEmpty.wait(ul);
     }
 }
@@ -118,7 +116,7 @@ void tsqueue<T>::waitForEvent() {
 template<typename T>
 void tsqueue<T>::waitForEvent(size_t size) {
     while(this->size() > size){
-        unique_lock<mutex> ul(mutexFull);
+        std::unique_lock<std::mutex> ul(mutexFull);
         cvFull.wait(ul);
     }
 }

@@ -1,5 +1,5 @@
 //
-// Created by alienson on 5.4.24..
+// Created by alienson on 5.4.24.
 //
 
 #include "HttpClient.h"

@@ -1,5 +1,5 @@
 //
-// Created by alienson on 3.4.24..
+// Created by alienson on 3.4.24.
 //
 
 #ifndef WINTER_ENTITY_H
@@ -13,23 +13,21 @@
 
 #define $Column(x)
 
-using namespace std;
-
 class Entity : public Reflect {
 public:
     Entity() = default;
     virtual ~Entity() = default;
 
-    [[nodiscard]] virtual string getTableName() const = 0;
-    [[nodiscard]] virtual string getPrimaryKeyName() const = 0;
+    [[nodiscard]] virtual std::string getTableName() const = 0;
+    [[nodiscard]] virtual std::string getPrimaryKeyName() const = 0;
 
-    virtual unordered_map<string, string>& getColumnMappings() const{
+    virtual std::unordered_map<std::string, std::string>& getColumnMappings() const{
         return columnMappings;
     }
 
 private:
-    //static unordered_map<string,string> generateMappings();
-    static inline unordered_map<string,string> columnMappings;
+    //static std::unordered_map<std::string, std::string> generateMappings();
+    static inline std::unordered_map<std::string, std::string> columnMappings;
 
 };
 

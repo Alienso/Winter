@@ -1,5 +1,5 @@
 //
-// Created by alienson on 22.3.24..
+// Created by alienson on 22.3.24.
 //
 
 #include "../core/Configuration.h"
@@ -9,25 +9,25 @@
 ConnectionPool* Repository::dbConnectionPool = new ConnectionPool(2, Configuration::dbConnectionPoolSize,
         []{ return (Connection*) new PgConnection(Configuration::dbConnectionString); }); //TODO
 
-shared_ptr<Statement> Repository::createStatement(const char *query) {
-    shared_ptr<Connection> connection = dbConnectionPool->getConnection();
+std::shared_ptr<Statement> Repository::createStatement(const char *query) {
+    std::shared_ptr<Connection> connection = dbConnectionPool->getConnection();
     return connection->createStatement(connection, query);
 }
 
-shared_ptr<Statement> Repository::createStatement(const string &query) {
-    shared_ptr<Connection> connection = dbConnectionPool->getConnection();
+std::shared_ptr<Statement> Repository::createStatement(const std::string &query) {
+    std::shared_ptr<Connection> connection = dbConnectionPool->getConnection();
     return connection->createStatement(connection, query.data());
 }
 
-shared_ptr<Statement> Repository::createStatement() {
-    shared_ptr<Connection> connection = dbConnectionPool->getConnection();
+std::shared_ptr<Statement> Repository::createStatement() {
+    std::shared_ptr<Connection> connection = dbConnectionPool->getConnection();
     return connection->createStatement(connection);
 }
 
 // "id,name,created_on"
-string Repository::getInsertColumnNames(const Entity* e){
-    string res;
-    unordered_map<string, string>& mappings = e->getColumnMappings();
+std::string Repository::getInsertColumnNames(const Entity* e){
+    std::string res;
+    std::unordered_map<std::string, std::string>& mappings = e->getColumnMappings();
     for (const auto& it : mappings){
         res += it.second;
         res += ',';
@@ -37,16 +37,16 @@ string Repository::getInsertColumnNames(const Entity* e){
 }
 
 // "3,'New User',current_timestamp"
-string Repository::toInsertString(const Entity* e){
-    string res;
-    unordered_map<string, string>& mappings = e->getColumnMappings();
+std::string Repository::toInsertString(const Entity* e){
+    std::string res;
+    std::unordered_map<std::string, std::string>& mappings = e->getColumnMappings();
     for (const auto& it : mappings){
         Field* f = e->getField(it.first.data());
         if (f == &Field::INVALID) {
             wtLogError("Invalid field encountered! %s", it.first.data());
             return "";
         }
-        string val = f->getAsString((Reflect*)e, '\'');
+        std::string val = f->getAsString((Reflect*)e, '\'');
         res+= val;
         res+= ',';
     }
@@ -55,9 +55,9 @@ string Repository::toInsertString(const Entity* e){
 }
 
 // "id=4,name='New Name',create_on='NOW'"
-string Repository::toUpdateString(const Entity* e){
-    string res;
-    unordered_map<string, string>& mappings = e->getColumnMappings();
+std::string Repository::toUpdateString(const Entity* e){
+    std::string res;
+    std::unordered_map<std::string, std::string>& mappings = e->getColumnMappings();
     for(auto& it : mappings){
         res += it.second;
         res += '=';
@@ -67,7 +67,7 @@ string Repository::toUpdateString(const Entity* e){
             wtLogError("Invalid field encountered! %s", it.first.data());
             return "";
         }
-        string val = f->getAsString((Reflect*)e, '\'');
+        std::string val = f->getAsString((Reflect*)e, '\'');
 
         res += val;
         res += ',';
@@ -79,7 +79,7 @@ string Repository::toUpdateString(const Entity* e){
 }
 
 int Repository::insert(const Entity *entity) {
-    string query = "insert into " + entity->getTableName() + "(";
+    std::string query = "insert into " + entity->getTableName() + "(";
     query+= getInsertColumnNames(entity);
     query+= ") values (";
     query+= toInsertString(entity);
@@ -88,17 +88,17 @@ int Repository::insert(const Entity *entity) {
 }
 
 int Repository::update(const Entity *entity) {
-    string query = "update " + entity->getTableName() + " set ";
+    std::string query = "update " + entity->getTableName() + " set ";
     query+=toUpdateString(entity);
     return createStatement()->executeUpdate(query.data());
 }
 
-int Repository::insert(const vector<Entity*>& entities) {
+int Repository::insert(const std::vector<Entity*>& entities) {
 
     if (entities.empty())
         return 0;
 
-    string query = "insert into " + entities[0]->getTableName() + "(";
+    std::string query = "insert into " + entities[0]->getTableName() + "(";
     query += getInsertColumnNames(entities[0]);
     query += ") values (";
     for (Entity* e: entities) {
@@ -109,14 +109,14 @@ int Repository::insert(const vector<Entity*>& entities) {
     return createStatement()->executeUpdate(query.data());
 }
 
-int Repository::update(const vector<Entity*>& entities) {
+int Repository::update(const std::vector<Entity*>& entities) {
 
     if (entities.empty())
         return 0;
 
     int counter = 0;
     for (Entity* e : entities) {
-        string query = "update " + entities[0]->getTableName() + " set ";
+        std::string query = "update " + entities[0]->getTableName() + " set ";
         query += toUpdateString(e);
         if(createStatement()->executeUpdate(query.data()) != 1)
             wtLogError("Error while executing query: %s", query.data());
@@ -127,13 +127,13 @@ int Repository::update(const vector<Entity*>& entities) {
 }
 
 int Repository::deleteEntity(Entity* e){
-    string id = getPrimaryKeyValue(e);
-    string query = "delete from " + e->getTableName() + " where id = " + id;
+    std::string id = getPrimaryKeyValue(e);
+    std::string query = "delete from " + e->getTableName() + " where id = " + id;
     return createStatement()->executeUpdate(query.data());
 }
 
-string Repository::getPrimaryKeyValue(const Entity* e){
-    unordered_map<string, string>& mappings = e->getColumnMappings();
+std::string Repository::getPrimaryKeyValue(const Entity* e){
+    std::unordered_map<std::string, std::string>& mappings = e->getColumnMappings();
     auto it = mappings.find(e->getPrimaryKeyName());
     if (it == mappings.end())
         return ";";

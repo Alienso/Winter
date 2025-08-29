@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 2.3.2024..
+// Created by Alienson on 2.3.2024.
 //
 
 #ifndef WINTER_THREADPOOL_H
@@ -14,17 +14,15 @@
 #include <functional>
 #include <queue>
 
-using namespace std;
-
 class ThreadPool{
 public:
     //TODO use tsqueue for this?
     explicit ThreadPool(int size) : stop(false){
         for (int i=0;i<size;i++){
             threads.emplace_back([this]{
-                function<void()> task;
+                std::function<void()> task;
                 while(true){
-                    unique_lock<mutex> ul(mutexBlocking);
+                    std::unique_lock<std::mutex> ul(mutexBlocking);
                     cvBlocking.wait(ul, [this] {
                         return this->stop || !this->tasks.empty();
                     });
@@ -55,9 +53,9 @@ public:
    }
 
 private:
-    vector<thread> threads;
-    queue<function<void()> > tasks;
-    condition_variable cvBlocking;
-    mutex mutexBlocking, queueMutex;
+    std::vector<std::thread> threads;
+    std::queue<std::function<void()> > tasks;
+    std::condition_variable cvBlocking;
+    std::mutex mutexBlocking, queueMutex;
     bool stop;
 };

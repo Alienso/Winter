@@ -1,11 +1,10 @@
 //
-// Created by Alienson on 27.1.2024..
+// Created by Alienson on 27.1.2024.
 //
 
 #include <vector>
 #include "../source/log/Logger.h"
 
-using namespace std;
 //WARNING TESTS ARE LINE SENSITIVE SINCE LOGGER LOGS THE CURRENT LINE NUMBER
 TEST_CASE("Logger Tests", "[Logger::info]"){
 

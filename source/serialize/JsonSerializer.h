@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 14.2.2024..
+// Created by Alienson on 14.2.2024.
 //
 
 #ifndef WINTER_JSONSERIALIZER_H
@@ -10,52 +10,50 @@
 #include "FieldTypeUtil.h"
 #include "stringUtils.h"
 
-using namespace std;
-
 class JsonSerializer {
 public:
-    [[nodiscard]] static string* serialize(Reflect* obj);
+    [[nodiscard]] static std::string* serialize(Reflect* obj);
 
 private:
-    [[nodiscard]] static string* convertToJsonString(const Field &field, Reflect* obj);
-    [[nodiscard]] static string* convertVectorToJsonString(const Field &field, Reflect *obj);
+    [[nodiscard]] static std::string* convertToJsonString(const Field &field, Reflect* obj);
+    [[nodiscard]] static std::string* convertVectorToJsonString(const Field &field, Reflect *obj);
 
 
-    [[nodiscard]] static string* vectorToString(const vector<char>& source);
-    [[nodiscard]] static string* vectorToString(const vector<string>& source);
-    [[nodiscard]] static string* vectorToString(const vector<Reflect*>& source);
-    [[nodiscard]] static string* vectorToString(const vector<std::byte>& source);
+    [[nodiscard]] static std::string* vectorToString(const std::vector<char>& source);
+    [[nodiscard]] static std::string* vectorToString(const std::vector<std::string>& source);
+    [[nodiscard]] static std::string* vectorToString(const std::vector<Reflect*>& source);
+    [[nodiscard]] static std::string* vectorToString(const std::vector<std::byte>& source);
 
-    [[nodiscard]] static string* vectorPtrToString(const vector<char*>& source);
-    [[nodiscard]] static string* vectorPtrToString(const vector<string*>& source);
+    [[nodiscard]] static std::string* vectorPtrToString(const std::vector<char*>& source);
+    [[nodiscard]] static std::string* vectorPtrToString(const std::vector<std::string*>& source);
 
 
     //TODO this has a copy in field but returning string instead of string*
     template<typename T>
-    static string* serializeField(const Field& field, Reflect* obj, T (Field::*getFunc)(void*) const, string (*to_string_func)(T)){
+    static std::string* serializeField(const Field& field, Reflect* obj, T (Field::*getFunc)(void*) const, std::string (*to_string_func)(T)){
         T t;
         if (!field.isPtr) {
             t = (field.*getFunc)(obj);
-            return new string(to_string_func(t));
+            return new std::string(to_string_func(t));
         }
         else{
             void* ptr = *field.getPtr(obj);
             if (ptr == nullptr)
-                return new string("null");
+                return new std::string("null");
             t = *(T*)ptr;
-            return new string(to_string_func(t));
+            return new std::string(to_string_func(t));
         }
     }
 
     template<typename U>
-    [[nodiscard]] static string* vectorToString(const vector<U>& source, string (*parseFunc)(U val)){
+    [[nodiscard]] static std::string* vectorToString(const std::vector<U>& source, std::string (*parseFunc)(U val)){
 
         if (source.empty())
-            return new string("[]");
+            return new std::string("[]");
 
-        auto* res = new string("[");
+        auto* res = new std::string("[");
         for(U u : source){
-            string s = parseFunc(u);
+            std::string s = parseFunc(u);
             *res += s + ',';
         }
         (*res)[res->size()-1] = ']';
@@ -63,14 +61,14 @@ private:
     }
 
     template<typename U>
-    [[nodiscard]] static string* vectorPtrToString(const vector<U*>& source, string (*parseFunc)(U val)){
+    [[nodiscard]] static std::string* vectorPtrToString(const std::vector<U*>& source, std::string (*parseFunc)(U val)){
 
         if (source.empty())
-            return new string("[]");
+            return new std::string("[]");
 
-        auto* res = new string("[");
+        auto* res = new std::string("[");
         for(U* u : source){
-            string s = parseFunc(*u);
+            std::string s = parseFunc(*u);
             *res += s + ',';
         }
         (*res)[res->size()-1] = ']';
@@ -78,21 +76,21 @@ private:
     }
 
     template<typename T>
-    static string* handleVecData(const Field& f, Reflect* obj, const bool isElemPtr, string (*toStr)(T)){
+    static std::string* handleVecData(const Field& f, Reflect* obj, const bool isElemPtr, std::string (*toStr)(T)){
         if (!f.isPtr) {
             if (!isElemPtr) {
-                auto* vec = static_cast<vector<T> *>(f.getAddress(obj));
+                auto* vec = static_cast<std::vector<T> *>(f.getAddress(obj));
                 return vectorToString(*vec, toStr);
             }else{
-                auto* vecPtr = static_cast<vector<T*> *>(f.getAddress(obj));
+                auto* vecPtr = static_cast<std::vector<T*> *>(f.getAddress(obj));
                 return vectorPtrToString(*vecPtr, toStr);
             }
         }else {
             if (!isElemPtr) {
-                auto* vec = static_cast<vector<T> *>(*(f.getPtr(obj)));
+                auto* vec = static_cast<std::vector<T> *>(*(f.getPtr(obj)));
                 return vectorToString(*vec, toStr);
             }else{
-                auto* vecPtr = static_cast<vector<T*> *>(*(f.getPtr(obj)));
+                auto* vecPtr = static_cast<std::vector<T*> *>(*(f.getPtr(obj)));
                 return vectorPtrToString(*vecPtr, toStr);
             }
         }

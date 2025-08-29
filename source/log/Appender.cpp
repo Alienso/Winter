@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 27.1.2024..
+// Created by Alienson on 27.1.2024.
 //
 
 #include "Appender.h"
@@ -7,9 +7,7 @@
 #include <iostream>
 #include <cstdarg>
 
-using namespace std;
-
-Appender::Appender(string _format, ostream* _stream) : format(std::move(_format)), stream(_stream) {
+Appender::Appender(std::string _format, std::ostream* _stream) : format(std::move(_format)), stream(_stream) {
 
 }
 
@@ -17,7 +15,7 @@ void Appender::writeFormatString(const char* logLevelStr, const char* filePath, 
     *stream << logLevelStr << filePath << ':' << line << '\t';
 }
 
-void Appender::write(const string &s) const {
+void Appender::write(const std::string &s) const {
     write(s.data());
 }
 
@@ -101,6 +99,6 @@ void Appender::write(const char *s, va_list args) const {
     }
 }
 
-ostream* Appender::getStream() const{
+std::ostream* Appender::getStream() const{
     return stream;
 }

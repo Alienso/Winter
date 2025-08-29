@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 3.2.2024..
+// Created by Alienson on 3.2.2024.
 //
 
 #include "MyController.h"
@@ -9,7 +9,7 @@
 JsonDeserializer MyController::deserializer = {};
 
 HttpResponse *MyController::home(HttpRequest *httpRequest) {
-    auto* request = (BaseRequest*) deserializer.deserialize(httpRequest->getRequestBody(),new BaseRequest());
+    auto* request = (BaseRequest*) deserializer.deserialize(httpRequest->getRequestBody(), new BaseRequest());
 
     //Do some logic
     wtLogInfo("Received data: number= %d, type=%s", request->number, request->type.data());
@@ -36,15 +36,15 @@ HttpResponse *MyController::home(HttpRequest *httpRequest) {
 
 HttpResponse *MyController::player(HttpRequest *request) {
 
-    string playerIdStr = (request->getQueryParameters()).find("id")->second;
+    std::string playerIdStr = (request->getQueryParameters()).find("id")->second;
     long playerId = stol(playerIdStr);
 
-    auto* players = playerRepository->getAllPlayers();
-    PlayerEntity* player = playerRepository->getSinglePlayer();
+    auto players = playerRepository->getAllPlayers();
+    std::shared_ptr<PlayerEntity> player = playerRepository->getSinglePlayer();
     int playerCount = playerRepository->getPlayerCount();
-    PlayerEntity* player2 = playerRepository->getPlayerById(playerId);
+    std::shared_ptr<PlayerEntity> player2 = playerRepository->getPlayerById(playerId);
 
-    int success;
+    int success; //For debug
 
     auto* newPlayer = new PlayerEntity();
     newPlayer->id = 3;
@@ -58,13 +58,6 @@ HttpResponse *MyController::player(HttpRequest *request) {
     success = playerRepository->deleteEntity(newPlayer);
 
     wtLogInfo("There are %d players in database", playerCount);
-
-    for (auto* p : *players)
-        delete p;
-    delete players;
-    delete player;
-    delete player2;
-    delete newPlayer;
 
     return new HttpResponse(HttpCode::OK);
 }

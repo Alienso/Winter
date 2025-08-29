@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 25.1.2024..
+// Created by Alienson on 25.1.2024.
 //
 
 #include "HttpRequest.h"
@@ -10,7 +10,7 @@
 
 HttpRequest::HttpRequest() {}
 
-size_t getHeadersDelimiterIndex(const size_t endIndex, const string& data){
+size_t getHeadersDelimiterIndex(const size_t endIndex, const std::string& data){
     for (size_t i = endIndex + 1; i<data.size(); i++){
         if (data[i] == '\r' && i+3 < data.size()){
             if (data[i+1] == '\n' && data[i+2] == '\r' && data[i+3] == '\n')
@@ -20,28 +20,28 @@ size_t getHeadersDelimiterIndex(const size_t endIndex, const string& data){
                 return i+2;
         }
     }
-    return string::npos;
+    return std::string::npos;
 }
 
-shared_ptr<HttpRequest> HttpRequest::parseFromString(const string& data) {
-    shared_ptr<HttpRequest> httpRequest{new HttpRequest()};
+std::shared_ptr<HttpRequest> HttpRequest::parseFromString(const std::string& data) {
+    std::shared_ptr<HttpRequest> httpRequest{new HttpRequest()};
 
     size_t startIndex, endIndex;
     endIndex = data.find('\n');
-    string line(data.data(), endIndex + 1); //sizeof \n
+    std::string line(data.data(), endIndex + 1); //sizeof \n
 
     startIndex = endIndex + 1;
     endIndex = getHeadersDelimiterIndex(endIndex, data);
 
-    if (endIndex == string::npos)
+    if (endIndex == std::string::npos)
         endIndex = data.length();
-    string headers = data.substr(startIndex, endIndex - startIndex + 2);
+    std::string headers = data.substr(startIndex, endIndex - startIndex + 2);
 
     startIndex = endIndex;
     endIndex = data.length();
-    if (endIndex == string::npos)
+    if (endIndex == std::string::npos)
         endIndex = data.length();
-    string_view body(&(data[startIndex]), endIndex - startIndex);
+    std::string_view body(&(data[startIndex]), endIndex - startIndex);
 
     parseRequestLine(*httpRequest, line);
     parseRequestHeaders(*httpRequest, headers);
@@ -51,13 +51,13 @@ shared_ptr<HttpRequest> HttpRequest::parseFromString(const string& data) {
     return httpRequest;
 }
 
-void HttpRequest::parseRequestLine(HttpRequest &request, const string &line) {
+void HttpRequest::parseRequestLine(HttpRequest &request, const std::string &line) {
     wtLogTrace("Request Line: %s", line.data());
 
     size_t startIndex, endIndex;
 
     endIndex = line.find(' ');
-    string_view method(line.data(), endIndex);
+    std::string_view method(line.data(), endIndex);
     request.method = HttpMethod::fromString(method.data());
 
     startIndex = endIndex + 1;
@@ -73,7 +73,7 @@ void HttpRequest::parseRequestLine(HttpRequest &request, const string &line) {
         queryParamsStart = endIndex;
     }
 
-    string_view endpoint(&(line[startIndex]), queryParamsStart - startIndex);
+    std::string_view endpoint(&(line[startIndex]), queryParamsStart - startIndex);
     URI newUri(wt::urlDecode(endpoint));
     request.uri = newUri;
 
@@ -83,13 +83,13 @@ void HttpRequest::parseRequestLine(HttpRequest &request, const string &line) {
 
     startIndex = endIndex + 1;
     endIndex = line.find('\n', endIndex + 1); //sizeof('\n')
-    string_view version(&(line[startIndex]), endIndex - startIndex);
+    std::string_view version(&(line[startIndex]), endIndex - startIndex);
     version = StringUtils::rtrim(version);
     request.httpVersion = HttpVersion::fromString(version.data());
 }
 
-void HttpRequest::parseQueryParams(HttpRequest &request, const string &requestLine, const size_t start, const size_t end) {
-    string requestParamValue, requestParamName;
+void HttpRequest::parseQueryParams(HttpRequest &request, const std::string &requestLine, const size_t start, const size_t end) {
+    std::string requestParamValue, requestParamName;
     size_t startIndex = start,endIndex = 0;
     size_t i;
     while (true){
@@ -125,8 +125,8 @@ void HttpRequest::parseQueryParams(HttpRequest &request, const string &requestLi
     }
 }
 
-void HttpRequest::parseRequestHeaders(HttpRequest &request, const string &headers) {
-    string headerValue, headerName;
+void HttpRequest::parseRequestHeaders(HttpRequest &request, const std::string &headers) {
+    std::string headerValue, headerName;
     size_t startIndex = 0,endIndex = 0;
     size_t i;
     while(true){
@@ -160,7 +160,7 @@ void HttpRequest::parseRequestHeaders(HttpRequest &request, const string &header
     }
 }
 
-void HttpRequest::parseRequestBody(HttpRequest &request, string_view body) {
+void HttpRequest::parseRequestBody(HttpRequest &request, std::string_view body) {
     request.requestBody = body.substr(0, body.size());
 }
 
@@ -180,11 +180,11 @@ HttpMethod *HttpRequest::getMethod() const {
     return method;
 }
 
-const string &HttpRequest::getRequestBody() const {
+const std::string &HttpRequest::getRequestBody() const {
     return requestBody;
 }
 
-const unordered_map<string, string> &HttpRequest::getRequestHeaders() {
+const std::unordered_map<std::string, std::string> &HttpRequest::getRequestHeaders() {
     return requestHeaders;
 }
 
@@ -192,6 +192,6 @@ HttpVersion *HttpRequest::getHttpVersion() const {
     return httpVersion;
 }
 
-const unordered_map<string, string> &HttpRequest::getQueryParameters() {
+const std::unordered_map<std::string, std::string> &HttpRequest::getQueryParameters() {
     return queryParameters;
 }

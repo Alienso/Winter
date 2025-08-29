@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 4.2.2024..
+// Created by Alienson on 4.2.2024.
 //
 
 /**
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    if (argv[1] == string("clean")){
+    if (argv[1] == std::string("clean")){
         auto path = std::filesystem::absolute(argv[2]);
         std::cout << "Are you sure you want to delete: " << path << " (y/n)\n";
         char c = (char)getchar();

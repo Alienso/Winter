@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 25.1.2024..
+// Created by Alienson on 25.1.2024.
 //
 
 #ifndef WINTER_HTTPSERVER_H
@@ -22,7 +22,7 @@ public:
     void update();
     void waitForEvent();
 
-    [[nodiscard]] tsqueue<shared_ptr<HttpRequest>> &getRequestQueue(){
+    [[nodiscard]] tsqueue<std::shared_ptr<HttpRequest>> &getRequestQueue(){
         return requestQueue;
     }
 
@@ -34,10 +34,10 @@ public:
     asio::io_context asioContext;
     asio::ip::tcp::acceptor asioAcceptor;
 
-    mutex muxBlocking;
-    condition_variable cvBlocking;
+    std::mutex muxBlocking;
+    std::condition_variable cvBlocking;
 
-    tsqueue<shared_ptr<HttpRequest>> requestQueue;
+    tsqueue<std::shared_ptr<HttpRequest>> requestQueue;
 };
 
 

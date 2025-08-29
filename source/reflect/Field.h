@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 6.2.2024..
+// Created by Alienson on 6.2.2024.
 //
 
 #ifndef WINTER_FIELD_H
@@ -24,7 +24,7 @@ public:
             name(_name), typeStr(_typeStr), type(static_cast<FieldType>(_type)), className(_className), offset(_offset), isPtr(_isPtr), isVec(_isVec){}
 
     void* getAddress(void* object) const;
-    string getAsString(Reflect* object, char stringChar = 0) const;
+    std::string getAsString(Reflect* object, char stringChar = 0) const;
 
     void set(void* object, const char* value) const;
     void setInt(void* object, int value) const;
@@ -48,7 +48,7 @@ public:
     [[nodiscard]] short getShort(void* object) const;
     [[nodiscard]] bool getBool(void* object) const;
     [[nodiscard]] std::byte getByte(void* object) const;
-    [[nodiscard]] string getString(void* object) const;
+    [[nodiscard]] std::string getString(void* object) const;
     [[nodiscard]] void** getPtr(void *object) const;
 
     static void copyValue(Reflect *source, const Field &sourceField, Reflect *dest, const Field &destField, CopyType copyType = COPY_TYPE_DEEP);
@@ -116,7 +116,7 @@ private:
     }
 
     template<typename T>
-    string getAsString(Reflect* obj, T (Field::*getFunc)(void*) const, string (*to_string_func)(T)) const{
+    std::string getAsString(Reflect* obj, T (Field::*getFunc)(void*) const, std::string (*to_string_func)(T)) const{
         T t;
         if (!isPtr) {
             t = (this->*getFunc)(obj);

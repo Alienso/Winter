@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 19.2.2024..
+// Created by Alienson on 19.2.2024.
 //
 
 #ifndef WINTER_CONTROLLERMAPPING_H

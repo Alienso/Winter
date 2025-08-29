@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 14.3.2024..
+// Created by Alienson on 14.3.2024.
 //
 
 #ifndef WINTER_PGRESULTSET_H
@@ -16,21 +16,21 @@ public:
     virtual ~PgResultSet();
 
     bool next() override;
-    [[nodiscard]] Reflect *getResult(Reflect* (*allocator)()) const override;
-    [[nodiscard]] vector<Reflect*>* getResultList(Reflect* (*allocator)()) const override;
+    [[nodiscard]] std::shared_ptr<Reflect> getResult(Reflect* (*allocator)()) const override;
+    [[nodiscard]] std::shared_ptr<std::vector<std::shared_ptr<Reflect>>> getResultList(Reflect* (*allocator)()) const override;
 
     [[nodiscard]] int getInt(size_t columnIndex) const override;
     [[nodiscard]] long getLong(size_t columnIndex) const override;
     [[nodiscard]] float getFloat(size_t columnIndex) const override;
     [[nodiscard]] double getDouble(size_t columnIndex) const override;
-    [[nodiscard]] string getString(size_t columnIndex) const override;
+    [[nodiscard]] std::string getString(size_t columnIndex) const override;
     [[nodiscard]] bool getBool(size_t columnIndex) const override;
     [[nodiscard]] std::byte getByte(size_t columnIndex) const override;
     [[nodiscard]] short getShort(size_t columnIndex) const override;
-    [[nodiscard]] string getDate(size_t columnIndex) const override;
-    [[nodiscard]] string getTime(size_t columnIndex) const override;
-    [[nodiscard]] string getDateTime(size_t columnIndex) const override;
-    [[nodiscard]] string getBlob(size_t columnIndex) const override;
+    [[nodiscard]] std::string getDate(size_t columnIndex) const override;
+    [[nodiscard]] std::string getTime(size_t columnIndex) const override;
+    [[nodiscard]] std::string getDateTime(size_t columnIndex) const override;
+    [[nodiscard]] std::string getBlob(size_t columnIndex) const override;
 
 private:
     PGresult *pgResult;

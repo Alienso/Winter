@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 1.2.2024..
+// Created by Alienson on 1.2.2024.
 //
 
 #ifndef WINTER_HTTPCONSTANTS_H
@@ -7,13 +7,11 @@
 
 #include "string"
 
-using namespace std;
-
 class HttpCode{
 public:
     HttpCode(int _code, const char* _name) : code(_code), name(_name) {}
     const int code;
-    const string name;
+    const std::string name;
 
     static HttpCode* OK;
     static HttpCode* BAD_REQUEST;
@@ -25,7 +23,7 @@ public:
 class HttpVersion{
 public:
     explicit HttpVersion(const char* _name) : name(_name){}
-    const string name;
+    const std::string name;
 
     [[nodiscard]] static HttpVersion* fromString(const char* s);
 
@@ -37,7 +35,7 @@ public:
 class HttpMethod{
 public:
     explicit HttpMethod(const char* _method) : method(_method) {}
-    const string method;
+    const std::string method;
 
     [[nodiscard]] static HttpMethod* fromString(const char* s);
 

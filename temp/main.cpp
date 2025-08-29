@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 10.2.2024..
+// Created by Alienson on 10.2.2024.
 //
 
 //#include "nanodbc/nanodbc.h"

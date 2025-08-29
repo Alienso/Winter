@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 11.2.2024..
+// Created by Alienson on 11.2.2024.
 //
 
 #ifndef WINTER_JSONDESERIALIZER_H
@@ -21,36 +21,34 @@
 #include "stringUtils.h"
 #include <cstdlib>
 
-using namespace std;
-
 class JsonDeserializer {
 public:
-    Reflect* deserialize(const string& s, Reflect* response);
+    Reflect* deserialize(const std::string& s, Reflect* response);
 
 private:
-    void setObjectValue(Field* f, const string& fieldValue, Reflect* response);
-    void setFieldValueArray(const string& fieldValue, FieldType fieldType, Reflect* obj, const Field* f);
+    void setObjectValue(Field* f, const std::string& fieldValue, Reflect* response);
+    void setFieldValueArray(const std::string& fieldValue, FieldType fieldType, Reflect* obj, const Field* f);
 
-    void insertVectorData(const string& source, vector<std::byte> *dest, const string &typeStr);
-    void insertVectorPtrData(const string& source, vector<Reflect*> *dest, const string &typeStr);
+    void insertVectorData(const std::string& source, std::vector<std::byte> *dest, const std::string &typeStr);
+    void insertVectorPtrData(const std::string& source, std::vector<Reflect*> *dest, const std::string &typeStr);
 
     template<typename U>
-    void insertVectorData(const string& source, U (*parseFunc)(string& val), vector<U> *dest) const{
-        vector<string>* vec = StringUtils::splitArray(source);
-        for (string& s : *vec)
+    void insertVectorData(const std::string& source, U (*parseFunc)(std::string& val), std::vector<U> *dest) const{
+        std::vector<std::string>* vec = StringUtils::splitArray(source);
+        for (std::string& s : *vec)
             s = StringUtils::trim(s);
-        for(string& s : *vec){
+        for(std::string& s : *vec){
             U u = parseFunc(s);
             dest->push_back(u);
         }
     }
 
     template<typename U>
-    void insertVectorPtrData(const string& source, U (*parseFunc)(string& val), vector<U*> *dest) const{
-        vector<string>* vec = StringUtils::splitArray(source);
-        for (string& s : *vec)
+    void insertVectorPtrData(const std::string& source, U (*parseFunc)(std::string& val), std::vector<U*> *dest) const{
+        std::vector<std::string>* vec = StringUtils::splitArray(source);
+        for (std::string& s : *vec)
             s = StringUtils::trim(s);
-        for(string& s : *vec){
+        for(std::string& s : *vec){
             U* u = new U();
             *u = parseFunc(s);
             dest->push_back(u);
@@ -58,8 +56,8 @@ private:
     }
 
     template<typename U>
-    void parseArrayData(const string& source, U (*parseFunc)(string& val), U* dest, unsigned int* destSize) const{
-        vector<string>* vec = StringUtils::splitArray(source, ','); //TODO handle , in strings
+    void parseArrayData(const std::string& source, U (*parseFunc)(std::string& val), U* dest, unsigned int* destSize) const{
+        std::vector<std::string>* vec = StringUtils::splitArray(source, ','); //TODO handle , in strings
         dest = (U*)calloc(vec->size(), sizeof(U));
         *destSize = vec->size();
         for(size_t i=0; i<vec->size(); i++){
@@ -69,22 +67,22 @@ private:
     }
 
     template<typename T>
-    void handleVecData(const Field* f, Reflect* obj, const bool isElemPtr, const string& fieldValue, T (*transformFunc)(string&)){
+    void handleVecData(const Field* f, Reflect* obj, const bool isElemPtr, const std::string& fieldValue, T (*transformFunc)(std::string&)){
         if (!f->isPtr){
             if (!isElemPtr){
-                auto* data = static_cast<vector<T>*>(f->getAddress(obj));
+                auto* data = static_cast<std::vector<T>*>(f->getAddress(obj));
                 insertVectorData<T>(fieldValue, transformFunc, data);
             }else{
-                auto* data = static_cast<vector<T*>*>(f->getAddress(obj));
+                auto* data = static_cast<std::vector<T*>*>(f->getAddress(obj));
                 insertVectorPtrData<T>(fieldValue, transformFunc, data);
             }
         }else{
             if (!isElemPtr){
-                auto* data = new vector<T>(); //static_cast<vector<T>*>(*(f->getPtr(obj)));
+                auto* data = new std::vector<T>(); //static_cast<vector<T>*>(*(f->getPtr(obj)));
                 insertVectorData<T>(fieldValue, transformFunc, data);
                 f->setPtr(obj, data);
             }else{
-                auto* data = new vector<T*>(); //static_cast<vector<T*>*>(*(f->getPtr(obj)));
+                auto* data = new std::vector<T*>(); //static_cast<vector<T*>*>(*(f->getPtr(obj)));
                 insertVectorPtrData<T>(fieldValue, transformFunc, data);
                 f->setPtr(obj, data);
             }

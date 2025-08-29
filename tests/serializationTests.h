@@ -1,5 +1,5 @@
 //
-// Created by alienson on 18.3.24..
+// Created by alienson on 18.3.24.
 //
 
 #ifndef WINTER_SERIALIZATIONTESTS_H

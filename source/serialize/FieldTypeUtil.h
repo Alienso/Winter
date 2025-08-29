@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 12.2.2024..
+// Created by Alienson on 12.2.2024.
 //
 
 #ifndef WINTER_FIELDTYPEUTIL_H
@@ -35,7 +35,7 @@ enum FieldType{
 };
 
 //TODO have map for this?
-[[nodiscard]] inline FieldType convertToFieldType(const string& s){
+[[nodiscard]] inline FieldType convertToFieldType(const std::string& s){
     if (s == "int")
         return FIELD_TYPE_INT;
     if (s == "float")
@@ -60,7 +60,7 @@ enum FieldType{
 }
 
 
-inline void getArraySubType(const string& s, string& type, bool* isPtr){
+inline void getArraySubType(const std::string& s, std::string& type, bool* isPtr){
     size_t index;
 
     //array check
@@ -74,7 +74,7 @@ inline void getArraySubType(const string& s, string& type, bool* isPtr){
 
     //vector check
     index = s.find('<');
-    if (index != string::npos) {
+    if (index != std::string::npos) {
         size_t endIndex = s.find('>', index);
         if (s[endIndex - 1] == '*'){
             type = s.substr(index + 1,endIndex - index - 2);
@@ -92,14 +92,14 @@ inline void getArraySubType(const string& s, string& type, bool* isPtr){
     *isPtr = false;
 }
 
-[[nodiscard]] inline FieldType getArraySubType(const string& s){
-    string type;
+[[nodiscard]] inline FieldType getArraySubType(const std::string& s){
+    std::string type;
     bool isPtr;
     getArraySubType(s, type, &isPtr);
     return convertToFieldType(type);
 }
 
-[[nodiscard]] inline JsonFieldType getJsonFieldType(const string& s) {
+[[nodiscard]] inline JsonFieldType getJsonFieldType(const std::string& s) {
     switch(s[0]){
         case '"':
             return JSON_FILED_TYPE_STRING;
@@ -113,13 +113,13 @@ inline void getArraySubType(const string& s, string& type, bool* isPtr){
         case 'F':
             return JSON_FIELD_TYPE_BOOL;
         default:
-            if (s.find('.') != string::npos)
+            if (s.find('.') != std::string::npos)
                 return JSON_FILED_TYPE_REAL_NUMBER;
             return JSON_FILED_TYPE_NATURAL_NUMBER;
     }
 }
 
-[[nodiscard]] inline JsonFieldType getJsonFieldSubType(const string& s) {
+[[nodiscard]] inline JsonFieldType getJsonFieldSubType(const std::string& s) {
     size_t i = 1;
     while (i < s.size() && isspace(s[i])) i++;
 
@@ -136,7 +136,7 @@ inline void getArraySubType(const string& s, string& type, bool* isPtr){
         case 'F':
             return JSON_FIELD_TYPE_BOOL;
         default:
-            if (s.find('.') != string::npos)
+            if (s.find('.') != std::string::npos)
                 return JSON_FILED_TYPE_REAL_NUMBER;
             return JSON_FILED_TYPE_NATURAL_NUMBER;
     }

@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 31.1.2024..
+// Created by Alienson on 31.1.2024.
 //
 
 #ifndef WINTER_STRINGUTILS_H
@@ -11,12 +11,10 @@
 #include <cstring>
 #include <iostream>
 
-using namespace std;
-
 class StringUtils{
 public:
 
-    [[nodiscard]] static string trim(const string& s){
+    [[nodiscard]] static std::string trim(const std::string& s){
         size_t start = s.size(), end = s.size();
         for(size_t i=0; i < s.size(); i++){
             if (!isspace(s[i])){
@@ -33,8 +31,8 @@ public:
         return s.substr(start, end - start + 1);
     }
 
-    [[nodiscard]] static string stripBlankCharacters(const string& s){
-        string res;
+    [[nodiscard]] static std::string stripBlankCharacters(const std::string& s){
+        std::string res;
         res.resize(s.length());
         size_t i,j;
         for (i=0,j=0; i<s.size(); i++)
@@ -44,8 +42,8 @@ public:
         return res;
     }
 
-    [[nodiscard]] static string stripSpecialCharacters(const string& s) {
-        string res;
+    [[nodiscard]] static std::string stripSpecialCharacters(const std::string& s) {
+        std::string res;
         res.resize(s.length());
         size_t i,j;
         for (i=0,j=0; i<s.size(); i++)
@@ -55,7 +53,7 @@ public:
         return res;
     }
 
-    [[nodiscard]] static bool endsWith(const string& s, const char* suffix) {
+    [[nodiscard]] static bool endsWith(const std::string& s, const char* suffix) {
         size_t suffixSize = 0;
         for (;suffix[suffixSize] != '\0'; suffixSize++);
         suffixSize--;
@@ -70,7 +68,7 @@ public:
         return true;
     }
 
-    [[nodiscard]] static bool startsWith(const string& s, const char* prefix) {
+    [[nodiscard]] static bool startsWith(const std::string& s, const char* prefix) {
         return startsWith(s.data(), prefix);
     }
 
@@ -83,12 +81,12 @@ public:
         }
     }
 
-    [[nodiscard]] static vector<string>* split(const string& s, const char c){
-        auto* res = new vector<string>();
+    [[nodiscard]] static std::vector<std::string>* split(const std::string& s, const char c){
+        auto* res = new std::vector<std::string>();
         size_t startIndex = 0, endIndex;
         while (startIndex < s.size()){
             endIndex = s.find(c, startIndex);
-            if (endIndex == string::npos)
+            if (endIndex == std::string::npos)
                 endIndex = s.size();
 
             res->push_back(s.substr(startIndex, endIndex - startIndex));
@@ -98,8 +96,8 @@ public:
         return res;
     }
 
-    [[nodiscard]] static vector<string>* splitArray(const string& s, const char c = ','){
-        auto* res = new vector<string>();
+    [[nodiscard]] static std::vector<std::string>* splitArray(const std::string& s, const char c = ','){
+        auto* res = new std::vector<std::string>();
         size_t startIndex = 0, endIndex;
         bool hasBrackets = false;
 
@@ -112,7 +110,7 @@ public:
         unsigned int bracketCounter = 0;
         bool inStr = false;
         while (startIndex < s.size()){
-            endIndex = string::npos;
+            endIndex = std::string::npos;
             for (i=startIndex; i<s.size(); i++){ //TODO !inStr should be check for brackets too
                 if (s[i] == '[' || s[i] == '{')
                     bracketCounter+=s[i];
@@ -126,7 +124,7 @@ public:
                 }
             }
 
-            if (endIndex == string::npos || endIndex >= s.size())
+            if (endIndex == std::string::npos || endIndex >= s.size())
                 endIndex = hasBrackets ? s.size() -1 : s.size();
 
             res->push_back(s.substr(startIndex, endIndex - startIndex));
@@ -136,8 +134,8 @@ public:
         return res;
     }
 
-    [[nodiscard]] static vector<string>* splitObjectArray(const string& s, const char c = ','){
-        auto* res = new vector<string>();
+    [[nodiscard]] static std::vector<std::string>* splitObjectArray(const std::string& s, const char c = ','){
+        auto* res = new std::vector<std::string>();
         size_t startIndex = 0, endIndex;
         size_t i;
         unsigned int bracketCounter = 0;
@@ -146,7 +144,7 @@ public:
         while(s[startIndex] != '{' && startIndex < s.size()) startIndex++;
 
         while (startIndex < s.size()){
-            endIndex = string::npos;
+            endIndex = std::string::npos;
             for (i=startIndex; i<s.size(); i++){
                 if (s[i] == '{')
                     bracketCounter++;
@@ -160,7 +158,7 @@ public:
                 }
             }
 
-            if (endIndex == string::npos || endIndex >= s.size())
+            if (endIndex == std::string::npos || endIndex >= s.size())
                 endIndex = s.size();
 
             res->push_back(s.substr(startIndex, endIndex - startIndex));
@@ -170,8 +168,8 @@ public:
         return res;
     }
 
-    [[nodiscard]] static string uncapitalize(const string& s){
-        string res(s);
+    [[nodiscard]] static std::string uncapitalize(const std::string& s){
+        std::string res(s);
         for (size_t i=0; i<s.size(); i++){
             if(isalpha(res[i]) && isupper(res[i]))
                 res[i] = (char)tolower(res[i]);
@@ -179,7 +177,7 @@ public:
         return res;
     }
 
-    [[nodiscard]] static string_view rtrim(const string_view s){
+    [[nodiscard]] static std::string_view rtrim(const std::string_view s){
         long long size = s.size();
         for(long long i=size;i>=0; i--){
             if (isspace(s[i]))
@@ -187,15 +185,15 @@ public:
             else break;
         }
 
-        return string_view(s.data(), size + 1);
+        return std::string_view(s.data(), size + 1);
     }
 
-    [[nodiscard]] static string replace(const string& s, const char pattern, const char replacement) {
+    [[nodiscard]] static std::string replace(const std::string& s, const char pattern, const char replacement) {
 
         if (s.empty())
             return "";
 
-        string res(s);
+        std::string res(s);
         for (size_t i=0; i<s.size(); i++){
             if (res[i] == pattern)
                 res[i] = replacement;
@@ -203,18 +201,18 @@ public:
         return res;
     }
 
-    [[nodiscard]] static string replace(const string& s, const char *pattern, const char replacement) {
+    [[nodiscard]] static std::string replace(const std::string& s, const char *pattern, const char replacement) {
 
         if (s.empty())
             return "";
 
-        string res;
+        std::string res;
         size_t start=0,end;
         for (size_t i = 0; i<s.size(); i++){
             end = s.find(pattern, start);
             for (size_t j=start; j<end && j<s.size(); j++)
                 res.push_back(s[j]);
-            if (end == string::npos) {
+            if (end == std::string::npos) {
                 break;
             }
             res.push_back(replacement);
@@ -223,8 +221,8 @@ public:
         return res;
     }
 
-    [[nodiscard]] static string toUpperCase(const string& s){
-        string res = {s};
+    [[nodiscard]] static std::string toUpperCase(const std::string& s){
+        std::string res = {s};
         for (char &c : res){
             if (islower(c))
                 c = (char)toupper(c);
@@ -232,8 +230,8 @@ public:
         return res;
     }
 
-    [[nodiscard]] static string toLowerCase(const string& s){
-        string res = {s};
+    [[nodiscard]] static std::string toLowerCase(const std::string& s){
+        std::string res = {s};
         for (char &c : res){
             if (isupper(c))
                 c = (char)tolower(c);
@@ -242,7 +240,7 @@ public:
     }
 
     [[nodiscard]] static bool parseBoolean(const char *value) {
-        string s{value};
+        std::string s{value};
         s = toLowerCase(s);
         if (s == "true")
             return true;
@@ -252,12 +250,12 @@ public:
         return false;
     }
 
-    [[nodiscard]] static string parseBoolean(bool value) {
+    [[nodiscard]] static std::string parseBoolean(bool value) {
         return value ? "true" : "false";
     }
 
-    [[nodiscard]] static string toCamelCase(const string& value){
-        string s;
+    [[nodiscard]] static std::string toCamelCase(const std::string& value){
+        std::string s;
         s.resize(value.size());
 
         size_t j = 0;
@@ -277,16 +275,16 @@ public:
         return s;
     }
 
-    [[nodiscard]] static inline string to_string(short x){
+    [[nodiscard]] static inline std::string to_string(short x){
         return std::to_string((int)x);
     }
-    [[nodiscard]] static inline string to_string(bool x){
+    [[nodiscard]] static inline std::string to_string(bool x){
         return x ? "true" : "false";
     }
-    [[nodiscard]] static inline string to_string(std::byte x){
+    [[nodiscard]] static inline std::string to_string(std::byte x){
         return std::to_string((char)x);
     }
-    [[nodiscard]] static inline string to_string(char x){
+    [[nodiscard]] static inline std::string to_string(char x){
         return std::to_string(x);
     }
 

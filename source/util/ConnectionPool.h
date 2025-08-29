@@ -1,5 +1,5 @@
 //
-// Created by alienson on 22.3.24..
+// Created by alienson on 22.3.24.
 //
 
 #ifndef WINTER_CONNECTIONPOOL_H
@@ -11,8 +11,6 @@
 #include "../sql/Connection.h"
 #include "Logger.h"
 
-using namespace std;
-
 
 class ConnectionPool {
 public:
@@ -23,10 +21,10 @@ public:
         }
     }
 
-    shared_ptr<Connection> getConnection(){
-        scoped_lock lock(mutex_);
+    std::shared_ptr<Connection> getConnection(){
+        std::scoped_lock lock(mutex_);
         if (pool.empty()){
-            //Try allocate more instances
+            //Try to allocate more instances
             if (currentSize >= maxSize) {
                 wtLogError("Maximum number of db connections reached!");
                 return nullptr;
@@ -38,14 +36,14 @@ public:
         }
         Connection* conn = pool.front();
         pool.pop();
-        return shared_ptr<Connection>(conn, [this](Connection* conn){
+        return std::shared_ptr<Connection>(conn, [this](Connection* conn){
             wtLogTrace("DB Connection released!");
             return returnToPool(conn, pool, mutex_);
         });
     }
 
-    static void returnToPool(Connection* connection, queue<Connection*>& pool, mutex& mutex_){
-        scoped_lock lock(mutex_);
+    static void returnToPool(Connection* connection, std::queue<Connection*>& pool, std::mutex& mutex_){
+        std::scoped_lock lock(mutex_);
         pool.push(connection);
     }
 
@@ -53,8 +51,8 @@ private:
     int currentSize;
     int maxSize;
     Connection* (*connectionAllocator)();
-    queue<Connection*> pool;
-    mutex mutex_;
+    std::queue<Connection*> pool;
+    std::mutex mutex_;
 };
 
 

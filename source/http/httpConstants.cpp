@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 2.2.2024..
+// Created by Alienson on 2.2.2024.
 //
 
 #include "httpConstants.h"

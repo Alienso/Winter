@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 3.2.2024..
+// Created by Alienson on 3.2.2024.
 //
 
 #ifndef WINTER_ROUTER_H
@@ -34,19 +34,19 @@ public:
     void operator=(const Router&) = delete;
     static Router* getInstance();
 
-    void routeRequest(shared_ptr<HttpRequest> &request);
+    void routeRequest(std::shared_ptr<HttpRequest> &request);
     void registerEndpoint(Endpoint* endpoint);
     void registerEndpoint(const char* url, HttpMethod* _method, std::function<HttpResponse*(HttpRequest*)> f);
     void initializeEndpoints(){}
 
-    vector<Endpoint*> endpoints;
+    std::vector<Endpoint*> endpoints;
 
 private:
     Router() = default;
     ~Router();
     ThreadPool threadPool{20};
     static Router* instance;
-    static mutex mutex_;
+    static std::mutex mutex_;
 };
 
 

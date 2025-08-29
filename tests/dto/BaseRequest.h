@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 5.3.2024..
+// Created by Alienson on 5.3.2024.
 //
 
 #include "Reflect.h"
@@ -11,9 +11,9 @@
 class BaseRequest : public Reflect{
 public:
     int number;
-    string type;
+    std::string type;
     InnerClass* innerClass;
-    vector<int> values;
+    std::vector<int> values;
 };
 
 #endif //WINTER_BASEREQUEST_H

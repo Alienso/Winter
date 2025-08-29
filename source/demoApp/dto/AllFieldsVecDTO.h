@@ -1,5 +1,5 @@
 //
-// Created by alienson on 17.3.24..
+// Created by alienson on 17.3.24.
 //
 
 #ifndef WINTER_ALLFIELDSVECDTO_H
@@ -9,37 +9,37 @@
 
 class AllFieldsVecDTO : public Reflect {
 public:
-    vector<short> s;
-    vector<int> i;
-    vector<long> l;
-    vector<float> f;
-    vector<double> d;
-    vector<char> c;
-    vector<string> str;
-    vector<bool> b;
-    vector<std::byte> bt;
+    std::vector<short> s;
+    std::vector<int> i;
+    std::vector<long> l;
+    std::vector<float> f;
+    std::vector<double> d;
+    std::vector<char> c;
+    std::vector<std::string> str;
+    std::vector<bool> b;
+    std::vector<std::byte> bt;
 
-    vector<short*> sPtr;
-    vector<int*> iPtr;
-    vector<long*> lPtr;
-    vector<float*> fPtr;
-    vector<double*> dPtr;
-    vector<char*> cPtr;
-    vector<string*> strPtr;
-    vector<bool*> bPtr;
-    vector<std::byte*> btPtr;
+    std::vector<short*> sPtr;
+    std::vector<int*> iPtr;
+    std::vector<long*> lPtr;
+    std::vector<float*> fPtr;
+    std::vector<double*> dPtr;
+    std::vector<char*> cPtr;
+    std::vector<std::string*> strPtr;
+    std::vector<bool*> bPtr;
+    std::vector<std::byte*> btPtr;
 
-    vector<InnerClass*> innerClassPtr;
-    vector<InnerClass> innerClass;
+    std::vector<InnerClass*> innerClassPtr;
+    std::vector<InnerClass> innerClass;
 
-    vector<int>* vecPtrInt;
-    vector<int*>* vecPtrIntPtr;
+    std::vector<int>* vecPtrInt;
+    std::vector<int*>* vecPtrIntPtr;
 
-    vector<string>* vecPtrString;
-    vector<string*>* vecPtrStringPtr;
+    std::vector<std::string>* vecPtrString;
+    std::vector<std::string*>* vecPtrStringPtr;
 
-    vector<InnerClass>* vecPtrInnerClass;
-    vector<InnerClass*>* vecPtrInnerClassPtr;
+    std::vector<InnerClass>* vecPtrInnerClass;
+    std::vector<InnerClass*>* vecPtrInnerClassPtr;
 
     AllFieldsVecDTO() = default;
 

@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 11.3.2024..
+// Created by Alienson on 11.3.2024.
 //
 
 #include "ComponentPass.h"
@@ -13,8 +13,8 @@ void ComponentPass::begin(std::string &fileName) {
     isClassComponent = false;
 
     size_t start = fileName.rfind("Component.h");
-    if (start != string::npos) {
-        string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
+    if (start != std::string::npos) {
+        std::string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
         componentCppFile = StringUtils::replace(path , '\\', '/');
     }
 }
@@ -28,15 +28,15 @@ bool ComponentPass::process(std::ifstream &inputFile, std::ofstream &outputFile,
             className = line.substr(index, indexLast - index);
 
             size_t semicolonIndex = line.find(':');
-            if (semicolonIndex != string::npos) {
+            if (semicolonIndex != std::string::npos) {
                 size_t componentIndex = line.find("Component", semicolonIndex);
-                if (componentIndex != string::npos) {
+                if (componentIndex != std::string::npos) {
                     componentClasses.emplace_back("", className, "_" + className + "_");
                     isClassComponent = true;
                     goto next;
                 }
                 componentIndex = line.find("Repository", semicolonIndex);
-                if (componentIndex != string::npos) {
+                if (componentIndex != std::string::npos) {
                     componentClasses.emplace_back("", className, "_" + className + "_");
                     isClassComponent = true;
                     goto next;
@@ -79,15 +79,15 @@ void ComponentPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std
 }
 
 void ComponentPass::processingFinished() {
-    ofstream outputFile = ofstream(componentCppFile, std::ios::app);
+    std::ofstream outputFile = std::ofstream(componentCppFile, std::ios::app);
     if (!outputFile.is_open()) {
-        cout << "Error while opening Component.cpp!";
+        std::cout << "Error while opening Component.cpp!";
     }
 
     //add includes
     outputFile << '\n';
     for (auto &x: componentClasses){
-        string path = StringUtils::replace(x.filePath, '\\', '/');
+        std::string path = StringUtils::replace(x.filePath, '\\', '/');
         outputFile << "#include \"" << path << "\"\n";
     }
     outputFile << '\n';
@@ -110,7 +110,7 @@ bool ComponentPass::shouldProcess(std::string &fileName) const {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
 }
 
-void ComponentPass::generateComponentId(ofstream &outputFile) {
+void ComponentPass::generateComponentId(std::ofstream &outputFile) {
     outputFile << "public:\n";
     outputFile << "\tstatic inline int _componentId_ = 0;\n";
 }

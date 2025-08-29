@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 27.1.2024..
+// Created by Alienson on 27.1.2024.
 //
 
 #include "Logger.h"
@@ -7,18 +7,16 @@
 
 #include <cstdarg>
 
-using namespace std;
-
 Logger* Logger::instance = nullptr;
-mutex Logger::mutex_;
+std::mutex Logger::mutex_;
 
 Logger::Logger() {
     logLevel = (LogLevel) Configuration::logLevel;
-    appenders.emplace_back("", &cout);
-    string cwd = __FILE__;
+    appenders.emplace_back("", &std::cout);
+    std::string cwd = __FILE__;
     size_t sourceIndex = cwd.find("Winter");
-    if (sourceIndex == string::npos) {
-        cout << "Error while initializing logger. Could not find source in path\n";
+    if (sourceIndex == std::string::npos) {
+        std::cout << "Error while initializing logger. Could not find source in path\n";
         sourceIndex = 0;
     }
     cwdOffset = sourceIndex + 7;
@@ -32,7 +30,7 @@ Logger *Logger::getInstance() {
     return instance;
 }
 
-void Logger::addAppender(ostream* stream) {
+void Logger::addAppender(std::ostream* stream) {
     appenders.emplace_back("", stream);
 }
 

@@ -1,5 +1,5 @@
 //
-// Created by alienson on 27.3.24..
+// Created by alienson on 27.3.24.
 //
 
 #ifndef WINTER_MAPPER_H

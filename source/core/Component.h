@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 5.3.2024..
+// Created by Alienson on 5.3.2024.
 //
 
 #ifndef WINTER_COMPONENT_H
@@ -16,8 +16,6 @@
 #include <vector>
 #include <iostream>
 #include "Logger.h"
-
-using namespace std;
 
 class Component{
 public:
@@ -42,6 +40,6 @@ public:
     static inline int _componentId_ = 0;
 
 private:
-    static vector<Component*> components;
+    static std::vector<Component*> components;
 };
 #endif //WINTER_COMPONENT_H

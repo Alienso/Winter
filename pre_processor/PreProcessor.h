@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 5.2.2024..
+// Created by Alienson on 5.2.2024.
 //
 
 #ifndef WINTER_PREPROCESSOR_H

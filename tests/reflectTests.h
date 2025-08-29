@@ -1,5 +1,5 @@
 //
-// Created by alienson on 28.3.24..
+// Created by alienson on 28.3.24.
 //
 
 #ifndef WINTER_REFLECTTESTS_H

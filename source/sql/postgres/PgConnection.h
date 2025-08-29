@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 14.3.2024..
+// Created by Alienson on 14.3.2024.
 //
 
 #ifndef WINTER_PGCONNECTION_H
@@ -7,7 +7,7 @@
 
 
 #include "../Connection.h"
-#include <libpq-fe.h>
+#include "libpq-fe.h"
 
 inline bool validateResponse(const PGconn *conn, PGresult *res, const char *message){
     auto code = PQresultStatus(res);
@@ -23,12 +23,12 @@ inline bool validateResponse(const PGconn *conn, PGresult *res, const char *mess
 class PgConnection : public Connection{
 
 public:
-    explicit PgConnection(const string& connectionString);
+    explicit PgConnection(const std::string& connectionString);
     virtual ~PgConnection();
 
-    shared_ptr<Statement> createStatement(shared_ptr<Connection> connection) override;
+    std::shared_ptr<Statement> createStatement(std::shared_ptr<Connection> connection) override;
 
-    shared_ptr<Statement> createStatement(shared_ptr<Connection> connection, const char *s) override;
+    std::shared_ptr<Statement> createStatement(std::shared_ptr<Connection> connection, const char *s) override;
 
     void commit() override;
 

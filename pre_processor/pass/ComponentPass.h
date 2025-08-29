@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 11.3.2024..
+// Created by Alienson on 11.3.2024.
 //
 
 #ifndef WINTER_COMPONENTPASS_H

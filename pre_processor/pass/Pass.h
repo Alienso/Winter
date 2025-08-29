@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 18.2.2024..
+// Created by Alienson on 18.2.2024.
 //
 
 #ifndef WINTER_PASS_H

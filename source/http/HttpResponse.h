@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 1.2.2024..
+// Created by Alienson on 1.2.2024.
 //
 
 #ifndef WINTER_HTTPRESPONSE_H
@@ -12,8 +12,6 @@
 #include "Reflect.h"
 #include "JsonSerializer.h"
 
-using namespace std;
-
 class HttpResponse {
 
 public:
@@ -22,23 +20,23 @@ public:
     explicit HttpResponse(Reflect* data, HttpCode* code = HttpCode::OK);
 
     void send() const;
-    [[nodiscard]] string toResponseString() const;
-    [[nodiscard]] const string& getBody() const;
+    [[nodiscard]] std::string toResponseString() const;
+    [[nodiscard]] const std::string& getBody() const;
     void setConnection(Connection* _connection);
 
 private:
     HttpVersion* httpVersion = nullptr;
     HttpCode* httpCode = nullptr;
-    unordered_map<string,string> responseHeaders;
-    string responseBody;
+    std::unordered_map<std::string,std::string> responseHeaders;
+    std::string responseBody;
 
     Connection* connection = nullptr;
     JsonSerializer serializer{};
-    static unordered_map<string,string> baseResponseHeaders;
+    static std::unordered_map<std::string,std::string> baseResponseHeaders;
 
-    [[nodiscard]] string writeRequestLine() const;
-    [[nodiscard]] string writeRequestHeaders() const;
-    [[nodiscard]] string writeRequestBody() const;
+    [[nodiscard]] std::string writeRequestLine() const;
+    [[nodiscard]] std::string writeRequestHeaders() const;
+    [[nodiscard]] std::string writeRequestBody() const;
 };
 
 

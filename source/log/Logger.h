@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 27.1.2024..
+// Created by Alienson on 27.1.2024.
 //
 
 #ifndef WINTER_LOGGER_H
@@ -22,7 +22,6 @@
 #define wtLogWarn(format, ...) Logger::getInstance()->warn(__FILE__, __LINE__, format, ##__VA_ARGS__)
 #define wtLogError(format, ...) Logger::getInstance()->error(__FILE__, __LINE__, format, ##__VA_ARGS__)
 
-using namespace std;
 
 enum LogLevel{
     LOG_LEVEL_TRACE,LOG_LEVEL_DEBUG,LOG_LEVEL_INFO,LOG_LEVEL_WARN,LOG_LEVEL_ERROR
@@ -36,7 +35,7 @@ public:
     void operator=(const Logger&) = delete;
     static Logger* getInstance();
 
-    void addAppender(ostream* stream);
+    void addAppender(std::ostream* stream);
 
     void trace(const char* file, int line, const char* s, ...) const;
     void debug(const char* file, int line, const char* s, ...) const;
@@ -45,35 +44,35 @@ public:
     void error(const char* file, int line, const char* s, ...) const;
 
     template<typename T>
-    void trace(const char* file, const int line, const char *s, const vector<T> vec) const {
+    void trace(const char* file, const int line, const char *s, const std::vector<T> vec) const {
         if(logLevel > LOG_LEVEL_TRACE)
             return;
         logArray(TRACE_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
     template<typename T>
-    void debug(const char* file, const int line, const char *s, const vector<T> vec) const {
+    void debug(const char* file, const int line, const char *s, const std::vector<T> vec) const {
         if(logLevel > LOG_LEVEL_DEBUG)
             return;
         logArray(DEBUG_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
     template<typename T>
-    void info(const char* file, const int line, const char *s, const vector<T> vec) const {
+    void info(const char* file, const int line, const char *s, const std::vector<T> vec) const {
         if(logLevel > LOG_LEVEL_INFO)
             return;
         logArray(INFO_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
     template<typename T>
-    void warn(const char* file, int line, const char *s, const vector<T> vec) const {
+    void warn(const char* file, int line, const char *s, const std::vector<T> vec) const {
         if(logLevel > LOG_LEVEL_WARN)
             return;
         logArray(WARN_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
     template<typename T>
-    void error(const char* file, const int line, const char *s, const vector<T> vec) const {
+    void error(const char* file, const int line, const char *s, const std::vector<T> vec) const {
         logArray(ERROR_STR, file + cwdOffset, line, s, vec.data(), vec.size());
     }
 
@@ -120,10 +119,10 @@ public:
 private:
     Logger();
     static Logger* instance;
-    static mutex mutex_;
+    static std::mutex mutex_;
 
     LogLevel logLevel;
-    vector<Appender> appenders;
+    std::vector<Appender> appenders;
     size_t cwdOffset = 0;
 
     void log(const char *logLevel, const char* file, int line, const char *s, va_list args) const;

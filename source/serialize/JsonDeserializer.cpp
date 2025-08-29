@@ -1,11 +1,11 @@
 //
-// Created by Alienson on 11.2.2024..
+// Created by Alienson on 11.2.2024.
 //
 
 #include "JsonDeserializer.h"
 
-Reflect* JsonDeserializer::deserialize(const string& s, Reflect* response){
-    string fieldName, fieldValue;
+Reflect* JsonDeserializer::deserialize(const std::string& s, Reflect* response){
+    std::string fieldName, fieldValue;
     JsonFieldType fieldType;
 
     size_t offset;
@@ -16,7 +16,7 @@ Reflect* JsonDeserializer::deserialize(const string& s, Reflect* response){
     bool inStr = false;
 
     offset = s.find('{');
-    if (offset == string::npos){
+    if (offset == std::string::npos){
         wtLogWarn("Error reading json. Could not find {");
         return response;
     }
@@ -25,10 +25,10 @@ Reflect* JsonDeserializer::deserialize(const string& s, Reflect* response){
     while(true){
 
         semicolonIndex = s.find(':', offset);
-        if (semicolonIndex == string::npos)
+        if (semicolonIndex == std::string::npos)
             return response;
 
-        commaIndex = string::npos;
+        commaIndex = std::string::npos;
         size_t i;
         for (i=semicolonIndex; i<s.size(); i++){
             switch (s[i]) {
@@ -55,9 +55,9 @@ Reflect* JsonDeserializer::deserialize(const string& s, Reflect* response){
             }
         }
 
-        if (commaIndex == string::npos || i >= s.size()) {
+        if (commaIndex == std::string::npos || i >= s.size()) {
             commaIndex = s.rfind('}', s.size());
-            if (commaIndex == string::npos){
+            if (commaIndex == std::string::npos){
                 wtLogError("Could not find } in json!");
                 continue;
             }
@@ -108,8 +108,8 @@ Reflect* JsonDeserializer::deserialize(const string& s, Reflect* response){
     }
 }
 
-void JsonDeserializer::setObjectValue(Field* f, const string& fieldValue, Reflect* response){
-    string className;
+void JsonDeserializer::setObjectValue(Field* f, const std::string& fieldValue, Reflect* response){
+    std::string className;
     bool isPtr = false;
     Reflect* tempObj;
 
@@ -132,10 +132,10 @@ void JsonDeserializer::setObjectValue(Field* f, const string& fieldValue, Reflec
     }
 }
 
-void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldType fieldType, Reflect* obj, const Field* f){
+void JsonDeserializer::setFieldValueArray(const std::string& fieldValue, const FieldType fieldType, Reflect* obj, const Field* f){
 
     bool isElemPtr = false;
-    string subTypeStr;
+    std::string subTypeStr;
     getArraySubType(f->typeStr, subTypeStr, &isElemPtr);
 
     FieldType subType = convertToFieldType(subTypeStr);
@@ -143,7 +143,7 @@ void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldT
     switch(subType){
         case FIELD_TYPE_INT:
             if (fieldType == FIELD_TYPE_VECTOR){
-                handleVecData<int>(f, obj, isElemPtr, fieldValue, [](string &val){ return stoi(val);});
+                handleVecData<int>(f, obj, isElemPtr, fieldValue, [](std::string &val){ return stoi(val);});
             }/*else {
                 int *array = nullptr;
                 unsigned int size;
@@ -153,57 +153,57 @@ void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldT
             break;
         case FIELD_TYPE_SHORT:
             if (fieldType == FIELD_TYPE_VECTOR){
-                handleVecData<short>(f, obj, isElemPtr, fieldValue, [](string &val){ return (short)stoi(val); });
+                handleVecData<short>(f, obj, isElemPtr, fieldValue, [](std::string &val){ return (short)stoi(val); });
             }
             break;
         case FIELD_TYPE_LONG:
             if (fieldType == FIELD_TYPE_VECTOR){
-                handleVecData<long>(f, obj, isElemPtr, fieldValue, [](string &val){ return stol(val);});
+                handleVecData<long>(f, obj, isElemPtr, fieldValue, [](std::string &val){ return stol(val);});
             }
             break;
         case FIELD_TYPE_CHAR:
             if (fieldType == FIELD_TYPE_VECTOR){
-                handleVecData<char>(f, obj, isElemPtr, fieldValue, [](string &val){ return val[0]; });
+                handleVecData<char>(f, obj, isElemPtr, fieldValue, [](std::string &val){ return val[0]; });
             }
             f->setChar(obj, fieldValue[0]);
             break;
         case FIELD_TYPE_FLOAT:
             if (fieldType == FIELD_TYPE_VECTOR){
-                handleVecData<float>(f, obj, isElemPtr, fieldValue, [](string &val){ return stof(val); });
+                handleVecData<float>(f, obj, isElemPtr, fieldValue, [](std::string &val){ return stof(val); });
             }
             break;
         case FIELD_TYPE_DOUBLE:
             if (fieldType == FIELD_TYPE_VECTOR){
-                handleVecData<double>(f, obj, isElemPtr, fieldValue, [](string &val){ return stod(val); });
+                handleVecData<double>(f, obj, isElemPtr, fieldValue, [](std::string &val){ return stod(val); });
             }
             break;
         case FIELD_TYPE_BOOL:
             if (fieldType == FIELD_TYPE_VECTOR){
-                handleVecData<bool>(f, obj, isElemPtr, fieldValue, [](string &val){ return StringUtils::parseBoolean(val.data()); });
+                handleVecData<bool>(f, obj, isElemPtr, fieldValue, [](std::string &val){ return StringUtils::parseBoolean(val.data()); });
             }
             break;
         case FIELD_TYPE_STRING: //TODO try optimize
             if (fieldType == FIELD_TYPE_VECTOR){
-                handleVecData<string>(f, obj, isElemPtr, fieldValue, [](string &val){ return val.substr(1, val.size() - 2); });
+                handleVecData<std::string>(f, obj, isElemPtr, fieldValue, [](std::string &val){ return val.substr(1, val.size() - 2); });
             }
             break;
         case FIELD_TYPE_OBJ:
             if (fieldType == FIELD_TYPE_VECTOR){
                 if (!f->isPtr) {
                     if (!isElemPtr){
-                        auto *data = (vector<std::byte>*)(f->getAddress(obj));
+                        auto *data = (std::vector<std::byte>*)(f->getAddress(obj));
                         insertVectorData(fieldValue, data, subTypeStr);
                     }else {
-                        auto *data = static_cast<vector<Reflect *> *>(f->getAddress(obj));
+                        auto *data = static_cast<std::vector<Reflect *> *>(f->getAddress(obj));
                         insertVectorPtrData(fieldValue, data, subTypeStr);
                     }
                 }else{
                     if (!isElemPtr){
-                        auto *data = new vector<std::byte>(); //static_cast<vector<Reflect *> *> (*(f->getPtr(obj)));
+                        auto *data = new std::vector<std::byte>(); //static_cast<vector<Reflect *> *> (*(f->getPtr(obj)));
                         insertVectorData(fieldValue, data, subTypeStr);
                         f->setPtr(obj, data);
                     }else {
-                        auto *data = new vector<Reflect *>(); //static_cast<vector<Reflect *> *> (*(f->getPtr(obj)));
+                        auto *data = new std::vector<Reflect *>(); //static_cast<vector<Reflect *> *> (*(f->getPtr(obj)));
                         insertVectorPtrData(fieldValue, data, subTypeStr);
                         f->setPtr(obj, data);
                     }
@@ -217,11 +217,11 @@ void JsonDeserializer::setFieldValueArray(const string& fieldValue, const FieldT
     }
 }
 
-void JsonDeserializer::insertVectorData(const string& source, vector<std::byte> *dest, const string &typeStr){
+void JsonDeserializer::insertVectorData(const std::string& source, std::vector<std::byte> *dest, const std::string &typeStr){
     /* TLDR we are doing a memcpy into dest vector*/
-    vector<string>* vec = StringUtils::splitObjectArray(source);
+    std::vector<std::string>* vec = StringUtils::splitObjectArray(source);
     *dest = {};
-    for(string& s : *vec){
+    for(std::string& s : *vec){
         Reflect* r = deserialize(s, Reflect::getClassInstanceByName(typeStr));
         /*dest->resize(currentSize + r->getClassSize());
         memcpy((void*)(&dest[currentSize]), (const void*)(r), r->getClassSize());*/
@@ -232,9 +232,9 @@ void JsonDeserializer::insertVectorData(const string& source, vector<std::byte> 
 }
 
 
-void JsonDeserializer::insertVectorPtrData(const string& source, vector<Reflect*> *dest, const string &typeStr){
-    vector<string>* vec = StringUtils::splitObjectArray(source);
-    for(string& s : *vec){
+void JsonDeserializer::insertVectorPtrData(const std::string& source, std::vector<Reflect*> *dest, const std::string &typeStr){
+    std::vector<std::string>* vec = StringUtils::splitObjectArray(source);
+    for(std::string& s : *vec){
         Reflect* r = deserialize(s, Reflect::getClassInstanceByName(typeStr));
         dest->push_back(r);
     }

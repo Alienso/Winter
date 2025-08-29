@@ -1,5 +1,5 @@
 //
-// Created by alienson on 4.4.24..
+// Created by alienson on 4.4.24.
 //
 
 #ifndef WINTER_UTIL_H

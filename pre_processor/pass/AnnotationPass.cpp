@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 18.2.2024..
+// Created by Alienson on 18.2.2024.
 //
 
 #include "fstream"
@@ -12,8 +12,8 @@ void AnnotationPass::begin(std::string& fileName) {
     bracketCounter = 0;
 
     size_t start = fileName.rfind("Router.h");
-    if (start != string::npos) {
-        string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
+    if (start != std::string::npos) {
+        std::string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
         routerCppFile = StringUtils::replace(path , '\\', '/');
     }
 }
@@ -56,36 +56,36 @@ bool AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
 
     //Endpoint annotation
     size_t beginIndex = previousLine.find('$');
-    if (beginIndex == string::npos)
+    if (beginIndex == std::string::npos)
         return false;
     size_t endIndex = previousLine.find('(', beginIndex);
-    if (endIndex == string::npos)
+    if (endIndex == std::string::npos)
         return false;
 
-    string methodName = previousLine.substr(beginIndex + 1, endIndex - beginIndex - 1);
+    std::string methodName = previousLine.substr(beginIndex + 1, endIndex - beginIndex - 1);
 
     beginIndex = previousLine.find('"', endIndex);
     endIndex = previousLine.find_last_of('"');
-    if (beginIndex == string::npos || endIndex == string::npos || beginIndex == endIndex)
+    if (beginIndex == std::string::npos || endIndex == std::string::npos || beginIndex == endIndex)
         return false;
 
-    string path = previousLine.substr(beginIndex + 1, endIndex - beginIndex - 1);
+    std::string path = previousLine.substr(beginIndex + 1, endIndex - beginIndex - 1);
 
     endIndex = line.find('(');
-    if (endIndex == string::npos)
+    if (endIndex == std::string::npos)
         return false;
     beginIndex = line.rfind(' ', endIndex);
-    if (beginIndex == string::npos)
+    if (beginIndex == std::string::npos)
         return false;
 
-    string functionName = line.substr(beginIndex + 1, endIndex - beginIndex - 1);
+    std::string functionName = line.substr(beginIndex + 1, endIndex - beginIndex - 1);
 
     beginIndex = endIndex;
     endIndex = line.find('*', endIndex);
-    if (endIndex == string::npos)
+    if (endIndex == std::string::npos)
         return false;
 
-    string bodyType = line.substr(beginIndex + 1, endIndex - beginIndex - 1);
+    std::string bodyType = line.substr(beginIndex + 1, endIndex - beginIndex - 1);
     bodyType = StringUtils::trim(bodyType);
 
     EndpointData endpoint(methodName, path, functionName, bodyType);
@@ -94,9 +94,9 @@ bool AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile
     return false;
 }
 
-void AnnotationPass::handleRestController(string &line) {
+void AnnotationPass::handleRestController(std::string &line) {
     size_t beginIndex = line.find("class");
-    if (beginIndex == string::npos)
+    if (beginIndex == std::string::npos)
         return;
 
     beginIndex+=5;
@@ -128,45 +128,45 @@ void AnnotationPass::handleRestController(string &line) {
     }
 
     size_t endIndex = line.find(' ', beginIndex);
-    if (endIndex == string::npos)
+    if (endIndex == std::string::npos)
         return;
 
     restControllers.emplace_back(line.substr(beginIndex, endIndex - beginIndex));
 }
 
-void AnnotationPass::handlePostConstruct(string &line) {
+void AnnotationPass::handlePostConstruct(std::string &line) {
     size_t endIndex, beginIndex;
     endIndex = line.find('(');
-    if (endIndex == string::npos)
+    if (endIndex == std::string::npos)
         return;
     beginIndex = line.rfind(' ', endIndex);
-    if (beginIndex == string::npos)
+    if (beginIndex == std::string::npos)
         return;
 
     postConstructMethodName = line.substr(beginIndex + 1, endIndex - beginIndex - 1);
 }
 
-bool AnnotationPass::handleAutoWire(string &line, std::ofstream &outputFile) {
+bool AnnotationPass::handleAutoWire(std::string &line, std::ofstream &outputFile) {
     size_t startIndex = 0, endIndex = 0;
     while(startIndex<line.size() && isspace(line[startIndex])) startIndex++;
     endIndex = line.find('*', startIndex + 1);
-    if (endIndex == string::npos)
+    if (endIndex == std::string::npos)
         return false;
 
-    string classNamePtr = line.substr(startIndex, endIndex - startIndex + 1);
+    std::string classNamePtr = line.substr(startIndex, endIndex - startIndex + 1);
     while(endIndex > startIndex && !isalnum(line[endIndex])) endIndex--;
     if (endIndex == startIndex)
         return false;
-    string className = line.substr(startIndex, endIndex - startIndex + 1);
+    std::string className = line.substr(startIndex, endIndex - startIndex + 1);
 
     endIndex = line.rfind(';');
-    if (endIndex == string::npos)
+    if (endIndex == std::string::npos)
         return false;
 
     endIndex--;
     startIndex = endIndex - 1;
     while(startIndex > 0 && isalnum(line[startIndex])) startIndex--;
-    string varName = line.substr(startIndex, endIndex - startIndex + 1);
+    std::string varName = line.substr(startIndex, endIndex - startIndex + 1);
 
     outputFile << '\t' << classNamePtr << ' ' << varName << " = (" << classNamePtr << ")(Component::getById(" << className << "::_componentId_));\n";
     return true;
@@ -205,16 +205,16 @@ void AnnotationPass::addPostConstruct(std::ofstream &outputFile){
     outputFile << "\t\treturn 0;\n" << "\t})();\n";
 }
 
-void AnnotationPass::handleEntityColumn(string &line, string& previousLine) {
+void AnnotationPass::handleEntityColumn(std::string &line, std::string& previousLine) {
 
     size_t beginIndex, endIndex;
     beginIndex = previousLine.find('"');
     endIndex = previousLine.find_last_of('"');
-    if (beginIndex == string::npos || endIndex == string::npos || beginIndex == endIndex)
+    if (beginIndex == std::string::npos || endIndex == std::string::npos || beginIndex == endIndex)
         return;
 
-    string columnName = previousLine.substr(beginIndex + 1, endIndex - beginIndex - 1);
-    string fieldName = Util::getFieldName(line);
+    std::string columnName = previousLine.substr(beginIndex + 1, endIndex - beginIndex - 1);
+    std::string fieldName = Util::getFieldName(line);
 
     columnMappings[fieldName] = columnName;
 }
@@ -225,9 +225,9 @@ void AnnotationPass::processingFinished() {
     //TODO how to get method reference?
     endpointData.resize(0);
 
-    ofstream outputFile = ofstream(routerCppFile, std::ios::app);
+    std::ofstream outputFile = std::ofstream(routerCppFile, std::ios::app);
     if (!outputFile.is_open()) {
-        cout << "Error while opening Router.cpp!";
+        std::cout << "Error while opening Router.cpp!";
     }
 
     if(endpointData.empty()) {
@@ -256,17 +256,17 @@ void AnnotationPass::processingFinished() {
     outputFile.close();
 }
 
-void AnnotationPass::generateColumnMappings(ofstream &outputFile) {
+void AnnotationPass::generateColumnMappings(std::ofstream &outputFile) {
 
     if (columnMappings.empty())
         return;
 
     outputFile << "\npublic:\n";
-    outputFile << "\tunordered_map<string, string>& getColumnMappings() const override{\n"
+    outputFile << "\tstd::unordered_map<std::string, std::string>& getColumnMappings() const override{\n"
                   "        return columnMappings;\n"
                   "    }\n\n"
-                  "\tstatic unordered_map<string,string> generateMappings(){\n"
-                  "\t\tunordered_map<string,string> columnMappings = {};\n";
+                  "\tstatic std::unordered_map<std::string, std::string> generateMappings(){\n"
+                  "\t\tstd::unordered_map<std::string, std::string> columnMappings = {};\n";
 
     for (const auto& it : columnMappings){
         outputFile << "\t\tcolumnMappings[\"" << it.first << "\"] = \"" << it.second << "\";\n";
@@ -275,12 +275,12 @@ void AnnotationPass::generateColumnMappings(ofstream &outputFile) {
     outputFile << "\t\treturn columnMappings;\n";
     outputFile << "\t}\n\n";
 
-    outputFile << "\tstatic inline unordered_map<string,string> columnMappings = generateMappings();\n\n";
+    outputFile << "\tstatic inline std::unordered_map<std::string, std::string> columnMappings = generateMappings();\n\n";
 }
 
 void AnnotationPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {
 }
 
-bool AnnotationPass::shouldProcess(string &fileName) const {
+bool AnnotationPass::shouldProcess(std::string &fileName) const {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
 }

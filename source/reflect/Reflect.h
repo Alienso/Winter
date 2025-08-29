@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 6.2.2024..
+// Created by Alienson on 6.2.2024.
 //
 
 /**
@@ -28,7 +28,7 @@ public:
     [[nodiscard]] virtual Method& getMethod(const char* methodName);
 
     [[nodiscard]] virtual int getClassSize() const;
-    [[nodiscard]] static Reflect* getClassInstanceByName(const string& name);
+    [[nodiscard]] static Reflect* getClassInstanceByName(const std::string& name);
 
     [[nodiscard]] static Reflect* getInstance();
     [[nodiscard]] virtual Reflect* clone(CopyType copyType) const;
@@ -39,7 +39,7 @@ public:
     static inline std::vector<Field> declaredFields = {};
     static inline std::vector<Method> declaredMethods = {};
 
-    static inline std::unordered_map<string,Reflect* (*)()> classMap;
+    static inline std::unordered_map<std::string, Reflect* (*)()> classMap;
 };
 
 

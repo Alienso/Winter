@@ -1,5 +1,5 @@
 //
-// Created by alienson on 1.4.24..
+// Created by alienson on 1.4.24.
 //
 
 #ifndef WINTER_DTOUTILS_H
@@ -10,8 +10,8 @@
 #include "../dto/BaseRequest.h"
 
 template<typename T>
-vector<T*> createVecPtr(vector<T> vec){
-    vector<T*> res = {};
+std::vector<T*> createVecPtr(std::vector<T> vec){
+    std::vector<T*> res = {};
     for (T t : vec){
         T* x = new T(t);
         res.push_back(x);
@@ -43,8 +43,8 @@ inline void fillPtrData(AllFieldsDTO& dto){
     dto.dPtr = new double(1.25);
     dto.cPtr = new char('a');
     dto.bPtr = new bool(false);
-    dto.strPtr = new string("Hello World");
-    dto.vecPtr = new vector<int>{1,2,3};
+    dto.strPtr = new std::string("Hello World");
+    dto.vecPtr = new std::vector<int>{1,2,3};
     auto* clazz = new InnerClass{5,2.5,"c"};
     dto.innerClassPtr = clazz;
 
@@ -64,7 +64,7 @@ inline void fillVectorFieldData(AllFieldsVecDTO& dto){
 
     InnerClass clazz{5,2.5,"c"};
     InnerClass clazz2{1,0,"s"};
-    vector<InnerClass> vecClass{};
+    std::vector<InnerClass> vecClass{};
     vecClass.push_back(clazz);
     vecClass.push_back(clazz2);
     dto.innerClass = vecClass;
@@ -78,23 +78,23 @@ inline void fillVectorPtrData(AllFieldsVecDTO& dto){
     dto.dPtr = createVecPtr<double>({1.25,0});
     dto.cPtr = createVecPtr<char>({'a','b'});
     dto.bPtr = createVecPtr<bool>({false, true});
-    dto.strPtr = createVecPtr<string>({"Hello", "World"});
+    dto.strPtr = createVecPtr<std::string>({"Hello", "World"});
     dto.btPtr = {};
 
     InnerClass* clazz = new InnerClass{5,2.5,"c"};
     InnerClass* clazz2 = new InnerClass{1,0,"s"};
     dto.innerClassPtr = {clazz, clazz2};
 
-    dto.vecPtrInt = new vector<int>({1,2,3});
-    vector<int*>* vecIntPtrPtr = new vector<int*>(createVecPtr<int>({0,0,7}));
+    dto.vecPtrInt = new std::vector<int>({1,2,3});
+    std::vector<int*>* vecIntPtrPtr = new std::vector<int*>(createVecPtr<int>({0,0,7}));
     dto.vecPtrIntPtr = vecIntPtrPtr;
 
-    dto.vecPtrString = new vector<string>({"Hi", "World"});
-    vector<string*>* vecStringPtrPtr = new vector<string*>(createVecPtr<string>({"World", "Hi"}));
+    dto.vecPtrString = new std::vector<std::string>({"Hi", "World"});
+    std::vector<std::string*>* vecStringPtrPtr = new std::vector<std::string*>(createVecPtr<std::string>({"World", "Hi"}));
     dto.vecPtrStringPtr = vecStringPtrPtr;
 
-    dto.vecPtrInnerClass = new vector<InnerClass>({*clazz, *clazz2});
-    vector<InnerClass*>* vecClassPtrPtr = new vector<InnerClass*>({clazz, clazz2});
+    dto.vecPtrInnerClass = new std::vector<InnerClass>({*clazz, *clazz2});
+    std::vector<InnerClass*>* vecClassPtrPtr = new std::vector<InnerClass*>({clazz, clazz2});
     dto.vecPtrInnerClassPtr = vecClassPtrPtr;
 }
 

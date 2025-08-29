@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 6.2.2024..
+// Created by Alienson on 6.2.2024.
 //
 
 #include "Reflect.h"
@@ -31,7 +31,7 @@ int Reflect::getClassSize() const{
     return 0;
 }
 
-Reflect* Reflect::getClassInstanceByName(const string& name){
+Reflect* Reflect::getClassInstanceByName(const std::string& name){
     auto i = classMap.find(name);
     if (i == classMap.end())
         return nullptr;

@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 18.2.2024..
+// Created by Alienson on 18.2.2024.
 //
 
 #ifndef WINTER_REFLECTIONPASS_H
@@ -23,10 +23,10 @@ public:
     bool process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& line, std::string& previousLine) override;
     void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) override;
     void processingFinished() override;
-    [[nodiscard]] bool shouldProcess(string &fileName) const override;
+    [[nodiscard]] bool shouldProcess(std::string &fileName) const override;
 
 private:
-    void generateReflectOverrides(ofstream &outputFile);
+    void generateReflectOverrides(std::ofstream &outputFile);
 
     bool shouldAddReflection = false;
     bool declaringMethod;

@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 25.1.2024..
+// Created by Alienson on 25.1.2024.
 //
 
 #ifndef WINTER_WINTER_H
@@ -23,7 +23,7 @@ private:
     bool shouldStop = false;
 
     HttpServer httpServer;
-    thread httpServerThread;
+    std::thread httpServerThread;
 
     Router* router = Router::getInstance();
 };

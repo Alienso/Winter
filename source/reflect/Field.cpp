@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 6.2.2024..
+// Created by Alienson on 6.2.2024.
 //
 
 #include "Field.h"
@@ -98,22 +98,22 @@ std::byte Field::getByte(void* object) const{
     return *(std::byte*)getAddress(object);
 }
 
-string Field::getString(void* object) const{
-    return *(string*)getAddress(object);
+std::string Field::getString(void* object) const{
+    return *(std::string*)getAddress(object);
 }
 
-string Field::getAsString(Reflect *object, char stringChar) const {
+std::string Field::getAsString(Reflect *object, char stringChar) const {
     switch (type) {
         case FIELD_TYPE_SHORT:
             return getAsString<short>(object, &Field::getShort, StringUtils::to_string);
         case FIELD_TYPE_INT:
-            return getAsString<int>(object, &Field::getInt, to_string);
+            return getAsString<int>(object, &Field::getInt, std::to_string);
         case FIELD_TYPE_LONG:
-            return getAsString<long>(object, &Field::getLong, to_string);
+            return getAsString<long>(object, &Field::getLong, std::to_string);
         case FIELD_TYPE_FLOAT:
-            return getAsString<float>(object, &Field::getFloat, to_string);
+            return getAsString<float>(object, &Field::getFloat, std::to_string);
         case FIELD_TYPE_DOUBLE:
-            return getAsString<double>(object, &Field::getDouble, to_string);
+            return getAsString<double>(object, &Field::getDouble, std::to_string);
         case FIELD_TYPE_CHAR:
             if (stringChar == 0)
                 return getAsString<char>(object, &Field::getChar, StringUtils::to_string);
@@ -131,34 +131,34 @@ string Field::getAsString(Reflect *object, char stringChar) const {
                 void* ptr = *getPtr(object);
                 if (ptr == nullptr) {
                     if (stringChar == 0) return "null";
-                    else return stringChar + string("null") + stringChar;
+                    else return stringChar + std::string("null") + stringChar;
                 }
-                if (stringChar == 0) return *(string*)ptr;
-                return stringChar + *(string*)ptr + stringChar;
+                if (stringChar == 0) return *(std::string*)ptr;
+                return stringChar + *(std::string*)ptr + stringChar;
             }
         default:
             wtLogError("Unknown type encountered: ", type);
             if (stringChar == 0) return "null";
-            else return stringChar + string("null") + stringChar;
+            else return stringChar + std::string("null") + stringChar;
     }
 }
 
 void Field::set(void *object, const char *value) const {
     switch (type) {
         case FIELD_TYPE_SHORT:
-            setValueInternal<short>((short)stoi(value), object, &Field::setShort);
+            setValueInternal<short>((short)std::stoi(value), object, &Field::setShort);
             break;
         case FIELD_TYPE_INT:
-            setValueInternal<int>(stoi(value), object, &Field::setInt);
+            setValueInternal<int>(std::stoi(value), object, &Field::setInt);
             break;
         case FIELD_TYPE_LONG:
-            setValueInternal<long>(stol(value), object, &Field::setLong);
+            setValueInternal<long>(std::stol(value), object, &Field::setLong);
             break;
         case FIELD_TYPE_FLOAT:
-            setValueInternal<float>(stof(value), object, &Field::setFloat);
+            setValueInternal<float>(std::stof(value), object, &Field::setFloat);
             break;
         case FIELD_TYPE_DOUBLE:
-            setValueInternal<double>(stod(value), object, &Field::setDouble);
+            setValueInternal<double>(std::stod(value), object, &Field::setDouble);
             break;
         case FIELD_TYPE_CHAR:
             setValueInternal<char>(value[0], object, &Field::setChar);
@@ -171,7 +171,7 @@ void Field::set(void *object, const char *value) const {
             break;
         case FIELD_TYPE_STRING:
             if (this->isPtr){
-                auto *valuePtr = new string(value);
+                auto *valuePtr = new std::string(value);
                 this->setPtr(object, valuePtr);
             }
             else
@@ -218,17 +218,17 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
             break;
         case FIELD_TYPE_STRING:
             if (sourceField.isPtr) {
-                string* helper = *((string **) sourceField.getPtr(source));
+                std::string* helper = *((std::string **) sourceField.getPtr(source));
                 if (destField.isPtr) {
-                    auto* sptr = new string(*helper);
+                    auto* sptr = new std::string(*helper);
                     destField.setPtr(dest, sptr);
                 }
                 else destField.setString(dest, *helper);
             }
             else {
-                string helper = sourceField.getString(source);
+                std::string helper = sourceField.getString(source);
                 if (destField.isPtr) {
-                    auto* sptr = new string(helper);
+                    auto* sptr = new std::string(helper);
                     destField.setPtr(dest, sptr);
                 }
                 else destField.setString(dest, helper);
@@ -238,7 +238,7 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
             //auto* destVec = (vector<std::byte>*)destField.getAddress(dest);
             //auto* sourceVec = (vector<std::byte>*)sourceField.getAddress(source);
             //*destVec = *sourceVec;
-            *(vector<std::byte>*)destField.getAddress(dest) = *(vector<std::byte>*)sourceField.getAddress(source);
+            *(std::vector<std::byte>*)destField.getAddress(dest) = *(std::vector<std::byte>*)sourceField.getAddress(source);
             break;
         case FIELD_TYPE_OBJ: //call clone() here?
             if (sourceField.isPtr){

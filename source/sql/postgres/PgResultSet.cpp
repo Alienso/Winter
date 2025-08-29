@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 14.3.2024..
+// Created by Alienson on 14.3.2024.
 //
 
 #include "PgResultSet.h"
@@ -21,24 +21,24 @@ bool PgResultSet::next() {
 }
 
 //TODO matching? Entity is available now. but Reflect* are also viable
-Reflect* PgResultSet::getResult(Reflect* (*allocator)()) const{
+std::shared_ptr<Reflect> PgResultSet::getResult(Reflect* (*allocator)()) const{
 
     if (resultSize == 0){
         return nullptr;
     }
 
-    unordered_map<string, int> tupleMapping{};
+    std::unordered_map<std::string, int> tupleMapping{};
 
     for (size_t i = 0; i < fieldCount; i++)
-        tupleMapping[StringUtils::toCamelCase(string{PQfname(pgResult, i)})] = i;
+        tupleMapping[StringUtils::toCamelCase(std::string{PQfname(pgResult, i)})] = i;
 
     auto it = tupleMapping.begin();
-    Reflect* entity = allocator();
+    std::shared_ptr<Reflect> entity = std::make_shared<Reflect>(*allocator());
     for (auto& f : entity->getDeclaredFields()) {
         it = tupleMapping.find(StringUtils::toCamelCase(f.name));
         if (it != tupleMapping.end()) {
             char *s = PQgetvalue(pgResult, 0, it->second);
-            f.set(entity, s);
+            f.set(entity.get(), s);
         }
     }
 
@@ -46,30 +46,30 @@ Reflect* PgResultSet::getResult(Reflect* (*allocator)()) const{
     return entity;
 }
 
-vector<Reflect*>* PgResultSet::getResultList(Reflect* (*allocator)()) const{
+std::shared_ptr<std::vector<std::shared_ptr<Reflect>>> PgResultSet::getResultList(Reflect* (*allocator)()) const{
 
-    auto* response = new vector<Reflect*>();
+    auto response = std::make_shared<std::vector<std::shared_ptr<Reflect>>>();
     if (resultSize == 0){
         return response;
     }
 
     response->resize(resultSize);
 
-    unordered_map<string, int> tupleMapping{};
+    std::unordered_map<std::string, int> tupleMapping{};
 
     for (size_t i = 0; i < fieldCount; i++)
-        tupleMapping[StringUtils::toCamelCase(string{PQfname(pgResult, i)})] = i;
+        tupleMapping[StringUtils::toCamelCase(std::string{PQfname(pgResult, i)})] = i;
 
     auto it = tupleMapping.begin();
 
     int j = 0;
     for (size_t i = 0; i < resultSize; i++){
-        Reflect* entity = allocator();
+        std::shared_ptr<Reflect> entity = std::make_shared<Reflect>(*allocator());
         for (auto& f : entity->getDeclaredFields()) {
             it = tupleMapping.find(StringUtils::toCamelCase(f.name)); //TODO add field match type to method signature
             if (it != tupleMapping.end()) {
                 char *s = PQgetvalue(pgResult, i, it->second);
-                f.set(entity, s);
+                f.set(entity.get(), s);
             }
         }
         (*response)[j++] = entity;
@@ -80,22 +80,22 @@ vector<Reflect*>* PgResultSet::getResultList(Reflect* (*allocator)()) const{
 }
 
 int PgResultSet::getInt(size_t columnIndex) const {
-    return stoi(PQgetvalue(pgResult, cursorIndex, columnIndex));
+    return std::stoi(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
 long PgResultSet::getLong(size_t columnIndex) const {
-    return stol(PQgetvalue(pgResult, cursorIndex, columnIndex));
+    return std::stol(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
 float PgResultSet::getFloat(size_t columnIndex) const {
-    return stof(PQgetvalue(pgResult, cursorIndex, columnIndex));
+    return std::stof(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
 double PgResultSet::getDouble(size_t columnIndex) const {
-    return stod(PQgetvalue(pgResult, cursorIndex, columnIndex));
+    return std::stod(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
-string PgResultSet::getString(size_t columnIndex) const {
+std::string PgResultSet::getString(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }
 
@@ -108,21 +108,21 @@ std::byte PgResultSet::getByte(size_t columnIndex) const {
 }
 
 short PgResultSet::getShort(size_t columnIndex) const {
-    return (short)stoi(PQgetvalue(pgResult, cursorIndex, columnIndex));
+    return (short)std::stoi(PQgetvalue(pgResult, cursorIndex, columnIndex));
 }
 
-string PgResultSet::getDate(size_t columnIndex) const {
+std::string PgResultSet::getDate(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }
 
-string PgResultSet::getTime(size_t columnIndex) const {
+std::string PgResultSet::getTime(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }
 
-string PgResultSet::getDateTime(size_t columnIndex) const {
+std::string PgResultSet::getDateTime(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }
 
-string PgResultSet::getBlob(size_t columnIndex) const {
+std::string PgResultSet::getBlob(size_t columnIndex) const {
     return PQgetvalue(pgResult, cursorIndex, columnIndex);
 }

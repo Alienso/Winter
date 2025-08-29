@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 18.2.2024..
+// Created by Alienson on 18.2.2024.
 //
 
 #include "ReflectionPass.h"
@@ -16,13 +16,13 @@ void ReflectionPass::begin(std::string& fileName) {
     className = {};
 
     size_t start = fileName.rfind("Reflect.h");
-    if (start != string::npos) {
-        string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
+    if (start != std::string::npos) {
+        std::string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
         reflectionCppFile = StringUtils::replace(path , '\\', '/');
     }
 }
 
-void ReflectionPass::end(ifstream &inputFile, ofstream &outputFile, std::string& fileName) {
+void ReflectionPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {
     if (!reflectClasses.empty()) {
         for (int i = reflectClasses.size() - 1; i >= 0; i++) {
             if (reflectClasses[i].filePath.empty())
@@ -32,7 +32,7 @@ void ReflectionPass::end(ifstream &inputFile, ofstream &outputFile, std::string&
     }
 }
 
-bool ReflectionPass::shouldProcess(string &fileName) const {
+bool ReflectionPass::shouldProcess(std::string &fileName) const {
     return StringUtils::endsWith(fileName, ".h") || StringUtils::endsWith(fileName, ".hpp");
 }
 
@@ -53,9 +53,9 @@ bool ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
 
             //Check if we need to add reflection or not
             size_t semicolonIndex = line.find(':');
-            if (semicolonIndex != string::npos) {
+            if (semicolonIndex != std::string::npos) {
                 size_t reflectIndex = line.find("Reflect", semicolonIndex);
-                if (reflectIndex != string::npos) {
+                if (reflectIndex != std::string::npos) {
                     if (className != "Entity") {
                         shouldAddReflection = true;
                         goto next;
@@ -64,7 +64,7 @@ bool ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
 
                 if (className != "Entity") {
                     reflectIndex = line.find("Entity", semicolonIndex);
-                    if (reflectIndex != string::npos) {
+                    if (reflectIndex != std::string::npos) {
                         shouldAddReflection = true;
                         goto next;
                     }
@@ -131,7 +131,7 @@ bool ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
             else {
                 //Temp solution, find last ' ' separating type from name
                 size_t blank = line.find_last_of(' ');
-                if (blank == string::npos)
+                if (blank == std::string::npos)
                     return false;
                 //Read all * or & that may be put together with the name
                 while (line[blank + 1] == '*' || line[blank + 1] == '&')
@@ -159,9 +159,9 @@ bool ReflectionPass::process(std::ifstream &inputFile, std::ofstream &outputFile
     return false;
 }
 
-void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
+void ReflectionPass::generateReflectOverrides(std::ofstream &outputFile) {
 
-    string variableName = "_" + StringUtils::uncapitalize(className) + "_";
+    std::string variableName = "_" + StringUtils::uncapitalize(className) + "_";
 
     //declaredFields,...
     outputFile << "\n\tstatic inline std::vector<Field> declaredFields = {};\n" <<
@@ -216,14 +216,14 @@ void ReflectionPass::generateReflectOverrides(ofstream &outputFile) {
 
 void ReflectionPass::processingFinished() {
 
-    ofstream outputFile = ofstream(reflectionCppFile, std::ios::app);
+    std::ofstream outputFile = std::ofstream(reflectionCppFile, std::ios::app);
     if (!outputFile.is_open()) {
-        cout << "Error while opening Reflect.cpp!";
+        std::cout << "Error while opening Reflect.cpp!";
     }
 
     //add includes
     for (auto &x: reflectClasses){
-        string path = StringUtils::replace(x.filePath, '\\', '/');
+        std::string path = StringUtils::replace(x.filePath, '\\', '/');
         outputFile << "#include \"" << path << "\"\n";
     }
     outputFile << '\n';

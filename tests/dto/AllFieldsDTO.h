@@ -1,5 +1,5 @@
 //
-// Created by alienson on 17.3.24..
+// Created by alienson on 17.3.24.
 //
 
 #ifndef WINTER_ALLFIELDSDTO_H
@@ -15,7 +15,7 @@ public:
     float f;
     double d;
     char c;
-    string str;
+    std::string str;
     bool b;
     byte bt;
 
@@ -25,7 +25,7 @@ public:
     float* fPtr;
     double* dPtr;
     char* cPtr;
-    string* strPtr;
+    std::string* strPtr;
     bool *bPtr;
     byte *btPtr;
 

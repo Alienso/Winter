@@ -1,5 +1,5 @@
 //
-// Created by alienson on 22.3.24..
+// Created by alienson on 22.3.24.
 //
 
 #ifndef WINTER_PLAYERREPOSITORY_H
@@ -11,21 +11,19 @@
 #include "../entity/PlayerEntity.h"
 #include "util.h"
 
-using namespace std;
-
 class PlayerRepository : public Repository {
 public:
-    vector<PlayerEntity*>* getAllPlayers(){
-        /*return wt::vector_ptr_cast<Reflect, PlayerEntity>(
-                createStatement()->executeQuery("select * from player")->getResultList());*/
-        shared_ptr<Statement> statement = Repository::createStatement();
-        vector<PlayerEntity*>* players = wt::vector_ptr_cast<Reflect, PlayerEntity>(
-                statement->executeQuery("select * from player")->getResultList(PlayerEntity::getInstance));
-        return players;
+    std::shared_ptr<std::vector<std::shared_ptr<PlayerEntity>>> getAllPlayers(){
+        std::shared_ptr<Statement> statement = Repository::createStatement();
+
+        auto players = statement->executeQuery("select * from player")->getResultList(PlayerEntity::getInstance);
+
+        return castTo<PlayerEntity>(players);
     }
 
-    PlayerEntity* getSinglePlayer(){
-        return (PlayerEntity*) createStatement()->executeQuery("select * from player limit 1")->getResult(PlayerEntity::getInstance);
+    std::shared_ptr<PlayerEntity> getSinglePlayer(){
+        std::shared_ptr<Reflect> player = createStatement()->executeQuery("select * from player limit 1")->getResult(PlayerEntity::getInstance);
+        return std::dynamic_pointer_cast<PlayerEntity>(player);
     }
 
     int getPlayerCount(){
@@ -36,10 +34,10 @@ public:
         //createStatement()->executeUpdate("insert into player values ") TODO
     }
 
-    PlayerEntity* getPlayerById(long id){
-        shared_ptr<Statement> statement = createStatement("select * from player where id = :id");
+    std::shared_ptr<PlayerEntity> getPlayerById(long id){
+        std::shared_ptr<Statement> statement = createStatement("select * from player where id = :id");
         statement->setLong(id, "id");
-        return (PlayerEntity*) statement->execute()->getResult(PlayerEntity::getInstance);
+        return std::dynamic_pointer_cast<PlayerEntity> (statement->execute()->getResult(PlayerEntity::getInstance));
     }
 };
 

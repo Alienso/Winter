@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 14.3.2024..
+// Created by Alienson on 14.3.2024.
 //
 
 #ifndef WINTER_PGSTATEMENT_H
@@ -15,17 +15,17 @@ class PgStatement : public Statement {
 public:
 
     PgStatement()= default;
-    explicit PgStatement(shared_ptr<Connection> connection_){
+    explicit PgStatement(std::shared_ptr<Connection> connection_){
         connection = std::move(connection_);
     }
-    PgStatement(shared_ptr<Connection> connection_, const char* s){
+    PgStatement(std::shared_ptr<Connection> connection_, const char* s){
         connection = std::move(connection_);
         query = s;
         generateParameterMap();
     }
     ~PgStatement() override;
 
-    shared_ptr<ResultSet> executeQuery(const char *s) override;
+    std::shared_ptr<ResultSet> executeQuery(const char *s) override;
 
     int executeUpdate(const char *s) override;
 
@@ -34,7 +34,7 @@ public:
     void close() override;
 
 private:
-    shared_ptr<Connection> connection = nullptr;
+    std::shared_ptr<Connection> connection = nullptr;
 };
 
 

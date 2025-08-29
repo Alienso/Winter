@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 5.3.2024..
+// Created by Alienson on 5.3.2024.
 //
 
 #ifndef WINTER_BASERESPONSE_H
@@ -11,7 +11,7 @@
 class BaseResponse : public Reflect{
 public:
     int code;
-    string message;
+    std::string message;
     InnerClass* innerClass;
     int sum;
 };

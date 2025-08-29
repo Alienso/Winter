@@ -1,5 +1,5 @@
 //
-// Created by alienson on 27.3.24..
+// Created by alienson on 27.3.24.
 //
 
 #ifndef WINTER_STRINGUTILSTESTS_H
@@ -8,8 +8,6 @@
 #endif //WINTER_STRINGUTILSTESTS_H
 
 #include "stringUtils.h"
-
-using namespace std;
 
 //TODO
 
