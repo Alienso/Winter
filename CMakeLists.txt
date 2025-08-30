@@ -3,12 +3,6 @@ project(Winter)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#USAGE:
-#Run preprocessor in order to generate target folder which can be used to run the program(Reloading cmake project will be necessary)
-#When Target build is being generated, sources list is transformed to target/* instead of source/*. That means that TESTS
-#are being run on target sources!
-#Also since all libraries are added to include_directories from source_dir, after transform, the target/* is being used instead
-
 if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0")
 endif (WIN32)
@@ -18,11 +12,11 @@ endif(UNIX)
 
 #Postgres
 if (UNIX)
-    include_directories(SYSTEM PRIVATE /usr/include/postgresql/)
+    include_directories(/usr/include/postgresql/)
     link_directories(/usr/local/pgsql/lib/)
 endif(UNIX)
 if (WIN32)
-    #include_directories(SYSTEM PRIVATE "C:/Program Files/PostgreSQL/12/include")
+    #include_directories("C:/Program Files/PostgreSQL/12/include")
     link_directories("C:/Program Files/PostgreSQL/12/lib")
 endif(WIN32)
 
@@ -39,116 +33,37 @@ include_directories(${PROJECT_SOURCE_DIR}/source/reflect)
 include_directories(${PROJECT_SOURCE_DIR}/source/serialize)
 include_directories(${PROJECT_SOURCE_DIR}/source/util)
 
-#pre-process app dir and use it for compilation
+set(GENERATED_DIR ${CMAKE_BINARY_DIR}/generated)
 
-set(SOURCES source/core/Winter.cpp source/core/Winter.h
-        source/core/Configuration.cpp source/core/Configuration.h
-        source/core/Component.cpp source/core/Component.h
-        source/core/Router.cpp source/core/Router.h
+add_custom_command(
+        OUTPUT ${GENERATED_DIR}/stamp
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_DIR}
+        COMMAND ${CMAKE_SOURCE_DIR}/cmake-build-debug/PreProcessor.exe
+        ${CMAKE_SOURCE_DIR}/source
+        ${GENERATED_DIR}
+        COMMAND ${CMAKE_COMMAND} -E touch ${GENERATED_DIR}/stamp
+        DEPENDS ${CMAKE_SOURCE_DIR}/cmake-build-debug/PreProcessor.exe
+        COMMENT "Running PreProcessor to generate sources"
+)
 
-        source/http/HttpServer.cpp source/http/HttpServer.h
-        source/http/HttpRequest.cpp source/http/HttpRequest.h
-        source/http/URI.cpp source/http/URI.h
-        source/http/Connection.cpp source/http/Connection.h
-        source/http/HttpResponse.cpp source/http/HttpResponse.h
-        source/http/httpConstants.h source/http/httpConstants.cpp
-        source/http/client/HttpClient.cpp source/http/client/HttpClient.h
+# Collect all generated .cpp files after preprocessing
+file(GLOB_RECURSE GENERATED_SOURCES
+        "${GENERATED_DIR}/*.cpp"
+)
 
-        source/log/Logger.cpp source/log/Logger.h
-        source/log/Appender.cpp source/log/Appender.h
+add_executable(my_app
+        ${GENERATED_SOURCES}
+)
 
-        source/util/tsqueue.h source/util/stringUtils.h
-        source/util/ThreadPool.h source/util/util.h
+add_dependencies(my_app run_preprocessor)
 
-        source/demoApp/controller/MyController.cpp source/demoApp/controller/MyController.h
-        source/demoApp/service/MyService.cpp source/demoApp/service/MyService.h
-        source/demoApp/dto/BaseRequest.h source/demoApp/dto/BaseResponse.h
-        source/demoApp/dto/InnerClass.h
+target_include_directories(my_app PRIVATE ${GENERATED_DIR})
 
-        source/reflect/Reflect.cpp source/reflect/Reflect.h
-        source/reflect/Field.cpp source/reflect/Field.h
-        source/reflect/Method.cpp source/reflect/Method.h
-        source/serialize/JsonDeserializer.cpp source/serialize/JsonDeserializer.h
-        source/serialize/JsonSerializer.cpp source/serialize/JsonSerializer.h
-        source/serialize/FieldTypeUtil.h source/http/ControllerMapping.h
+if (WIN32)
+    target_link_libraries(my_app wsock32 ws2_32 pq)
+endif (WIN32)
+if (UNIX)
+    target_link_libraries(my_app pq)
+endif(UNIX)
 
-        source/sql/Connection.h
-        source/sql/Statement.cpp source/sql/Statement.h
-        source/sql/postgres/PgConnection.cpp source/sql/postgres/PgConnection.h
-        source/sql/postgres/PgStatement.cpp source/sql/postgres/PgStatement.h
-        source/sql/ResultSet.h
-        source/sql/postgres/PgResultSet.cpp source/sql/postgres/PgResultSet.h
-        source/sql/Repository.h source/sql/Repository.cpp
-        source/sql/Entity.cpp source/sql/Entity.h
-
-        source/map/Mapper.h source/map/Mapper.cpp)
-
-
-#---------------------------------------------
-#Target Build
-
-list(TRANSFORM SOURCES REPLACE source/ target/)
-
-set(targetLen 0)
-
-list(LENGTH SOURCES sourceLen )
-message(SOURCES LEN=${sourceLen})
-
-foreach(X IN LISTS SOURCES)
-    if (EXISTS ${PROJECT_SOURCE_DIR}/${X})
-        MATH(EXPR targetLen "${targetLen}+1")
-    endif()
-endforeach()
-
-message(TARGET LEN=${targetLen})
-
-if (${sourceLen} STREQUAL  ${targetLen})
-
-    add_executable(Winter target/main.cpp ${SOURCES} )
-
-    if (WIN32)
-        target_link_libraries(Winter wsock32 ws2_32 pq)
-    endif (WIN32)
-    if (UNIX)
-        target_link_libraries(Winter pq)
-    endif(UNIX)
-
-    #add_custom_command(TARGET Winter PRE_BUILD
-    #    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    #    ${PROJECT_SOURCE_DIR}/source/app $<TARGET_FILE_DIR:Winter>/app)
-
-
-    #---------------------------------------------
-    #Tests
-    add_executable(Tests ${SOURCES}
-            tests/runTests.cpp
-            tests/deserializationTests.h
-            tests/serializationTests.h
-            tests/loggerTests.h
-            tests/httpRequestParseTests.h
-            tests/util/dtoUtils.h)
-    if (WIN32)
-        target_link_libraries(Tests wsock32 ws2_32 pq)
-    endif (WIN32)
-    if (UNIX)
-        target_link_libraries(Tests pq)
-    endif(UNIX)
-
-
-endif()
-
-#---------------------------------------------
-#PreProcessor
-
-add_executable(PreProcessor pre_processor/main.cpp
-        pre_processor/PreProcessor.cpp pre_processor/PreProcessor.h
-        pre_processor/pass/ReflectionPass.cpp pre_processor/pass/ReflectionPass.h
-        pre_processor/pass/Pass.cpp pre_processor/pass/Pass.h
-        pre_processor/pass/AnnotationPass.cpp pre_processor/pass/AnnotationPass.h
-        pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h
-        pre_processor/util.h)
-
-#---------------------------------------
-#Temp
-#add_executable(Temp ./temp/main.cpp)
-#target_link_libraries(Temp pq)
+add_custom_target(run_preprocessor DEPENDS ${GENERATED_DIR}/stamp)

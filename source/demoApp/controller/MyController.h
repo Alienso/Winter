@@ -6,10 +6,9 @@
 #define WINTER_MYCONTROLLER_H
 
 
-#include "../../demoApp/repository/PlayerRepository.h"
-#include "../../demoApp/service/MyService.h"
+#include "../repository/PlayerRepository.h"
+#include "../service/MyService.h"
 #include "../../http/ControllerMapping.h"
-
 
 
 $RestController
