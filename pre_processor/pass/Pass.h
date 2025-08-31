@@ -6,6 +6,7 @@
 #define WINTER_PASS_H
 
 #include <iostream>
+#include <fstream>
 
 //TODO move passes to source folder since they are not part of the library
 

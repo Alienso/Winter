@@ -101,7 +101,7 @@ int processFile(const std::filesystem::directory_entry &entry) {
             return 1;
         }
 
-        preProcessor.process(inputFile, outputFile, outputFileName);
+        preProcessor.process(inputFile, outputFile, inputFileName, outputFileName);
 
         inputFile.close();
         outputFile.close();

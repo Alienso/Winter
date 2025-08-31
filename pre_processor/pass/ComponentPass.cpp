@@ -100,8 +100,8 @@ void ComponentPass::processingFinished() {
     outputFile << "\tint i=0;\n\n";
     for (auto &x: componentClasses){
         outputFile << "\tauto* " << x.alternativeName << " = new " << x.className << "();\n";
+        outputFile << "\tcomponents[i] = ((Component*)" << x.alternativeName << ");\n\n";
         outputFile << "\t" << x.className << "::_componentId_ = i++;\n";
-        outputFile << "\tcomponents[i-1] = ((Component*)" << x.alternativeName << ");\n\n";
     }
     outputFile << "}";
 }

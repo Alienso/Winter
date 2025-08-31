@@ -12,7 +12,7 @@
 
 class PreProcessor {
 public:
-    void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName);
+    void process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& inputFileName, std::string& outputFileName);
     void addPass(Pass* pass);
     void finish();
 

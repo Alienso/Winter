@@ -4,32 +4,38 @@
 
 #include "PreProcessor.h"
 
-void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {
+void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string& inputFileName, std::string& outputFileName) {
 
     std::vector<Pass*> requiredPasses;
+    std::string formattedInputFileName = inputFileName;
+    std::replace(formattedInputFileName.begin(), formattedInputFileName.end(), '\\', '/');
+
     for (auto pass : passes){
-        if (pass->shouldProcess(fileName))
+        if (pass->shouldProcess(outputFileName))
             requiredPasses.push_back(pass);
     }
 
     for (auto pass : requiredPasses){
-        pass->begin(fileName);
+        pass->begin(outputFileName);
     }
 
     bool lineConsumed = false;
-    while (std::getline(inputFile, line)) {
+    for (int lineNumber = 1; std::getline(inputFile, line); lineNumber++) {
+        //LineProcessingData lineProcessingData = {inputFile, outputFile, inputFileName, outputFileName, lineNumber, line, lastLine };
         for(auto pass : requiredPasses) {
             lineConsumed = pass->process(inputFile, outputFile, line, lastLine);
             if (lineConsumed) break;
         }
 
-        if (!lineConsumed)
+        if (!lineConsumed) {
+            outputFile << "#line " << lineNumber << " \"" << formattedInputFileName << "\"\n";
             outputFile << line << std::endl;
+        }
         lastLine = line;
     }
 
     for (auto pass : requiredPasses){
-        pass->end(inputFile,outputFile, fileName);
+        pass->end(inputFile, outputFile, outputFileName);
     }
 }
 
