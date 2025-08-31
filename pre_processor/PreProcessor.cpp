@@ -21,7 +21,6 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile, 
 
     bool lineConsumed = false;
     for (int lineNumber = 1; std::getline(inputFile, line); lineNumber++) {
-        //LineProcessingData lineProcessingData = {inputFile, outputFile, inputFileName, outputFileName, lineNumber, line, lastLine };
         for(auto pass : requiredPasses) {
             lineConsumed = pass->process(inputFile, outputFile, line, lastLine);
             if (lineConsumed) break;
