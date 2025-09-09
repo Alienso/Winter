@@ -21,11 +21,12 @@ if (WIN32)
 endif(WIN32)
 
 include_directories(${PROJECT_SOURCE_DIR})
-include_directories(${PROJECT_SOURCE_DIR}/include/)
-include_directories(${PROJECT_SOURCE_DIR}/include/postgreSQL)
+include_directories(/include/)
+include_directories(vendor/include/)
+include_directories(vendor/include/postgreSQL)
 
-link_directories(${PROJECT_SOURCE_DIR}/lib/)
-link_directories(${PROJECT_SOURCE_DIR}/lib/postgreSQL)
+link_directories(vendor/lib/)
+link_directories(vendor/lib/postgreSQL)
 
 #temp lib includes
 include_directories(${PROJECT_SOURCE_DIR}/source/log)
@@ -33,13 +34,13 @@ include_directories(${PROJECT_SOURCE_DIR}/source/reflect)
 include_directories(${PROJECT_SOURCE_DIR}/source/serialize)
 include_directories(${PROJECT_SOURCE_DIR}/source/util)
 
-add_executable(PreProcessor pre_processor/main.cpp
-        pre_processor/PreProcessor.cpp pre_processor/PreProcessor.h
-        pre_processor/pass/ReflectionPass.cpp pre_processor/pass/ReflectionPass.h
-        pre_processor/pass/Pass.cpp pre_processor/pass/Pass.h
-        pre_processor/pass/AnnotationPass.cpp pre_processor/pass/AnnotationPass.h
-        pre_processor/pass/ComponentPass.cpp pre_processor/pass/ComponentPass.h
-        pre_processor/util.h)
+add_executable(PreProcessor tools/pre_processor/main.cpp
+        tools/pre_processor/PreProcessor.cpp tools/pre_processor/PreProcessor.h
+        tools/pre_processor/pass/ReflectionPass.cpp tools/pre_processor/pass/ReflectionPass.h
+        tools/pre_processor/pass/Pass.cpp tools/pre_processor/pass/Pass.h
+        tools/pre_processor/pass/AnnotationPass.cpp tools/pre_processor/pass/AnnotationPass.h
+        tools/pre_processor/pass/ComponentPass.cpp tools/pre_processor/pass/ComponentPass.h
+        tools/pre_processor/util.h)
 
 
 set(GENERATED_DIR ${CMAKE_BINARY_DIR}/generated)
