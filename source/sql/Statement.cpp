@@ -2,7 +2,7 @@
 // Created by alienson on 24.3.24.
 //
 
-#include "Statement.h"
+#include "include/sql/Statement.h"
 
 Statement *Statement::setInt(int x, const char *name) {
     std::string val = std::to_string(x);

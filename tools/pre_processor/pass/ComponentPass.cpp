@@ -3,7 +3,7 @@
 //
 
 #include "ComponentPass.h"
-#include "stringUtils.h"
+#include "include/util/stringUtils.h"
 
 #include "fstream"
 

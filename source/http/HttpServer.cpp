@@ -5,8 +5,8 @@
 #include <iostream>
 #include <thread>
 #include "HttpServer.h"
-#include "../core/Configuration.h"
-#include "Logger.h"
+#include "include/core/Configuration.h"
+#include "include/log/Logger.h"
 
 HttpServer::HttpServer() :
     port(Configuration::serverPort),

@@ -6,9 +6,9 @@
 #define WINTER_JSONSERIALIZER_H
 
 #include "Reflect.h"
-#include "Logger.h"
+#include "include/log/Logger.h"
 #include "FieldTypeUtil.h"
-#include "stringUtils.h"
+#include "include/util/stringUtils.h"
 
 class JsonSerializer {
 public:

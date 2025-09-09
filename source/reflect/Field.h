@@ -7,7 +7,7 @@
 
 #include <string>
 #include "FieldTypeUtil.h"
-#include "Logger.h"
+#include "include/log/Logger.h"
 
 enum CopyType{
     COPY_TYPE_SHALLOW,

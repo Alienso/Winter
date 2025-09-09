@@ -4,9 +4,9 @@
 
 #include <thread>
 
-#include "Winter.h"
-#include "Logger.h"
-#include "Component.h"
+#include "include/core/Winter.h"
+#include "include/log/Logger.h"
+#include "include/core/Component.h"
 
 void Winter::run() {
     init();

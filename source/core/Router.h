@@ -15,8 +15,8 @@
 #include <utility>
 #include "Reflect.h"
 #include "mutex"
-#include "../http/HttpRequest.h"
-#include "../http/HttpResponse.h"
+#include "include/http/HttpRequest.h"
+#include "include/http/HttpResponse.h"
 #include "../util/ThreadPool.h"
 
 class Endpoint{

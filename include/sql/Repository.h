@@ -6,7 +6,7 @@
 #define WINTER_REPOSITORY_H
 
 
-#include <../util/ConnectionPool.h>
+#include "source/util/ConnectionPool.h"
 #include "Statement.h"
 #include "Entity.h"
 

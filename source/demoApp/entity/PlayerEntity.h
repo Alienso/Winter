@@ -9,7 +9,7 @@
 
 #include <string>
 #include <Reflect.h>
-#include <../sql/Entity.h>
+#include "include/sql/Entity.h"
 
 class PlayerEntity : public Entity {
 public:

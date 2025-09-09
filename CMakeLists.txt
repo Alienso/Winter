@@ -21,7 +21,7 @@ if (WIN32)
 endif(WIN32)
 
 include_directories(${PROJECT_SOURCE_DIR})
-include_directories(/include/)
+include_directories(include/)
 include_directories(vendor/include/)
 include_directories(vendor/include/postgreSQL)
 

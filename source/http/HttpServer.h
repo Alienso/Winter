@@ -5,7 +5,7 @@
 #ifndef WINTER_HTTPSERVER_H
 #define WINTER_HTTPSERVER_H
 
-#include "HttpRequest.h"
+#include "include/http/HttpRequest.h"
 #include "../util/tsqueue.h"
 #include "Connection.h"
 

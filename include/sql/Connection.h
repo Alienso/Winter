@@ -2,8 +2,8 @@
 // Created by Alienson on 14.3.2024.
 //
 
-#ifndef WINTER_CONNECTION_H
-#define WINTER_CONNECTION_H
+#ifndef WINTER_SQL_CONNECTION_H
+#define WINTER_SQL_CONNECTION_H
 
 
 #include "Statement.h"
@@ -20,4 +20,4 @@ public:
 };
 
 
-#endif //WINTER_CONNECTION_H
+#endif //WINTER_SQL_CONNECTION_H

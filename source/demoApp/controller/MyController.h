@@ -8,7 +8,7 @@
 
 #include "../repository/PlayerRepository.h"
 #include "../service/MyService.h"
-#include "../../http/ControllerMapping.h"
+#include "include/http/ControllerMapping.h"
 
 
 $RestController

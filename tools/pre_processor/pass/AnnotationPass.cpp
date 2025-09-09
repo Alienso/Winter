@@ -5,7 +5,7 @@
 #include "fstream"
 
 #include "AnnotationPass.h"
-#include "stringUtils.h"
+#include "include/util/stringUtils.h"
 #include "tools/pre_processor/util.h"
 
 void AnnotationPass::begin(std::string& fileName) {

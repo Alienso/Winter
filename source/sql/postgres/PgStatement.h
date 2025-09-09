@@ -6,7 +6,7 @@
 #define WINTER_PGSTATEMENT_H
 
 
-#include "../Statement.h"
+#include "include/sql/Statement.h"
 
 #include <utility>
 #include "PgConnection.h"

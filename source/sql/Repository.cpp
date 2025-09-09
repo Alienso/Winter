@@ -2,9 +2,9 @@
 // Created by alienson on 22.3.24.
 //
 
-#include "../core/Configuration.h"
+#include "include/core/Configuration.h"
 #include "postgres/PgConnection.h"
-#include "Repository.h"
+#include "include/sql/Repository.h"
 
 ConnectionPool* Repository::dbConnectionPool = new ConnectionPool(2, Configuration::dbConnectionPoolSize,
         []{ return (Connection*) new PgConnection(Configuration::dbConnectionString); }); //TODO

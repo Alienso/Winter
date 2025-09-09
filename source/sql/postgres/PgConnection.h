@@ -6,7 +6,7 @@
 #define WINTER_PGCONNECTION_H
 
 
-#include "../Connection.h"
+#include "include/sql/Connection.h"
 #include "libpq-fe.h"
 
 inline bool validateResponse(const PGconn *conn, PGresult *res, const char *message){

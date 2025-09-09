@@ -10,7 +10,7 @@
 #include <iostream>
 #include <filesystem>
 
-#include "stringUtils.h"
+#include "include/util/stringUtils.h"
 #include "PreProcessor.h"
 #include "tools/pre_processor/pass/ReflectionPass.h"
 #include "tools/pre_processor/pass/AnnotationPass.h"

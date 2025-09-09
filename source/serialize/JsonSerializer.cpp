@@ -2,7 +2,7 @@
 // Created by Alienson on 14.2.2024.
 //
 
-#include "JsonSerializer.h"
+#include "include/serialize/JsonSerializer.h"
 
 std::string* JsonSerializer::serialize(Reflect* obj){
     auto* s = new std::string("{\n");

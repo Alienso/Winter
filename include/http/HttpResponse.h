@@ -8,9 +8,9 @@
 
 #include <memory>
 #include "HttpRequest.h"
-#include "httpConstants.h"
+#include "include/http/httpConstants.h"
 #include "Reflect.h"
-#include "JsonSerializer.h"
+#include "include/serialize/JsonSerializer.h"
 
 class HttpResponse {
 

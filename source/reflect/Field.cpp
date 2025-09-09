@@ -5,7 +5,7 @@
 #include "Field.h"
 #include "Reflect.h"
 
-#include "stringUtils.h"
+#include "include/util/stringUtils.h"
 
 Field Field::INVALID = {"","",FIELD_TYPE_INT, "", 0, false, false};
 

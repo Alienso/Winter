@@ -6,9 +6,9 @@
 #define WINTER_WINTER_H
 
 
-#include <../util/ConnectionPool.h>
-#include "../http/HttpServer.h"
-#include "Router.h"
+#include "source/util/ConnectionPool.h"
+#include "source/http/HttpServer.h"
+#include "source/core/Router.h"
 
 class Winter {
 public:

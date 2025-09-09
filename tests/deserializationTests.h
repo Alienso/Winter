@@ -9,7 +9,7 @@
 
 #include "./target/reflect/Reflect.h"
 
-#include "JsonDeserializer.h"
+#include "include/serialize/JsonDeserializer.h"
 #include "./dto/AllFieldsDTO.h"
 #include "./dto/AllFieldsVecDTO.h"
 #include "./dto/BaseRequest.h"

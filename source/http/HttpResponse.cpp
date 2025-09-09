@@ -2,9 +2,9 @@
 // Created by Alienson on 1.2.2024.
 //
 
-#include "HttpResponse.h"
+#include "include/http/HttpResponse.h"
 #include "Connection.h"
-#include "Logger.h"
+#include "include/log/Logger.h"
 
 #include "util.h"
 

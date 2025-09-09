@@ -3,7 +3,7 @@
 //
 
 #include <vector>
-#include "../source/log/Logger.h"
+#include "include/log/Logger.h"
 
 //WARNING TESTS ARE LINE SENSITIVE SINCE LOGGER LOGS THE CURRENT LINE NUMBER
 TEST_CASE("Logger Tests", "[Logger::info]"){

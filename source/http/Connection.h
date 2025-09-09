@@ -2,8 +2,8 @@
 // Created by Alienson on 27.1.2024.
 //
 
-#ifndef WINTER_CONNECTION_H
-#define WINTER_CONNECTION_H
+#ifndef WINTER_HTTP_CONNECTION_H
+#define WINTER_HTTP_CONNECTION_H
 
 #include <asio/ip/tcp.hpp>
 #include "HttpRequest.h"
@@ -36,4 +36,4 @@ private:
 };
 
 
-#endif //WINTER_CONNECTION_H
+#endif //WINTER_HTTP_CONNECTION_H

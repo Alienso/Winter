@@ -5,7 +5,7 @@
 #ifndef WINTER_HTTPREQUESTPARSETESTS_H
 #define WINTER_HTTPREQUESTPARSETESTS_H
 
-#include "../source/http/HttpRequest.h"
+#include "include/http/HttpRequest.h"
 
 
 TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){

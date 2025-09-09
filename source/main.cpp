@@ -2,7 +2,7 @@
 #define _GLIBCXX_HAS_GTHREADS
 
 #include <iostream>
-#include "../core/Winter.h"
+#include "include/core/Winter.h"
 
 int main() {
 

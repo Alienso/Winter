@@ -2,7 +2,7 @@
 // Created by Alienson on 11.2.2024.
 //
 
-#include "JsonDeserializer.h"
+#include "include/serialize/JsonDeserializer.h"
 
 Reflect* JsonDeserializer::deserialize(const std::string& s, Reflect* response){
     std::string fieldName, fieldValue;

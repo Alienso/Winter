@@ -2,8 +2,8 @@
 // Created by Alienson on 27.1.2024.
 //
 
-#include "Logger.h"
-#include "../core/Configuration.h"
+#include "include/log/Logger.h"
+#include "include/core/Configuration.h"
 
 #include <cstdarg>
 

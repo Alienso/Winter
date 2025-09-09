@@ -5,7 +5,7 @@
 #ifndef WINTER_MYSERVICE_H
 #define WINTER_MYSERVICE_H
 
-#include "../core/Component.h"
+#include "include/core/Component.h"
 
 class MyService : public Component {
 

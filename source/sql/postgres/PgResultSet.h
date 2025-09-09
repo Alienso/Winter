@@ -6,7 +6,7 @@
 #define WINTER_PGRESULTSET_H
 
 
-#include "../ResultSet.h"
+#include "include/sql/ResultSet.h"
 #include <libpq-fe.h>
 
 class PgResultSet : public ResultSet {

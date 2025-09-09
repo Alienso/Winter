@@ -3,7 +3,7 @@
 //
 
 #include "PgConnection.h"
-#include "Logger.h"
+#include "include/log/Logger.h"
 #include "PgStatement.h"
 
 PgConnection::PgConnection(const std::string& connectionString) {

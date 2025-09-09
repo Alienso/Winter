@@ -2,8 +2,8 @@
 // Created by alienson on 27.3.24.
 //
 
-#include "Mapper.h"
-#include "Logger.h"
+#include "include/map/Mapper.h"
+#include "include/log/Logger.h"
 
 void Mapper::map(Reflect *source, Reflect *dest, FieldMatchType fieldMatchType) const {
     for(auto& sourceField : source->getDeclaredFields()){

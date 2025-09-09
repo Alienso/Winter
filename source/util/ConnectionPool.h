@@ -8,8 +8,8 @@
 #include <queue>
 #include <functional>
 
-#include "../sql/Connection.h"
-#include "Logger.h"
+#include "include/sql/Connection.h"
+#include "include/log/Logger.h"
 
 
 class ConnectionPool {

@@ -2,10 +2,10 @@
 // Created by Alienson on 25.1.2024.
 //
 
-#include "HttpRequest.h"
+#include "include/http/HttpRequest.h"
 #include "Connection.h"
-#include "Logger.h"
-#include "stringUtils.h"
+#include "include/log/Logger.h"
+#include "include/util/stringUtils.h"
 #include "../util/util.h"
 
 HttpRequest::HttpRequest() {}

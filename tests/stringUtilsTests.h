@@ -7,7 +7,7 @@
 
 #endif //WINTER_STRINGUTILSTESTS_H
 
-#include "stringUtils.h"
+#include "include/util/stringUtils.h"
 
 //TODO
 

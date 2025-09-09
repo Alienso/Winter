@@ -6,8 +6,8 @@
 #define WINTER_PLAYERREPOSITORY_H
 
 #include <vector>
-#include <../sql/Statement.h>
-#include "../../sql/Repository.h"
+#include "include/sql/Statement.h"
+#include "include/sql/Repository.h"
 #include "../entity/PlayerEntity.h"
 #include "util.h"
 

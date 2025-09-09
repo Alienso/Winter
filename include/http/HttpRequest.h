@@ -12,7 +12,7 @@
 #include <vector>
 #include <memory>
 #include "URI.h"
-#include "httpConstants.h"
+#include "include/http/httpConstants.h"
 
 class Connection;
 

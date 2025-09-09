@@ -5,8 +5,6 @@
 #ifndef WINTER_UTIL_H
 #define WINTER_UTIL_H
 
-#endif //WINTER_UTIL_H
-
 #include <string>
 #include <chrono>
 
@@ -44,3 +42,4 @@ namespace wt{
     }
 }
 
+#endif //WINTER_UTIL_H

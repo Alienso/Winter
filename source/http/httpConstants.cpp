@@ -2,9 +2,9 @@
 // Created by Alienson on 2.2.2024.
 //
 
-#include "httpConstants.h"
-#include "Logger.h"
-#include "stringUtils.h"
+#include "include/http/httpConstants.h"
+#include "include/log/Logger.h"
+#include "include/util/stringUtils.h"
 
 #include <cstring>
 

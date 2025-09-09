@@ -5,7 +5,7 @@
 #ifndef WINTER_STATEMENT_H
 #define WINTER_STATEMENT_H
 
-#include <Reflect.h>
+#include "source/reflect/Reflect.h"
 #include "ResultSet.h"
 
 #include <memory>
