@@ -18,7 +18,9 @@ Makefile
 .idea/*
 PreProcessor
 Target
-Tests
+lib/tests
 
 target
 **.log
+
+Notes.txt
