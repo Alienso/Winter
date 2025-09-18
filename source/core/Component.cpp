@@ -2,6 +2,6 @@
 // Created by Alienson on 5.3.2024.
 //
 
-#include "include/core/Component.h"
+#include "Component.h"
 
 std::vector<Component*> Component::components = {};

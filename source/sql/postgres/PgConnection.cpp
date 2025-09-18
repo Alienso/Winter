@@ -20,11 +20,11 @@ PgConnection::~PgConnection() {
     PQfinish(postgresConn);
 }
 
-std::shared_ptr<Statement> PgConnection::createStatement(std::shared_ptr<Connection> connection) {
+std::shared_ptr<Statement> PgConnection::createStatement(std::shared_ptr<DbConnection> connection) {
     return std::make_shared<PgStatement>(connection); //'this' and connection are the same
 }
 
-std::shared_ptr<Statement> PgConnection::createStatement(std::shared_ptr<Connection> connection, const char *s) {
+std::shared_ptr<Statement> PgConnection::createStatement(std::shared_ptr<DbConnection> connection, const char *s) {
     return std::make_shared<PgStatement>(connection, s); //'this' and connection are the same
 }
 

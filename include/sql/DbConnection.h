@@ -9,10 +9,10 @@
 #include "Statement.h"
 #include <memory>
 
-class Connection {
+class DbConnection {
 public:
-    virtual std::shared_ptr<Statement> createStatement(std::shared_ptr<Connection> connection) = 0;
-    virtual std::shared_ptr<Statement> createStatement(std::shared_ptr<Connection> connection, const char* s) = 0;
+    virtual std::shared_ptr<Statement> createStatement(std::shared_ptr<DbConnection> connection) = 0;
+    virtual std::shared_ptr<Statement> createStatement(std::shared_ptr<DbConnection> connection, const char* s) = 0;
 
     virtual void commit() = 0;
     virtual void rollback() = 0;

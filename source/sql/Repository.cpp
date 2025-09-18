@@ -6,21 +6,21 @@
 #include "postgres/PgConnection.h"
 #include "include/sql/Repository.h"
 
-ConnectionPool* Repository::dbConnectionPool = new ConnectionPool(2, Configuration::dbConnectionPoolSize,
-        []{ return (Connection*) new PgConnection(Configuration::dbConnectionString); }); //TODO
+DbConnectionPool* Repository::dbConnectionPool = new DbConnectionPool(2, Configuration::dbConnectionPoolSize,
+                                                                      []{ return (DbConnection*) new PgConnection(Configuration::dbConnectionString); }); //TODO
 
 std::shared_ptr<Statement> Repository::createStatement(const char *query) {
-    std::shared_ptr<Connection> connection = dbConnectionPool->getConnection();
+    std::shared_ptr<DbConnection> connection = dbConnectionPool->getConnection();
     return connection->createStatement(connection, query);
 }
 
 std::shared_ptr<Statement> Repository::createStatement(const std::string &query) {
-    std::shared_ptr<Connection> connection = dbConnectionPool->getConnection();
+    std::shared_ptr<DbConnection> connection = dbConnectionPool->getConnection();
     return connection->createStatement(connection, query.data());
 }
 
 std::shared_ptr<Statement> Repository::createStatement() {
-    std::shared_ptr<Connection> connection = dbConnectionPool->getConnection();
+    std::shared_ptr<DbConnection> connection = dbConnectionPool->getConnection();
     return connection->createStatement(connection);
 }
 

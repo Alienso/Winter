@@ -6,7 +6,7 @@
 #define WINTER_CONTROLLERMAPPING_H
 
 #include "source/core/Router.h"
-#include "include/core/Component.h"
+#include "source/core/Component.h"
 #include "HttpRequest.h"
 #include "httpConstants.h"
 #include "include/serialize/JsonDeserializer.h"

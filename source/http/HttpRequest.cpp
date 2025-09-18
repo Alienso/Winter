@@ -3,7 +3,7 @@
 //
 
 #include "include/http/HttpRequest.h"
-#include "Connection.h"
+#include "HttpConnection.h"
 #include "include/log/Logger.h"
 #include "include/util/stringUtils.h"
 #include "../util/util.h"
@@ -164,11 +164,11 @@ void HttpRequest::parseRequestBody(HttpRequest &request, std::string_view body) 
     request.requestBody = body.substr(0, body.size());
 }
 
-void HttpRequest::setConnection(Connection* _connection) {
+void HttpRequest::setConnection(HttpConnection* _connection) {
     this->connection = _connection;
 }
 
-Connection *HttpRequest::getConnection() const {
+HttpConnection *HttpRequest::getConnection() const {
     return connection;
 }
 

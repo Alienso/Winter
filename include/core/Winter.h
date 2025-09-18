@@ -6,7 +6,7 @@
 #define WINTER_WINTER_H
 
 
-#include "source/util/ConnectionPool.h"
+#include "source/util/DbConnectionPool.h"
 #include "source/http/HttpServer.h"
 #include "source/core/Router.h"
 

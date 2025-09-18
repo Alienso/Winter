@@ -7,7 +7,7 @@
 
 #include "include/http/HttpRequest.h"
 #include "../util/tsqueue.h"
-#include "Connection.h"
+#include "HttpConnection.h"
 
 #include <thread>
 #include <asio/ip/tcp.hpp>

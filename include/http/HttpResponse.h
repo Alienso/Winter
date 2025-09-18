@@ -22,7 +22,7 @@ public:
     void send() const;
     [[nodiscard]] std::string toResponseString() const;
     [[nodiscard]] const std::string& getBody() const;
-    void setConnection(Connection* _connection);
+    void setConnection(HttpConnection* _connection);
 
 private:
     HttpVersion* httpVersion = nullptr;
@@ -30,7 +30,7 @@ private:
     std::unordered_map<std::string,std::string> responseHeaders;
     std::string responseBody;
 
-    Connection* connection = nullptr;
+    HttpConnection* connection = nullptr;
     JsonSerializer serializer{};
     static std::unordered_map<std::string,std::string> baseResponseHeaders;
 

@@ -66,7 +66,7 @@ add_executable(Winter ${CMAKE_BINARY_DIR}/dummy.cpp)
 
 # Collect all generated .cpp files after preprocessing
 file(GLOB_RECURSE GENERATED_SOURCES "${GENERATED_DIR}/*.cpp")
-target_sources(Winter PRIVATE ${GENERATED_SOURCES})
+target_sources(Winter PRIVATE ${GENERATED_SOURCES} source/main.cpp)
 add_dependencies(Winter run_preprocessor)
 target_include_directories(Winter PRIVATE ${GENERATED_DIR})
 

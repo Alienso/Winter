@@ -14,19 +14,19 @@
 #include "URI.h"
 #include "include/http/httpConstants.h"
 
-class Connection;
+class HttpConnection;
 
 class HttpRequest {
 
 public:
     HttpRequest();
-    HttpRequest(HttpMethod* _method, URI _uri, HttpVersion* _httpVersion, std::unordered_map<std::string, std::string>& _requestHeaders, std::string& _requestBody, Connection* _connection ) :
+    HttpRequest(HttpMethod* _method, URI _uri, HttpVersion* _httpVersion, std::unordered_map<std::string, std::string>& _requestHeaders, std::string& _requestBody, HttpConnection* _connection ) :
     method(_method), uri(std::move(_uri)), httpVersion(_httpVersion), requestHeaders(_requestHeaders), requestBody(_requestBody), connection(_connection){}
 
     [[nodiscard]] static std::shared_ptr<HttpRequest> parseFromString(const std::string &data);
 
-    void setConnection(Connection* _connection);
-    [[nodiscard]] Connection* getConnection() const;
+    void setConnection(HttpConnection* _connection);
+    [[nodiscard]] HttpConnection* getConnection() const;
     [[nodiscard]] const URI& getUri() const;
     [[nodiscard]] HttpMethod* getMethod() const;
     [[nodiscard]] HttpVersion* getHttpVersion() const;
@@ -41,7 +41,7 @@ private:
     std::unordered_map<std::string, std::string> queryParameters;
     std::unordered_map<std::string, std::string> requestHeaders;
     std::string requestBody;
-    Connection* connection;
+    HttpConnection* connection;
 
     static void parseRequestLine(HttpRequest& request, const std::string &line);
     static void parseRequestHeaders(HttpRequest& request, const std::string &headers);

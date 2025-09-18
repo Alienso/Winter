@@ -15,10 +15,10 @@ class PgStatement : public Statement {
 public:
 
     PgStatement()= default;
-    explicit PgStatement(std::shared_ptr<Connection> connection_){
+    explicit PgStatement(std::shared_ptr<DbConnection> connection_){
         connection = std::move(connection_);
     }
-    PgStatement(std::shared_ptr<Connection> connection_, const char* s){
+    PgStatement(std::shared_ptr<DbConnection> connection_, const char* s){
         connection = std::move(connection_);
         query = s;
         generateParameterMap();
@@ -34,7 +34,7 @@ public:
     void close() override;
 
 private:
-    std::shared_ptr<Connection> connection = nullptr;
+    std::shared_ptr<DbConnection> connection = nullptr;
 };
 
 

@@ -2,26 +2,26 @@
 // Created by alienson on 22.3.24.
 //
 
-#ifndef WINTER_CONNECTIONPOOL_H
-#define WINTER_CONNECTIONPOOL_H
+#ifndef WINTER_DBCONNECTIONPOOL_H
+#define WINTER_DBCONNECTIONPOOL_H
 
 #include <queue>
 #include <functional>
 
-#include "include/sql/Connection.h"
+#include "include/sql/DbConnection.h"
 #include "include/log/Logger.h"
 
 
-class ConnectionPool {
+class DbConnectionPool {
 public:
-    ConnectionPool(int initialSize, int maxSize_, Connection* (*allocator)()) : currentSize(initialSize), maxSize(maxSize_), connectionAllocator(nullptr){
+    DbConnectionPool(int initialSize, int maxSize_, DbConnection* (*allocator)()) : currentSize(initialSize), maxSize(maxSize_), connectionAllocator(nullptr){
         for (int i=0; i<initialSize; i++){
-            Connection* connection = allocator();
+            DbConnection* connection = allocator();
             pool.push(connection);
         }
     }
 
-    std::shared_ptr<Connection> getConnection(){
+    std::shared_ptr<DbConnection> getConnection(){
         std::scoped_lock lock(mutex_);
         if (pool.empty()){
             //Try to allocate more instances
@@ -30,19 +30,19 @@ public:
                 return nullptr;
             }
 
-            Connection* connection = connectionAllocator();
+            DbConnection* connection = connectionAllocator();
             pool.push(connection);
             currentSize++;
         }
-        Connection* conn = pool.front();
+        DbConnection* conn = pool.front();
         pool.pop();
-        return std::shared_ptr<Connection>(conn, [this](Connection* conn){
+        return std::shared_ptr<DbConnection>(conn, [this](DbConnection* conn){
             wtLogTrace("DB Connection released!");
             return returnToPool(conn, pool, mutex_);
         });
     }
 
-    static void returnToPool(Connection* connection, std::queue<Connection*>& pool, std::mutex& mutex_){
+    static void returnToPool(DbConnection* connection, std::queue<DbConnection*>& pool, std::mutex& mutex_){
         std::scoped_lock lock(mutex_);
         pool.push(connection);
     }
@@ -50,10 +50,10 @@ public:
 private:
     int currentSize;
     int maxSize;
-    Connection* (*connectionAllocator)();
-    std::queue<Connection*> pool;
+    DbConnection* (*connectionAllocator)();
+    std::queue<DbConnection*> pool;
     std::mutex mutex_;
 };
 
 
-#endif //WINTER_CONNECTIONPOOL_H
+#endif //WINTER_DBCONNECTIONPOOL_H

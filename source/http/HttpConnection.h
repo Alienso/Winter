@@ -6,13 +6,13 @@
 #define WINTER_HTTP_CONNECTION_H
 
 #include <asio/ip/tcp.hpp>
-#include "HttpRequest.h"
+#include "http/HttpRequest.h"
 #include "../util/tsqueue.h"
 
-class Connection {
+class HttpConnection {
 
 public:
-    Connection(asio::io_context& asioContext, asio::ip::tcp::socket socket, tsqueue<std::shared_ptr<HttpRequest>>& requestQueue);
+    HttpConnection(asio::io_context& asioContext, asio::ip::tcp::socket socket, tsqueue<std::shared_ptr<HttpRequest>>& requestQueue);
 
     void createHttpRequest();
     void respondToHttpRequest(const std::string& response);

@@ -15,7 +15,7 @@
 
 #include <vector>
 #include <iostream>
-#include "Logger.h"
+#include "log/Logger.h"
 
 class Component{
 public:

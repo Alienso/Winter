@@ -2,24 +2,24 @@
 // Created by Alienson on 27.1.2024.
 //
 
-#include "Connection.h"
+#include "HttpConnection.h"
 #include "asio/read.hpp"
 #include "include/log/Logger.h"
 #include <iostream>
 #include <optional>
 #include <thread>
 
-Connection::Connection(asio::io_context &context, asio::ip::tcp::socket socket_, tsqueue<std::shared_ptr<HttpRequest>>& queue) :
+HttpConnection::HttpConnection(asio::io_context &context, asio::ip::tcp::socket socket_, tsqueue<std::shared_ptr<HttpRequest>>& queue) :
      socket(std::move(socket_)), asioContext(context), requestQueue(queue) {}
 
-void Connection::tryParseRequest(){
+void HttpConnection::tryParseRequest(){
     std::shared_ptr<HttpRequest> httpRequest = HttpRequest::parseFromString(requestData);
     httpRequest->setConnection(this);
     requestQueue.push_back(std::shared_ptr<HttpRequest>(httpRequest));
     requestParsed = true;
 }
 
-void Connection::readDataFromSocket(){
+void HttpConnection::readDataFromSocket(){
     wtLogTrace("Reading data from socket");
     int bufferSize = sizeof(tempRequestBuffer);
     while (int read = socket.read_some(asio::buffer(tempRequestBuffer))){
@@ -60,11 +60,11 @@ void Connection::readDataFromSocket(){
         socket.cancel();*/
 }
 
-void Connection::createHttpRequest() {
+void HttpConnection::createHttpRequest() {
     readDataFromSocket();
 }
 
-void Connection::respondToHttpRequest(const std::string& response){
+void HttpConnection::respondToHttpRequest(const std::string& response){
     socket.write_some(asio::buffer(response.data(), response.size()));
     socket.close();
 }

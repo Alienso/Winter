@@ -6,7 +6,7 @@
 #define WINTER_REPOSITORY_H
 
 
-#include "source/util/ConnectionPool.h"
+#include "source/util/DbConnectionPool.h"
 #include "Statement.h"
 #include "Entity.h"
 
@@ -26,7 +26,7 @@ public:
     static int deleteEntity(Entity* e);
 
 private:
-    static ConnectionPool* dbConnectionPool;
+    static DbConnectionPool* dbConnectionPool;
 
     [[nodiscard]] static std::string getInsertColumnNames(const Entity* e);
     [[nodiscard]] static std::string toInsertString(const Entity* e);

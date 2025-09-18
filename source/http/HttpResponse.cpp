@@ -3,7 +3,7 @@
 //
 
 #include "include/http/HttpResponse.h"
-#include "Connection.h"
+#include "HttpConnection.h"
 #include "include/log/Logger.h"
 
 #include "util.h"
@@ -74,6 +74,6 @@ const std::string &HttpResponse::getBody() const {
     return responseBody;
 }
 
-void HttpResponse::setConnection(Connection * _connection) {
+void HttpResponse::setConnection(HttpConnection * _connection) {
     this->connection = _connection;
 }

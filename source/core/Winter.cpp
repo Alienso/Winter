@@ -6,7 +6,7 @@
 
 #include "include/core/Winter.h"
 #include "include/log/Logger.h"
-#include "include/core/Component.h"
+#include "Component.h"
 
 void Winter::run() {
     init();

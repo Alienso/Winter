@@ -14,7 +14,7 @@ void ComponentPass::begin(std::string &fileName) {
 
     size_t start = fileName.rfind("Component.h");
     if (start != std::string::npos) {
-        std::string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
+        std::string path = fileName.substr(0, fileName.size() - 2) + ".cpp"; //TODO this only reads .h file, but it should be moved to include fir
         componentCppFile = StringUtils::replace(path , '\\', '/');
     }
 }

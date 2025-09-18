@@ -6,7 +6,7 @@
 #define WINTER_PGCONNECTION_H
 
 
-#include "include/sql/Connection.h"
+#include "include/sql/DbConnection.h"
 #include "libpq-fe.h"
 
 inline bool validateResponse(const PGconn *conn, PGresult *res, const char *message){
@@ -20,15 +20,15 @@ inline bool validateResponse(const PGconn *conn, PGresult *res, const char *mess
     return true;
 }
 
-class PgConnection : public Connection{
+class PgConnection : public DbConnection{
 
 public:
     explicit PgConnection(const std::string& connectionString);
     virtual ~PgConnection();
 
-    std::shared_ptr<Statement> createStatement(std::shared_ptr<Connection> connection) override;
+    std::shared_ptr<Statement> createStatement(std::shared_ptr<DbConnection> connection) override;
 
-    std::shared_ptr<Statement> createStatement(std::shared_ptr<Connection> connection, const char *s) override;
+    std::shared_ptr<Statement> createStatement(std::shared_ptr<DbConnection> connection, const char *s) override;
 
     void commit() override;
 

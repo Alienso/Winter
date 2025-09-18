@@ -26,7 +26,7 @@ void PreProcessor::process(std::ifstream &inputFile, std::ofstream &outputFile, 
             if (lineConsumed) break;
         }
 
-        if (!lineConsumed) {
+        if (!lineConsumed && !line.empty()) {
             outputFile << "#line " << lineNumber << " \"" << formattedInputFileName << "\"\n";
             outputFile << line << std::endl;
         }
