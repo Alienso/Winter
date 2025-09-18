@@ -19,11 +19,9 @@ Spring clone in C++
 
 ## How to Run:
 
-With cmake, first build and run pre_processor, so it can generate required files. After that you can just run the app itself.
+Run "app" configuration
 
-Note: Pre processor run is required before each application build because of the way reflection and annotations are set up.
-
-### TODO:
+### Future plans:
 * sql object bindings
 * Object primitive types
 * yml config file
