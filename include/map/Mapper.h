@@ -5,7 +5,7 @@
 #ifndef WINTER_MAPPER_H
 #define WINTER_MAPPER_H
 
-#include "Reflect.h"
+#include "reflect/Reflect.h"
 
 /*
  * Strict = exact match

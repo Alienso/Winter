@@ -5,8 +5,8 @@
 #ifndef WINTER_STATEMENT_H
 #define WINTER_STATEMENT_H
 
-#include "source/reflect/Reflect.h"
-#include "ResultSet.h"
+#include "reflect/Reflect.h"
+#include "sql/ResultSet.h"
 
 #include <memory>
 

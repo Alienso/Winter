@@ -3,7 +3,7 @@
 //
 
 #include "ComponentPass.h"
-#include "include/util/stringUtils.h"
+#include "util/stringUtils.h"
 
 #include "fstream"
 
@@ -12,11 +12,20 @@ void ComponentPass::begin(std::string &fileName) {
     className = {};
     isClassComponent = false;
 
-    size_t start = fileName.rfind("Component.h");
+    /*size_t start = fileName.rfind("Component.h");
     if (start != std::string::npos) {
         std::string path = fileName.substr(0, fileName.size() - 2) + ".cpp"; //TODO this only reads .h file, but it should be moved to include fir
         componentCppFile = StringUtils::replace(path , '\\', '/');
+    }*/
+
+    /*
+    //TODO fix this
+    if (componentCppFile == "") {
+        std::string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
+        componentCppFile = "../../app/generated/Component.cpp";
     }
+    */
+
 }
 
 bool ComponentPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) {
@@ -83,6 +92,10 @@ void ComponentPass::processingFinished() {
     if (!outputFile.is_open()) {
         std::cout << "Error while opening Component.cpp!";
     }
+
+    //init
+    outputFile << "#include \"core/Component.h\"" << "\n";
+    outputFile << "std::vector<Component*> Component::components = {};";
 
     //add includes
     outputFile << '\n';

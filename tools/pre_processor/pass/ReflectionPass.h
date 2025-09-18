@@ -11,11 +11,11 @@
  */
 
 #include "Pass.h"
-
-#include "Field.h"
-#include "Method.h"
+#include "reflect/Field.h"
+#include "reflect/Method.h"
 
 #include <utility>
+#include <vector>
 
 class ReflectionPass : public Pass{
 public:

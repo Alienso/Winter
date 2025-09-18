@@ -5,10 +5,10 @@
 #ifndef WINTER_JSONSERIALIZER_H
 #define WINTER_JSONSERIALIZER_H
 
-#include "Reflect.h"
-#include "include/log/Logger.h"
-#include "FieldTypeUtil.h"
-#include "include/util/stringUtils.h"
+#include "reflect/Reflect.h"
+#include "log/Logger.h"
+#include "serialize/FieldTypeUtil.h"
+#include "util/stringUtils.h"
 
 class JsonSerializer {
 public:

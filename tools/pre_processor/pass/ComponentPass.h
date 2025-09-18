@@ -28,7 +28,7 @@ private:
     int bracketCounter = 0;
     bool isClassComponent;
     std::string className;
-    std::string componentCppFile;
+    std::string componentCppFile = "../../app/generated/Component.cpp";
 
     struct componentFileData{
         std::string filePath;

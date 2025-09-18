@@ -3,6 +3,8 @@
 //
 
 #include "ReflectionPass.h"
+#include "util/stringUtils.h"
+#include "serialize/FieldTypeUtil.h"
 
 #include <fstream>
 

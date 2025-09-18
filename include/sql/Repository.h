@@ -6,9 +6,9 @@
 #define WINTER_REPOSITORY_H
 
 
-#include "source/util/DbConnectionPool.h"
-#include "Statement.h"
-#include "Entity.h"
+#include "util/DbConnectionPool.h"
+#include "sql/Statement.h"
+#include "sql/Entity.h"
 
 #include <memory>
 

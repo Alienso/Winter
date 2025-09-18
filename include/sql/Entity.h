@@ -9,7 +9,7 @@
  * Base class for all database entities. ColumnMappings are filled at runtime based on $Column annotation
  */
 
-#include "Reflect.h"
+#include "reflect/Reflect.h"
 
 #define $Column(x)
 

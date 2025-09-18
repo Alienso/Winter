@@ -7,10 +7,10 @@
 
 
 #include <memory>
-#include "HttpRequest.h"
-#include "include/http/httpConstants.h"
-#include "Reflect.h"
-#include "include/serialize/JsonSerializer.h"
+#include "http/HttpRequest.h"
+#include "http/httpConstants.h"
+#include "reflect/Reflect.h"
+#include "serialize/JsonSerializer.h"
 
 class HttpResponse {
 

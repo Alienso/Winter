@@ -6,7 +6,7 @@
 #define WINTER_SQL_CONNECTION_H
 
 
-#include "Statement.h"
+#include "sql/Statement.h"
 #include <memory>
 
 class DbConnection {

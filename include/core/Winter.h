@@ -5,10 +5,9 @@
 #ifndef WINTER_WINTER_H
 #define WINTER_WINTER_H
 
-
-#include "source/util/DbConnectionPool.h"
-#include "source/http/HttpServer.h"
-#include "source/core/Router.h"
+#include "../util/DbConnectionPool.h"
+#include "../http/HttpServer.h"
+#include "../core/Router.h"
 
 class Winter {
 public:

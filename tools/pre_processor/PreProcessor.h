@@ -8,7 +8,7 @@
 #include <fstream>
 #include <regex>
 #include <vector>
-#include "tools/pre_processor/pass/Pass.h"
+#include "pass/Pass.h"
 
 class PreProcessor {
 public:

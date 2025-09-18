@@ -5,12 +5,12 @@
 #ifndef WINTER_CONTROLLERMAPPING_H
 #define WINTER_CONTROLLERMAPPING_H
 
-#include "source/core/Router.h"
-#include "source/core/Component.h"
-#include "HttpRequest.h"
-#include "httpConstants.h"
-#include "include/serialize/JsonDeserializer.h"
-#include "include/serialize/JsonSerializer.h"
+#include "core/Router.h"
+#include "core/Component.h"
+#include "http/HttpRequest.h"
+#include "http/httpConstants.h"
+#include "serialize/JsonDeserializer.h"
+#include "serialize/JsonSerializer.h"
 
 
 #define $RestController

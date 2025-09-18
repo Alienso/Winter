@@ -10,11 +10,11 @@
 #include <iostream>
 #include <filesystem>
 
-#include "include/util/stringUtils.h"
+#include "util/stringUtils.h"
 #include "PreProcessor.h"
-#include "tools/pre_processor/pass/ReflectionPass.h"
-#include "tools/pre_processor/pass/AnnotationPass.h"
-#include "tools/pre_processor/pass/ComponentPass.h"
+#include "pass/ReflectionPass.h"
+#include "pass/AnnotationPass.h"
+#include "pass/ComponentPass.h"
 
 int processFile(const std::filesystem::directory_entry &entry);
 
