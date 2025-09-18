@@ -20,12 +20,6 @@ void ReflectionPass::begin(std::string& fileName) {
     fields.resize(0);
     methods.resize(0);
     className = {};
-
-    size_t start = fileName.rfind("Reflect.h");
-    if (start != std::string::npos) {
-        std::string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
-        reflectionCppFile = StringUtils::replace(path , '\\', '/');
-    }
 }
 
 void ReflectionPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) {

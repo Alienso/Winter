@@ -15,12 +15,6 @@ AnnotationPass::AnnotationPass(std::string& sourceDir, std::string &targetDir) {
 
 void AnnotationPass::begin(std::string& fileName) {
     bracketCounter = 0;
-
-    size_t start = fileName.rfind("Router.h");
-    if (start != std::string::npos) {
-        std::string path = fileName.substr(0, fileName.size() - 2) + ".cpp";
-        routerCppFile = StringUtils::replace(path , '\\', '/');
-    }
 }
 
 bool AnnotationPass::process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) {
