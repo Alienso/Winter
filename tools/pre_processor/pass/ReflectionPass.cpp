@@ -8,6 +8,10 @@
 
 #include <fstream>
 
+ReflectionPass::ReflectionPass(std::string &sourceDir, std::string &targetDir) {
+    reflectionCppFile = targetDir + "/Reflect.cpp";
+}
+
 void ReflectionPass::begin(std::string& fileName) {
     shouldAddReflection = false;
     bracketCounter = 0;
@@ -218,9 +222,9 @@ void ReflectionPass::generateReflectOverrides(std::ofstream &outputFile) {
 
 void ReflectionPass::processingFinished() {
 
-    std::ofstream outputFile = std::ofstream(reflectionCppFile, std::ios::app);
+    std::ofstream outputFile = std::ofstream(reflectionCppFile, std::ios::trunc | std::fstream::out);
     if (!outputFile.is_open()) {
-        std::cout << "Error while opening Reflect.cpp!";
+        std::cout << "Error while opening Reflect.cpp!\n";
     }
 
     //add includes

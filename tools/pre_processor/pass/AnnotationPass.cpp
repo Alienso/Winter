@@ -9,6 +9,10 @@
 #include "util/util.h"
 #include "../util.h"
 
+AnnotationPass::AnnotationPass(std::string& sourceDir, std::string &targetDir) {
+    routerCppFile = targetDir + "/Router.cpp";
+}
+
 void AnnotationPass::begin(std::string& fileName) {
     bracketCounter = 0;
 
@@ -226,9 +230,9 @@ void AnnotationPass::processingFinished() {
     //TODO how to get method reference?
     endpointData.resize(0);
 
-    std::ofstream outputFile = std::ofstream(routerCppFile, std::ios::app);
+    std::ofstream outputFile = std::ofstream(routerCppFile, std::ios::trunc | std::fstream::out);
     if (!outputFile.is_open()) {
-        std::cout << "Error while opening Router.cpp!";
+        std::cout << "Error while opening Router.cpp!\n";
     }
 
     if(endpointData.empty()) {

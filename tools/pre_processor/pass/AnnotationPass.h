@@ -16,6 +16,7 @@
 
 class AnnotationPass : public Pass{
 public:
+    explicit AnnotationPass(std::string& sourceDir, std::string& targetDir);
     void begin(std::string& fileName) override;
     bool process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) override;
     void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string& fileName) override;

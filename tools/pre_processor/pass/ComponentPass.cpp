@@ -7,6 +7,11 @@
 
 #include "fstream"
 
+ComponentPass::ComponentPass(std::string& sourceDir, std::string &targetDir) {
+    isClassComponent = false;
+    componentCppFile = targetDir + "/Component.cpp";
+}
+
 void ComponentPass::begin(std::string &fileName) {
     bracketCounter = 0;
     className = {};
@@ -88,14 +93,10 @@ void ComponentPass::end(std::ifstream &inputFile, std::ofstream &outputFile, std
 }
 
 void ComponentPass::processingFinished() {
-    std::ofstream outputFile = std::ofstream(componentCppFile, std::ios::app);
+    std::ofstream outputFile = std::ofstream(componentCppFile, std::ios::trunc | std::fstream::out);
     if (!outputFile.is_open()) {
-        std::cout << "Error while opening Component.cpp!";
+        std::cout << "Error while opening Component.cpp!\n";
     }
-
-    //init
-    outputFile << "#include \"core/Component.h\"" << "\n";
-    outputFile << "std::vector<Component*> Component::components = {};";
 
     //add includes
     outputFile << '\n';

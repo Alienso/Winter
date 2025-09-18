@@ -17,6 +17,7 @@
 
 class ComponentPass : public Pass{
 public:
+    explicit ComponentPass(std::string& sourceDir, std::string &targetDir);
     void begin(std::string &fileName) override;
     bool process(std::ifstream &inputFile, std::ofstream &outputFile, std::string &line, std::string &previousLine) override;
     void end(std::ifstream &inputFile, std::ofstream &outputFile, std::string &fileName) override;
@@ -28,7 +29,7 @@ private:
     int bracketCounter = 0;
     bool isClassComponent;
     std::string className;
-    std::string componentCppFile = "../../app/generated/Component.cpp";
+    std::string componentCppFile;
 
     struct componentFileData{
         std::string filePath;

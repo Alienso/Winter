@@ -52,13 +52,13 @@ int main(int argc, char** argv) {
     inputDirectory = std::string (argv[1]);
     outputDirectory = std::string(argv[2]);
 
-    Pass* reflectionPass = new ReflectionPass();
+    Pass* reflectionPass = new ReflectionPass(inputDirectory, outputDirectory);
     preProcessor.addPass(reflectionPass);
 
-    Pass* annotationPass = new AnnotationPass();
+    Pass* annotationPass = new AnnotationPass(inputDirectory, outputDirectory);
     preProcessor.addPass(annotationPass);
 
-    Pass* componentPass = new ComponentPass();
+    Pass* componentPass = new ComponentPass(inputDirectory, outputDirectory);
     preProcessor.addPass(componentPass);
 
     for (const auto &dirEntry: std::filesystem::recursive_directory_iterator(argv[1])){
