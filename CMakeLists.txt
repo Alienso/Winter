@@ -24,12 +24,11 @@ set(GENERATED_DIR ${CMAKE_BINARY_DIR}/generated)
 
 add_custom_target(run_preprocessor
         COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_DIR}
-        COMMAND ${CMAKE_BINARY_DIR}/bin/PreProcessor.exe ${CMAKE_SOURCE_DIR}/app/source ${GENERATED_DIR}
-        DEPENDS ${CMAKE_BINARY_DIR}/bin/PreProcessor.exe
+        COMMAND ${CMAKE_BINARY_DIR}/bin/PreProcessor ${CMAKE_SOURCE_DIR}/app/source ${GENERATED_DIR}
+        DEPENDS ${CMAKE_BINARY_DIR}/bin/PreProcessor
         COMMENT "Running PreProcessor..."
 )
 
-file(WRITE ${CMAKE_BINARY_DIR}/dummy.cpp "// placeholder")
 add_executable(app ${CMAKE_SOURCE_DIR}/app/main.cpp)
 
 # Collect all generated .cpp files after preprocessing
