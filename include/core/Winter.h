@@ -11,7 +11,7 @@
 
 class Winter {
 public:
-    Winter() = default;
+    Winter();
     void run();
 
 private:
@@ -19,6 +19,8 @@ private:
     void mainLoop();
     void cleanup();
 
+    static void signalHandler(int signal);
+    static Winter* instance;
     bool shouldStop = false;
 
     HttpServer httpServer;

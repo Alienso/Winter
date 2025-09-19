@@ -30,6 +30,7 @@ public:
 
 class Router {
 public:
+    ~Router();
     Router(Router& other) = delete;
     void operator=(const Router&) = delete;
     static Router* getInstance();
@@ -43,7 +44,6 @@ public:
 
 private:
     Router() = default;
-    ~Router();
     ThreadPool threadPool{20};
     static Router* instance;
     static std::mutex mutex_;

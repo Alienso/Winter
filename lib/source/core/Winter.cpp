@@ -8,6 +8,19 @@
 #include "log/Logger.h"
 #include "core/Component.h"
 
+Winter* Winter::instance = nullptr;
+
+void Winter::signalHandler(int signal) {
+    wtLogInfo("Received signal %d", signal);
+    instance->shouldStop = true;
+    //instance->cleanup();
+    //exit(signal);
+}
+
+Winter::Winter(){
+    Winter::instance = this;
+}
+
 void Winter::run() {
     init();
     mainLoop();
@@ -16,6 +29,7 @@ void Winter::run() {
 
 void Winter::init() {
     wtLogTrace("Hello world");
+    signal(SIGINT, Winter::signalHandler);
     httpServerThread = std::thread([this]() { httpServer.start(); });
     Reflect::initializeReflection();
     Component::initializeComponents();
@@ -34,4 +48,6 @@ void Winter::cleanup() {
     if (httpServerThread.joinable())
         httpServerThread.join();
     httpServer.stop();
+
+    //delete router;
 }

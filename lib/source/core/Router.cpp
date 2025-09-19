@@ -40,7 +40,7 @@ void Router::routeRequest(std::shared_ptr<HttpRequest> &request) {
 }
 
 void Router::registerEndpoint(Endpoint *endpoint) {
-    wtLogTrace("Registered endpoint %s", endpoint->uri.getPath().data());
+    wtLogTrace("Registered endpoint %s %s", endpoint->method->method.c_str(), endpoint->uri.getPath().data());
     endpoints.push_back(endpoint);
 }
 
