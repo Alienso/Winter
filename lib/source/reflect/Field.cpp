@@ -2,8 +2,8 @@
 // Created by Alienson on 6.2.2024.
 //
 
-#include "Field.h"
-#include "Reflect.h"
+#include "reflect/Field.h"
+#include "reflect/Reflect.h"
 
 #include "util/stringUtils.h"
 

@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <thread>
-#include "HttpServer.h"
+#include "http/HttpServer.h"
 #include "core/Configuration.h"
 #include "log/Logger.h"
 

@@ -2,7 +2,7 @@
 // Created by Alienson on 27.1.2024.
 //
 
-#include "HttpConnection.h"
+#include "http/HttpConnection.h"
 #include "asio/read.hpp"
 #include "log/Logger.h"
 #include <iostream>

@@ -3,7 +3,7 @@
 //
 
 #include "http/HttpRequest.h"
-#include "HttpConnection.h"
+#include "http/HttpConnection.h"
 #include "log/Logger.h"
 #include "util/stringUtils.h"
 #include "util/util.h"

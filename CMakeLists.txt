@@ -28,7 +28,24 @@ if (WIN32)
     link_directories("C:/Program Files/PostgreSQL/12/lib")
 endif(WIN32)
 
+
+include_directories(include)
+include_directories(vendor/include)
+include_directories(vendor/include/postgreSQL)
+
+link_directories(vendor/lib)
+
+include_directories(include/log)
+include_directories(include/reflect)
+include_directories(include/serialize)
+include_directories(include/util)
+include_directories(include/http)
+include_directories(include/core)
+include_directories(include/sql)
+include_directories(include/util)
+
 set(GENERATED_DIR ${CMAKE_BINARY_DIR}/generated)
+set(LIB_SOURCES_DIR ${CMAKE_SOURCE_DIR}/lib/source)
 
 add_custom_target(run_preprocessor
         COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_DIR}
@@ -51,9 +68,27 @@ target_include_directories(app PRIVATE vendor/include)
 
 target_link_directories(app PRIVATE vendor/lib)
 
+
+#Relase
+#[[
 if (WIN32)
     target_link_libraries(app Winter wsock32 ws2_32 pq)
 endif (WIN32)
 if (UNIX)
     target_link_libraries(app Winter pq)
 endif(UNIX)
+]]
+
+#Development
+
+file(GLOB_RECURSE LIB_GENERATED_SOURCES "${LIB_SOURCES_DIR}/*.cpp")
+set(GENERATED_SOURCES ${GENERATED_SOURCES} ${LIB_GENERATED_SOURCES})
+target_sources(app PRIVATE ${GENERATED_SOURCES} )
+
+if (WIN32)
+    target_link_libraries(app wsock32 ws2_32 pq)
+endif (WIN32)
+if (UNIX)
+    target_link_libraries(app pq)
+endif(UNIX)
+

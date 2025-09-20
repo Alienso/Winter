@@ -11,10 +11,8 @@
 Winter* Winter::instance = nullptr;
 
 void Winter::signalHandler(int signal) {
-    wtLogInfo("Received signal %d", signal);
+    wtLogInfo("Received signal %d", signal); //TODO check this
     instance->shouldStop = true;
-    //instance->cleanup();
-    //exit(signal);
 }
 
 Winter::Winter(){

@@ -3,9 +3,9 @@
 //
 
 #include "http/HttpResponse.h"
-#include "HttpConnection.h"
+#include "http/HttpConnection.h"
 
-#include "util.h"
+#include "util/util.h"
 
 std::unordered_map<std::string,std::string> HttpResponse::baseResponseHeaders = {{"Connection","Closed"},
                                                                   {"Server", "WT/0.0.1"}};
