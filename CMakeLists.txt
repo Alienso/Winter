@@ -18,22 +18,13 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0 -fuse-ld=mold")
 endif(UNIX)
 
-#Postgres
-if (UNIX)
-    include_directories(/usr/include/postgresql/)
-    link_directories(/usr/local/pgsql/lib/)
-endif(UNIX)
-if (WIN32)
-    #include_directories("C:/Program Files/PostgreSQL/12/include")
-    link_directories("C:/Program Files/PostgreSQL/12/lib")
-endif(WIN32)
-
 
 include_directories(include)
 include_directories(vendor/include)
 include_directories(vendor/include/postgreSQL)
 
 link_directories(vendor/lib)
+link_directories(vendor/lib/postgres)
 
 include_directories(include/log)
 include_directories(include/reflect)
