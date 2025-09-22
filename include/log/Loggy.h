@@ -1,5 +1,5 @@
 //
-// Created by Alienson on 20.9.2025..
+// Created by Alienson on 20.9.2025.
 //
 
 #ifndef WINTER_LOGGY_H
@@ -113,7 +113,7 @@ public:
         std::ostringstream outputStr;
         printToString(formatString, outputStr);
         outputStr << '\n';
-        logQueue.emplace(logLevelString, outputStr.str(), file, line);
+        logQueue.emplace_back(logLevelString, outputStr.str(), file, line);
     }
 
     template <typename First, typename... Rest>
@@ -121,7 +121,7 @@ public:
         std::ostringstream outputStr;
         printToString(formatString, outputStr, first, std::forward<Rest>(rest)...);
         outputStr << '\n';
-        logQueue.emplace(logLevelString, outputStr.str(), file, line);
+        logQueue.emplace_back(logLevelString, outputStr.str(), file, line);
     }
 
 
@@ -132,7 +132,7 @@ private:
 
     LogLevel logLevel;
     std::vector<Appender> appenders;
-    std::queue<LogCommand> logQueue;
+    tsqueue<LogCommand> logQueue;
     size_t cwdOffset = 0;
 
     std::thread loggingThread;

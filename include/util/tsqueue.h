@@ -20,6 +20,11 @@ public:
 
     void push_front(const T& val);
     void push_back(const T& val);
+
+    template<typename... Args>
+    void emplace_front(Args&&... args);
+    template<typename... Args>
+    void emplace_back(Args&&... args);
     T pop_front();
     T pop_back();
     const T& front();
@@ -56,6 +61,23 @@ void tsqueue<T>::push_back(const T& val) {
     cvEmpty.notify_one();
     queue.push_back(val);
 }
+
+template<typename T>
+template<typename... Args>
+void tsqueue<T>::emplace_back(Args&&... args){
+    std::scoped_lock lock(mutex_);
+    cvEmpty.notify_one();
+    queue.emplace_back(args...);
+}
+
+template<typename T>
+template<typename... Args>
+void tsqueue<T>::emplace_front(Args&&... args){
+    std::scoped_lock lock(mutex_);
+    cvEmpty.notify_one();
+    queue.emplace_front(args...);
+}
+
 
 template<typename T>
 T tsqueue<T>::pop_front() {

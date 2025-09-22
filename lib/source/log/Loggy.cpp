@@ -26,14 +26,13 @@ Loggy::Loggy() {
 
     loggingThread = std::thread([this]{
         while(true){
-            //logQueue.waitForEvent();
+            logQueue.waitForEvent();
             while(!logQueue.empty()){
-                LogCommand command = logQueue.front();
+                LogCommand command = logQueue.pop_front();
                 for (auto& appender : appenders){
                     appender.writeFormatString(command.logLevelString, command.file.c_str() + cwdOffset, command.line);
                     appender.write(command.outputString);
                 }
-                logQueue.pop();
             }
         }
     });
