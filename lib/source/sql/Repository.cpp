@@ -43,7 +43,7 @@ std::string Repository::toInsertString(const Entity* e){
     for (const auto& it : mappings){
         Field* f = e->getField(it.first.data());
         if (f == &Field::INVALID) {
-            wtLogError("Invalid field encountered! %s", it.first.data());
+            wtLogError("Invalid field encountered! {}", it.first.data());
             return "";
         }
         std::string val = f->getAsString((Reflect*)e, '\'');
@@ -64,7 +64,7 @@ std::string Repository::toUpdateString(const Entity* e){
 
         Field* f = e->getField(it.first.data());
         if (f == &Field::INVALID) {
-            wtLogError("Invalid field encountered! %s", it.first.data());
+            wtLogError("Invalid field encountered! {}", it.first.data());
             return "";
         }
         std::string val = f->getAsString((Reflect*)e, '\'');
@@ -119,7 +119,7 @@ int Repository::update(const std::vector<Entity*>& entities) {
         std::string query = "update " + entities[0]->getTableName() + " set ";
         query += toUpdateString(e);
         if(createStatement()->executeUpdate(query.data()) != 1)
-            wtLogError("Error while executing query: %s", query.data());
+            wtLogError("Error while executing query: {}", query.data());
         else counter++;
     }
 
@@ -140,7 +140,7 @@ std::string Repository::getPrimaryKeyValue(const Entity* e){
 
     Field* f = e->getField(it->first.data());
     if (f == &Field::INVALID) {
-        wtLogError("Invalid field encountered! %s", e->getPrimaryKeyName().data());
+        wtLogError("Invalid field encountered! {}", e->getPrimaryKeyName().data());
         return ";";
     }
 

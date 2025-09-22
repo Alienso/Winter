@@ -11,7 +11,7 @@ Logger* Logger::instance = nullptr;
 std::mutex Logger::mutex_;
 
 Logger::Logger() {
-    logLevel = (LogLevel) Configuration::logLevel;
+    logLevel = (LogLevelOld) Configuration::logLevel;
     appenders.emplace_back("", &std::cout);
     std::string cwd = __FILE__;
     size_t sourceIndex = cwd.find("Winter");
@@ -35,39 +35,39 @@ void Logger::addAppender(std::ostream* stream) {
 }
 
 void Logger::trace(const char* file, const int line, const char* s, ...) const {
-    if(logLevel > LOG_LEVEL_TRACE)
+    /*if(logLevel > LOG_LEVEL_TRACE)
         return;
     va_list argptr;
     va_start(argptr, s);
     log(TRACE_STR, file, line, s, argptr);
-    va_end(argptr);
+    va_end(argptr);*/
 }
 
 void Logger::debug(const char* file, const int line, const char* s, ...) const {
-    if(logLevel > LOG_LEVEL_DEBUG)
+    /*if(logLevel > LOG_LEVEL_DEBUG)
         return;
     va_list argptr;
     va_start(argptr, s);
     log(DEBUG_STR, file, line, s, argptr);
-    va_end(argptr);
+    va_end(argptr);*/
 }
 
 void Logger::info(const char* file, const int line, const char *s, ...) const {
-    if(logLevel > LOG_LEVEL_INFO)
+    /*if(logLevel > LOG_LEVEL_INFO)
         return;
     va_list argptr;
     va_start(argptr, s);
     log(INFO_STR, file, line, s, argptr);
-    va_end(argptr);
+    va_end(argptr);*/
 }
 
 void Logger::warn(const char* file, const int line, const char *s, ...) const {
-    if(logLevel > LOG_LEVEL_WARN)
+    /*if(logLevel > LOG_LEVEL_WARN)
         return;
     va_list argptr;
     va_start(argptr, s);
     log(WARN_STR, file, line, s, argptr);
-    va_end(argptr);
+    va_end(argptr);*/
 }
 
 void Logger::error(const char* file, const int line, const char *s, ...) const {

@@ -4,7 +4,7 @@
 
 #include "reflect/Reflect.h"
 
-#include "log/Logger.h"
+#include "log/Loggy.h"
 
 std::vector<Field> &Reflect::getDeclaredFields() {
     wtLogError("getDeclaredFields called for Reflect*!");
@@ -12,7 +12,7 @@ std::vector<Field> &Reflect::getDeclaredFields() {
 }
 
 Field *Reflect::getField(const char *fieldName) const{
-    wtLogError("getField called for %s for Reflect*!", fieldName);
+    wtLogError("getField called for {} for Reflect*!", fieldName);
     return &Field::INVALID;
 }
 
@@ -22,7 +22,7 @@ std::vector<Method> &Reflect::getDeclaredMethods() {
 }
 
 Method &Reflect::getMethod(const char *methodName) {
-    wtLogError("getMethod %s called for Reflect*!", methodName);
+    wtLogError("getMethod {} called for Reflect*!", methodName);
     return declaredMethods[0];
 }
 

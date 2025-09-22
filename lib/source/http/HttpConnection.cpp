@@ -4,7 +4,7 @@
 
 #include "http/HttpConnection.h"
 #include "asio/read.hpp"
-#include "log/Logger.h"
+#include "log/Loggy.h"
 #include <iostream>
 #include <optional>
 #include <thread>

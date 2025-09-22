@@ -184,7 +184,7 @@ void Field::set(void *object, const char *value) const {
 
 void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, const Field &destField, CopyType copyType) {
     if (sourceField.type != destField.type){
-        wtLogError("Source and Field types dont match!. Source: %d, Dest: %d", sourceField.type, destField.type);
+        wtLogError("Source and Field types dont match!. Source: {}, Dest: {}", sourceField.type, destField.type);
         return;
     }
 
@@ -274,7 +274,7 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
 
 void Field::copyObject(Reflect *source, Reflect *dest, CopyType copyType) {
     if (source->getClassSize() != dest->getClassSize()){
-        wtLogError("Class sizes mismatch. Source: %d Dest: %d", source->getClassSize(), dest->getClassSize());
+        wtLogError("Class sizes mismatch. Source: {} Dest: {}", source->getClassSize(), dest->getClassSize());
         return;
     }
     for(auto& sourceField : source->getDeclaredFields()){
@@ -282,7 +282,7 @@ void Field::copyObject(Reflect *source, Reflect *dest, CopyType copyType) {
         if (destField != &Field::INVALID ) {
             Field::copyValue(source, sourceField, dest, *destField, copyType);
         }else{
-            wtLogWarn("Invalid field occurred: %s", sourceField.name.data());
+            wtLogWarn("Invalid field occurred: {}", sourceField.name.data());
         }
     }
 }

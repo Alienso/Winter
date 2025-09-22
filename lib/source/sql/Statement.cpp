@@ -150,7 +150,7 @@ std::string Statement::buildQuery() {
             std::string paramName = query.substr(beginIndex, endIndex - beginIndex);
             it = paramsMap.find(paramName);
             if (it == paramsMap.end()){
-                wtLogError("Parameter %s is unbound!", paramName.data());
+                wtLogError("Parameter {} is unbound!", paramName.data());
                 return "";
             }
             i = endIndex;

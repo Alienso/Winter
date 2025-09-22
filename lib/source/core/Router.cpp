@@ -40,12 +40,12 @@ void Router::routeRequest(std::shared_ptr<HttpRequest> &request) {
 }
 
 void Router::registerEndpoint(Endpoint *endpoint) {
-    wtLogTrace("Registered endpoint %s %s", endpoint->method->method.c_str(), endpoint->uri.getPath().data());
+    wtLogTrace("Registered endpoint {} {}", endpoint->method->method, endpoint->uri.getPath());
     endpoints.push_back(endpoint);
 }
 
 void Router::registerEndpoint(const char *url, HttpMethod *method, std::function<HttpResponse*(HttpRequest*)> f) {
-    wtLogTrace("Registered endpoint %s", url);
+    wtLogTrace("Registered endpoint {}", url);
     auto* endpoint = new Endpoint(url, method, f);
     endpoints.push_back(endpoint);
 }

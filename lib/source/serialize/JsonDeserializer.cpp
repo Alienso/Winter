@@ -80,7 +80,7 @@ Reflect* JsonDeserializer::deserialize(const std::string& s, Reflect* response){
         FieldType expectedType = f->type;
 
         if (!areTypesCompatible(fieldType, expectedType)) {
-            wtLogError("Incompatible types: %d and %d for field %s", fieldType, expectedType, fieldName.data());
+            wtLogError("Incompatible types: {} and {} for field {}", fieldType, expectedType, fieldName.data());
             return response;
         }
 
@@ -91,7 +91,7 @@ Reflect* JsonDeserializer::deserialize(const std::string& s, Reflect* response){
             FieldType fieldSubType = getArraySubType(f->typeStr);
             JsonFieldType jsonFieldSubType = getJsonFieldSubType(fieldValue);
             if (!areTypesCompatible(jsonFieldSubType, fieldSubType)) {
-                wtLogError("Incompatible vec sub types: %d and %d for field %s", jsonFieldSubType, expectedType, fieldName.data());
+                wtLogError("Incompatible vec sub types: {} and {} for field {}", jsonFieldSubType, expectedType, fieldName.data());
                 return response;
             }
             setFieldValueArray(fieldValue, expectedType, response, f);
@@ -211,7 +211,7 @@ void JsonDeserializer::setFieldValueArray(const std::string& fieldValue, const F
             }
             break;
         default:
-            wtLogError("Unknown FieldType Type %d in vec", subType);
+            wtLogError("Unknown FieldType Type {} in vec", subType);
             f->setInt(obj, 0);
             break;
     }

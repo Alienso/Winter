@@ -3,7 +3,7 @@
 //
 
 #include "http/httpConstants.h"
-#include "log/Logger.h"
+#include "log/Loggy.h"
 #include "util/stringUtils.h"
 
 #include <cstring>
@@ -29,7 +29,7 @@ HttpMethod* HttpMethod::TRACE = new HttpMethod("TRACE");
 HttpMethod* HttpMethod::PATCH = new HttpMethod("PATCH");
 
 HttpVersion* HttpVersion::fromString(const char* s){
-    wtLogTrace("Http version string: %s", s);
+    wtLogTrace("Http version string: {}", s);
     if (StringUtils::startsWith(s,"HTTP/1.0"))
         return HttpVersion::V1_0;
     else if (StringUtils::startsWith(s,"HTTP/1.1"))
@@ -37,7 +37,7 @@ HttpVersion* HttpVersion::fromString(const char* s){
     else if (StringUtils::startsWith(s,"HTTP/2.0"))
         return HttpVersion::V2_0;
 
-    wtLogError("Invalid HttpVersion: %s", s);
+    wtLogError("Invalid HttpVersion: {}", s);
     return nullptr;
 }
 
@@ -61,6 +61,6 @@ HttpMethod* HttpMethod::fromString(const char* s) {
     else if (StringUtils::startsWith(s, "PATCH"))
         return HttpMethod::PATCH;
 
-    wtLogError("Invalid HttpMethod: %s", s);
+    wtLogError("Invalid HttpMethod: {}", s);
     return nullptr;
 }

@@ -16,7 +16,7 @@
 #include <string>
 
 #include "reflect/Reflect.h"
-#include "log/Logger.h"
+#include "log/Loggy.h"
 #include "serialize/FieldTypeUtil.h"
 #include "util/stringUtils.h"
 #include <cstdlib>

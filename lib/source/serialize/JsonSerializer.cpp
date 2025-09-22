@@ -75,7 +75,7 @@ std::string* JsonSerializer::convertToJsonString(const Field &field, Reflect* ob
         case FIELD_TYPE_VECTOR:
             return convertVectorToJsonString(field, obj);
         default:
-            wtLogError("Unknown fieldType: %d", field.type);
+            wtLogError("Unknown fieldType: {}", field.type);
             return new std::string("\"\"");
     }
 }
@@ -160,7 +160,7 @@ std::string* JsonSerializer::convertVectorToJsonString(const Field &f, Reflect *
                 }
             }
         default:
-            wtLogError("Unknown FieldType Type %d in vec", subType);
+            wtLogError("Unknown FieldType Type {} in vec", subType);
             return new std::string("\"\"");
     }
 

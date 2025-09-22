@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(ExampleProject)
+project(Winter)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -81,9 +81,8 @@ endif(UNIX)
 
 #Development
 
-file(GLOB_RECURSE LIB_GENERATED_SOURCES "${LIB_SOURCES_DIR}/*.cpp")
-set(GENERATED_SOURCES ${GENERATED_SOURCES} ${LIB_GENERATED_SOURCES})
-target_sources(app PRIVATE ${GENERATED_SOURCES} )
+file(GLOB_RECURSE LIB_GENERATED_SOURCES "${GENERATED_DIR}/*.cpp" "${LIB_SOURCES_DIR}/*.cpp")
+target_sources(app PRIVATE ${LIB_GENERATED_SOURCES} )
 
 if (WIN32)
     target_link_libraries(app wsock32 ws2_32 pq)

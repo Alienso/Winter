@@ -13,7 +13,7 @@ inline bool validateResponse(const PGconn *conn, PGresult *res, const char *mess
     auto code = PQresultStatus(res);
     if (code != PGRES_COMMAND_OK && code != PGRES_TUPLES_OK){
         wtLogError(message);
-        wtLogError("SQLERROR: %s", PQerrorMessage(conn));
+        wtLogError("SQLERROR: {}", PQerrorMessage(conn));
         PQclear(res);
         return false;
     }

@@ -9,7 +9,7 @@
 #include <functional>
 
 #include "../sql/DbConnection.h"
-#include "../log/Logger.h"
+#include "../log/Loggy.h"
 
 
 class DbConnectionPool {

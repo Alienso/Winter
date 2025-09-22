@@ -3,7 +3,7 @@
 //
 
 #include "map/Mapper.h"
-#include "log/Logger.h"
+#include "log/Loggy.h"
 
 void Mapper::map(Reflect *source, Reflect *dest, FieldMatchType fieldMatchType) const {
     for(auto& sourceField : source->getDeclaredFields()){
@@ -15,7 +15,7 @@ void Mapper::map(Reflect *source, Reflect *dest, FieldMatchType fieldMatchType) 
             Field::copyValue(source, sourceField, dest, *destField);
         }else{
             if (failOnUnknownProperty){
-                wtLogError("Unknown property %s found!", sourceField.name.data());
+                wtLogError("Unknown property {} found!", sourceField.name.data());
                 return;
             }
         }

@@ -5,7 +5,7 @@
 #ifndef WINTER_CONFIGURATION_H
 #define WINTER_CONFIGURATION_H
 
-#include "log/Logger.h"
+#include "log/Loggy.h"
 
 class Configuration {
 public:

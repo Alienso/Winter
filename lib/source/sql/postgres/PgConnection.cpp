@@ -3,14 +3,14 @@
 //
 
 #include "sql/postgres/PgConnection.h"
-#include "log/Logger.h"
+#include "log/Loggy.h"
 #include "sql/postgres/PgStatement.h"
 
 PgConnection::PgConnection(const std::string& connectionString) {
     PGconn *conn;
     conn = PQconnectdb(connectionString.data());
     if (PQstatus(conn) != CONNECTION_OK){
-        wtLogError("%s", PQerrorMessage(conn));
+        wtLogError("{}", PQerrorMessage(conn));
         PQfinish(conn);
     }
     postgresConn = conn;

@@ -4,7 +4,7 @@
 
 #include "http/HttpRequest.h"
 #include "http/HttpConnection.h"
-#include "log/Logger.h"
+#include "log/Loggy.h"
 #include "util/stringUtils.h"
 #include "util/util.h"
 
@@ -52,7 +52,7 @@ std::shared_ptr<HttpRequest> HttpRequest::parseFromString(const std::string& dat
 }
 
 void HttpRequest::parseRequestLine(HttpRequest &request, const std::string &line) {
-    wtLogTrace("Request Line: %s", line.data());
+    wtLogTrace("Request Line: {}", line);
 
     size_t startIndex, endIndex;
 

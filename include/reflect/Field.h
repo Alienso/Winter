@@ -7,7 +7,7 @@
 
 #include <string>
 #include "serialize/FieldTypeUtil.h"
-#include "log/Logger.h"
+#include "log/Loggy.h"
 
 enum CopyType{
     COPY_TYPE_SHALLOW,
@@ -90,7 +90,7 @@ private:
                 if (cp.sourceField.isPtr) {
                     cp.destField.setPtr(cp.dest, *((T **) cp.sourceField.getPtr(cp.source)));
                 }else{
-                    wtLogError("Can not make DEEP copy of non pointer! FieldName: %s", cp.sourceField.name.data());
+                    wtLogError("Can not make DEEP copy of non pointer! FieldName: {}", cp.sourceField.name.data());
                 }
             }else {
                 auto *valuePtr = new T();

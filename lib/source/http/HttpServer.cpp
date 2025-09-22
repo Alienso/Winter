@@ -6,7 +6,7 @@
 #include <thread>
 #include "http/HttpServer.h"
 #include "core/Configuration.h"
-#include "log/Logger.h"
+#include "log/Loggy.h"
 
 HttpServer::HttpServer() :
     port(Configuration::serverPort),
@@ -16,11 +16,11 @@ HttpServer::HttpServer() :
 void HttpServer::listen() {
     asioAcceptor.async_accept([this](std::error_code ec, asio::ip::tcp::socket socket){
         if (!ec){
-            wtLogTrace("New Connection: %s", socket.remote_endpoint().address().to_string().data());
+            wtLogTrace("New Connection: {}", socket.remote_endpoint().address().to_string().data());
             auto* newConnection = new HttpConnection(asioContext, std::move(socket), requestQueue);
             newConnection->createHttpRequest();
         }else{
-            wtLogError("New connection ERROR: %s", ec.message().data());
+            wtLogError("New connection ERROR: {}", ec.message().data());
         }
 
         requestQueue.waitForEvent(maxConnections);

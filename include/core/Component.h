@@ -15,7 +15,7 @@
 
 #include <vector>
 #include <iostream>
-#include "log/Logger.h"
+#include "log/Loggy.h"
 
 class Component{
 public:
@@ -33,7 +33,7 @@ public:
     }
 
     [[nodiscard]] static Component* getById(int id){
-        wtLogTrace("Get Called for ID %d", id);
+        wtLogTrace("Get Called for ID {}", id);
         return components[id];
     }
 
