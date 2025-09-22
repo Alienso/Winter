@@ -43,6 +43,7 @@ class Loggy {
 
 public:
     Loggy(Loggy& other) = delete;
+    ~Loggy();
     void operator=(const Loggy&) = delete;
     static Loggy* getInstance();
 

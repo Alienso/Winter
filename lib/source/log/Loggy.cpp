@@ -39,6 +39,10 @@ Loggy::Loggy() {
 
 }
 
+Loggy::~Loggy() {
+    loggingThread.join();
+}
+
 Loggy *Loggy::getInstance() {
     std::lock_guard<std::mutex> lock(mutex_);
     if (instance == nullptr){
