@@ -5,7 +5,6 @@
 #include "http/HttpConnection.h"
 #include "asio/read.hpp"
 #include "log/Loggy.h"
-#include "core/Configuration.h"
 #include "http/HttpHeader.h"
 #include "HttpResponse.h"
 

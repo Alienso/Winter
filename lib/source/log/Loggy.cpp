@@ -23,7 +23,6 @@ Loggy::Loggy() {
         sourceIndex = 0;
     }
     cwdOffset = sourceIndex + 7;
-    cwdOffset = 0;
 
     loggingThread = std::thread([this]{
         while(true){
@@ -31,8 +30,9 @@ Loggy::Loggy() {
             while(!logQueue.empty()){
                 LogCommand command = logQueue.pop_front();
                 for (auto& appender : appenders){
-                    //TODO this cwdOffset is incorrect for app files, since their path is relative
-                    appender.writeFormatString(command.logLevelString, command.file.c_str() + cwdOffset, command.line);
+                    //cwdOffset is incorrect for app files, since their path is relative
+                    int offset = command.file[0]=='.' ? 6 : cwdOffset; // (../../)
+                    appender.writeFormatString(command.logLevelString, command.file.c_str() + offset, command.line);
                     appender.write(command.outputString);
                 }
             }
