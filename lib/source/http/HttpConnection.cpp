@@ -5,59 +5,67 @@
 #include "http/HttpConnection.h"
 #include "asio/read.hpp"
 #include "log/Loggy.h"
+#include "core/Configuration.h"
+#include "http/HttpHeader.h"
+#include "HttpResponse.h"
+
 #include <iostream>
 #include <optional>
 #include <thread>
 
 HttpConnection::HttpConnection(asio::io_context &context, asio::ip::tcp::socket socket_, tsqueue<std::shared_ptr<HttpRequest>>& queue) :
-     socket(std::move(socket_)), asioContext(context), requestQueue(queue) {}
+        socket(std::move(socket_)), asioContext(context), requestQueue(queue), httpRequestParser(processDataMut) {
 
-void HttpConnection::tryParseRequest(){
-    std::shared_ptr<HttpRequest> httpRequest = HttpRequest::parseFromString(requestData);
-    httpRequest->setConnection(this);
-    requestQueue.push_back(std::shared_ptr<HttpRequest>(httpRequest));
-    requestParsed = true;
 }
+
 
 void HttpConnection::readDataFromSocket(){
     wtLogTrace("Reading data from socket");
-    int bufferSize = sizeof(tempRequestBuffer);
-    while (int read = socket.read_some(asio::buffer(tempRequestBuffer))){
-        std::size_t oldSize = requestData.size();
-        requestData.resize(requestData.size() + read);
-        memcpy(&(requestData[oldSize]), tempRequestBuffer, read);
-        if (read != bufferSize){
-            tryParseRequest();
-            break;
-        }
-    }
 
-    /*socket.async_read_some(asio::buffer(tempRequestBuffer, sizeof(tempRequestBuffer)),
-            [this](error_code ec, size_t length){
-        if (!ec){
+    socket.async_read_some(asio::buffer(httpRequestParser.tempRequestBuffer, sizeof(httpRequestParser.tempRequestBuffer)),
+            [this](asio::error_code errorCode, size_t length){
+        if (!errorCode){
+            std::scoped_lock lock(processDataMut);
             wtLogTrace("Reading data from socket");
-            timeout = timeoutStep;
-            if (!socket.is_open()){
-                wtLogTrace("Socket closed!");
-                tryParseRequest();
-            }
-            std::size_t oldSize = requestData.size();
-            requestData.resize(requestData.size() + length);
-            memcpy(&(requestData[oldSize]), tempRequestBuffer, length);
-            readDataFromSocket();
+            httpRequestParser.updateData(length);
         }else{
-            wtLogError("Error occurred while reading data from socket", ec.message().data());
-            tryParseRequest();
+            wtLogError("Error occurred while reading data from socket {}", errorCode.message().data());
+        }
+        httpRequestParser.parseReceivedData(length);
+    });
+
+    asio::steady_timer timer(asioContext);
+    timer.expires_after(std::chrono::milliseconds(timeoutAfter));
+
+    timer.async_wait([&](const asio::error_code& error) {
+        if (!error) {
+            std::scoped_lock lock(processDataMut);
+            if (!httpRequestParser.getStatus().requestParsed){
+                wtLogError("ReadTimeout occurred!");
+                socket.cancel();
+                timedOut = true;
+            }
         }
     });
 
-    //On Linux callback if never invoked when this part of the code is present
-    while(timeout > 0) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(timeoutStep));
-        timeout-=timeoutStep;
+    while(!httpRequestParser.getStatus().requestParsed && !httpRequestParser.getStatus().parsingFailed && !timedOut){
+        asioContext.run_one();
     }
-    if (!requestParsed)
-        socket.cancel();*/
+    if (!timedOut) timer.cancel();
+
+    if (httpRequestParser.getStatus().requestParsed){
+        httpRequestParser.getHttpRequest()->setConnection(this);
+        requestQueue.push_back(httpRequestParser.getHttpRequest());
+    } else {
+        HttpCode* code = HttpCode::INTERNAL_SERVER_ERROR;
+        if (httpRequestParser.getStatus().parsingFailed) code = HttpCode::BAD_REQUEST;
+        else if (timedOut) code = HttpCode::REQUEST_TIMEOUT;
+
+        HttpResponse *response = new HttpResponse(code);
+        response->setConnection(this);
+        response->send();
+        delete response;
+    }
 }
 
 void HttpConnection::createHttpRequest() {

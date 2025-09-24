@@ -18,6 +18,7 @@ public:
     static HttpCode* NOT_FOUND;
     static HttpCode* INTERNAL_SERVER_ERROR;
     static HttpCode* METHOD_NOT_ALLOWED;
+    static HttpCode* REQUEST_TIMEOUT;
 };
 
 class HttpVersion{

@@ -11,6 +11,9 @@ class Configuration {
 public:
     static const inline int serverPort = 8080;
     static const inline int serverMaxConnections = 20;
+    static const inline int maxHttpRequestSize = 512 * 1024 * 1024;
+    static const inline int httpRequestReadTimeout = 2000;
+
     static const inline int logLevel = LOG_LEVEL_TRACE;
 
     static const inline int dbConnectionPoolSize = 20;

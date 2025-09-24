@@ -12,6 +12,7 @@ HttpCode *HttpCode::OK = new HttpCode(200,"OK");
 HttpCode *HttpCode::BAD_REQUEST = new HttpCode(400,"Bad Request");
 HttpCode *HttpCode::NOT_FOUND = new HttpCode(404,"Not found");
 HttpCode *HttpCode::METHOD_NOT_ALLOWED = new HttpCode(405,"Method not allowed");
+HttpCode *HttpCode::REQUEST_TIMEOUT = new HttpCode(408,"Request timeout");
 HttpCode *HttpCode::INTERNAL_SERVER_ERROR = new HttpCode(500,"Internal server error");
 
 HttpVersion* HttpVersion::V1_0 = new HttpVersion("HTTP/1.0");

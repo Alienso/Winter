@@ -9,6 +9,9 @@
 #include "http/HttpRequest.h"
 #include "util/tsqueue.h"
 
+#include "Configuration.h"
+#include "HttpRequestParser.h"
+
 class HttpConnection {
 
 public:
@@ -19,20 +22,17 @@ public:
 
 private:
     void readDataFromSocket();
-    void tryParseRequest();
 
     asio::ip::tcp::socket socket;
     asio::io_context& asioContext;
-
     tsqueue<std::shared_ptr<HttpRequest>>& requestQueue;
-    char tempRequestBuffer[20 * 1024];
-    std::string requestData;
+    std::mutex processDataMut;
+    HttpRequestParser httpRequestParser;
 
-    const int timeoutStep = 100;
-    int timeout = 100;
-    bool requestParsed = false;
+    static constexpr int timeoutAfter = Configuration::httpRequestReadTimeout;
 
-    std::string responseBuffer;
+    bool timedOut = false;
+
 };
 
 
