@@ -43,6 +43,7 @@ private:
     std::string requestBody;
     HttpConnection* connection;
 
+    friend HttpConnection;
     static void parseRequestLine(HttpRequest& request, const std::string &line);
     static void parseRequestHeaders(HttpRequest& request, const std::string &headers);
     static void parseRequestBody(HttpRequest& request, std::string_view body);

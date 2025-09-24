@@ -31,7 +31,7 @@ private:
     std::string responseBody;
 
     HttpConnection* connection = nullptr;
-    JsonSerializer serializer{};
+    static inline JsonSerializer serializer = {};
     static std::unordered_map<std::string,std::string> baseResponseHeaders;
 
     [[nodiscard]] std::string writeRequestLine() const;
