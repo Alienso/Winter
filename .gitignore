@@ -18,7 +18,6 @@ Makefile
 .idea/*
 PreProcessor
 Target
-lib/tests
 
 target
 **.log

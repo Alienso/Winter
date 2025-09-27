@@ -36,3 +36,7 @@ endif (WIN32)
 if (UNIX)
     target_link_libraries(Winter pq)
 endif(UNIX)
+
+add_executable(WinterTests tests/runTests.cpp ${GENERATED_SOURCES})
+
+target_link_libraries(WinterTests wsock32 ws2_32 pq)
