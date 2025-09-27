@@ -154,7 +154,7 @@ private:
     void printToString(const char* formatString, std::ostringstream& stringStream, First&& arg, Rest&&... rest) const {
         for (size_t i = 0; formatString[i] != '\0'; i++) {
             if (formatString[i] == '{' && formatString[i+1] == '}'){
-                if constexpr (is_std_vector_v<std::decay_t<First>>) {
+                if constexpr (is_std_vector_v<std::decay_t<First>> || std::is_array_v<First>) {
                     stringStream << "{ ";
                     for (size_t vec_index = 0; vec_index < arg.size(); vec_index++) {
                         stringStream << arg[vec_index];

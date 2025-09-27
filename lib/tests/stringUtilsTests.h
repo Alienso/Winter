@@ -5,7 +5,8 @@
 #ifndef WINTER_STRINGUTILSTESTS_H
 #define WINTER_STRINGUTILSTESTS_H
 
-#include "/util/stringUtils.h"
+#include "../vendor/include/catch.hpp"
+#include "../include/util/stringUtils.h"
 
 //TODO
 

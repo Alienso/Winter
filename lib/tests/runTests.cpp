@@ -32,16 +32,28 @@ void Reflect::initializeClassMap(){
     Reflect::classMap["InnerClass"] = &_InnerClass_;
 }
 void Reflect::initializeReflection() {
-    /*AllFieldsDTO::initializeReflection();
-    AllFieldsVecDTO::initializeReflection();*/
+    AllFieldsDTO::initializeReflection();
+    AllFieldsVecDTO::initializeReflection();
     InnerClass::initializeReflection();
 
     initializeClassMap();
 }
 
-#include "loggerTests.h"
+static int __init__ = ([]{
+    AllFieldsDTO::initializeReflection();
+    AllFieldsVecDTO::initializeReflection();
+    InnerClass::initializeReflection();
+
+    Reflect::classMap["AllFieldsDTO"] = &_AllFieldsDTO_;
+    Reflect::classMap["AllFieldsVecDTO"] = &_AllFieldsVecDTO_;
+    Reflect::classMap["InnerClass"] = &_InnerClass_;
+
+    return 0;
+})();
+
+//#include "loggerTests.h"
 //#include "httpRequestParseTests.h"
-//#include "deserializationTests.h"
-//#include "serializationTests.h"
-//#include "stringUtilsTests.h"
-//#include "reflectTests.h"
+#include "deserializationTests.h"
+#include "serializationTests.h"
+#include "stringUtilsTests.h"
+#include "reflectTests.h"

@@ -27,35 +27,35 @@ TEST_CASE("Logger Tests", "[Logger::info]"){
     }
 
     SECTION("Logging String with parameters: int") {
-        wtLogInfo("There are %d tests in this file", 5);
+        wtLogInfo("There are {} tests in this file", 5);
         fout->flush();
         getline(fin, buffer);
         REQUIRE(buffer == "INFO:  tests/loggerTests.h:26\tThere are 5 tests in this file");
     }
 
     SECTION("Logging String with parameters: int, int") {
-        wtLogInfo("There are %d/%d tests in this file", 10, 2);
+        wtLogInfo("There are {}/{} tests in this file", 10, 2);
         fout->flush();
         getline(fin, buffer);
         REQUIRE(buffer == "INFO:  tests/loggerTests.h:33\tThere are 10/2 tests in this file");
     }
 
     SECTION("Logging String with parameters: float, double, char, long") {
-        wtLogInfo("This is a float:%f, this is a double:%e, this is a char:%c, this is a long: %ld", 1.2f, 2.68, 'c', 128l);
+        wtLogInfo("This is a float:{}, this is a double:{}, this is a char:{}, this is a long: {}", 1.2f, 2.68, 'c', 128l);
         fout->flush();
         getline(fin, buffer);
         REQUIRE(buffer == "INFO:  tests/loggerTests.h:40\tThis is a float:1.2, this is a double:2.68, this is a char:c, this is a long: 128");
     }
 
     SECTION("Logging String with parameters: string") {
-        wtLogInfo("Hello %s", "world");
+        wtLogInfo("Hello {}", "world");
         fout->flush();
         getline(fin, buffer);
         REQUIRE(buffer == "INFO:  tests/loggerTests.h:47\tHello world");
     }
 
     SECTION("Logging String with parameters: vec") {
-        wtLogInfo("Received vec: ", std::vector<int>{1,2,3});
+        wtLogInfo("Received vec: {}", std::vector<int>{1,2,3});
         fout->flush();
         getline(fin, buffer);
         REQUIRE(buffer == "INFO:  tests/loggerTests.h:54\tReceived vec: [1,2,3]");
@@ -63,7 +63,7 @@ TEST_CASE("Logger Tests", "[Logger::info]"){
 
     SECTION("Logging String with parameters: empty vec") {
         std::vector<int> vec{};
-        wtLogInfo("Received vec: ", vec);
+        wtLogInfo("Received vec: {}", vec);
         fout->flush();
         getline(fin, buffer);
         //REQUIRE(buffer == "INFO:  tests/loggerTests.h:62\tReceived vec: []"); TODO??
@@ -71,7 +71,7 @@ TEST_CASE("Logger Tests", "[Logger::info]"){
 
     SECTION("Logging String with parameters: array") {
         int array[3] = {1,2,3};
-        wtLogInfo("Received array: ", array, 3);
+        wtLogInfo("Received array: {}", array, 3);
         fout->flush();
         getline(fin, buffer);
         REQUIRE(buffer == "INFO:  tests/loggerTests.h:70\tReceived array: [1,2,3]");
@@ -88,13 +88,13 @@ void basicString(){
 }
 
 void primitiveTypes(){
-    const char* s = "There are %d tests in this file";
+    const char* s = "There are {} tests in this file";
     wtLogInfo(s, 5);
 }
 
 //TODO
 void primitiveTypes2(){
-    const char* s = "This is a %d out of %d tests of primitive types";
+    const char* s = "This is a {} out of {} tests of primitive types";
     wtLogInfo(s, "second", 2);
     wtLogInfo(s, 2, 2);
 }

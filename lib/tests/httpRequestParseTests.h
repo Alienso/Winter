@@ -5,7 +5,8 @@
 #ifndef WINTER_HTTPREQUESTPARSETESTS_H
 #define WINTER_HTTPREQUESTPARSETESTS_H
 
-#include "/http/HttpRequest.h"
+#include "../vendor/include/catch.hpp"
+#include "../include/http/HttpRequest.h"
 
 //TODO
 /*

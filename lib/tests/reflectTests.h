@@ -5,6 +5,7 @@
 #ifndef WINTER_REFLECTTESTS_H
 #define WINTER_REFLECTTESTS_H
 
+#include "../vendor/include/catch.hpp"
 #include "util/dtoUtils.h"
 
 

@@ -5,8 +5,9 @@
 #ifndef WINTER_DESERIALIZATIONTESTS_H
 #define WINTER_DESERIALIZATIONTESTS_H
 
-#include "reflect/Reflect.h"
+#include "../vendor/include/catch.hpp"
 
+#include "../include/reflect/Reflect.h"
 #include "../../include/serialize/JsonDeserializer.h"
 #include "./dto/AllFieldsDTO.h"
 #include "./dto/AllFieldsVecDTO.h"
@@ -113,6 +114,7 @@ TEST_CASE("Vector Deserialization Tests", "[JsonDeserializer::deserialize]"){
     SECTION("Deserialization of vec<string>"){
         std::string s = R"({"str":["Hello","World"]})";
         deserializer.deserialize(s,request);
+        REQUIRE(request->str.size() == 2);
         REQUIRE(request->str[0] == "Hello");
         REQUIRE(request->str[1] == "World");
     }

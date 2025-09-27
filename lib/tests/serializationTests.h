@@ -7,7 +7,8 @@
 
 #include "reflect/Reflect.h"
 
-#include "/serialize/JsonSerializer.h"
+#include "../vendor/include/catch.hpp"
+#include "../include/serialize/JsonSerializer.h"
 #include "util/dtoUtils.h"
 
 TEST_CASE("Serialization Tests", "[JsonSerializer::serialize]"){
