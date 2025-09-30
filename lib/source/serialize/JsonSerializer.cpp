@@ -28,6 +28,7 @@ std::string* JsonSerializer::serialize(Reflect* obj){
 std::string* JsonSerializer::convertToJsonString(const Field &field, Reflect* obj){
     switch (field.type) {
         case FIELD_TYPE_INT:
+        case FIELD_TYPE_BYTE:
             return serializeField<int>(field, obj, &Field::getInt, std::to_string);
         case FIELD_TYPE_SHORT:
             return serializeField<short>(field, obj, &Field::getShort, StringUtils::to_string);
@@ -51,7 +52,6 @@ std::string* JsonSerializer::convertToJsonString(const Field &field, Reflect* ob
                 char c = **((char **) field.getPtr(obj));
                 return new std::string("\"" + std::to_string(c) + "\"");
             }
-
         case FIELD_TYPE_STRING:
             if (!field.isPtr) {
                 std::string str = field.getString(obj);

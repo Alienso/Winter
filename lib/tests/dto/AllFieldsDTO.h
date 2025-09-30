@@ -17,7 +17,6 @@ public:
     char c;
     std::string str;
     bool b;
-    std::byte bt;
 
     short* sPtr;
     int* iPtr;
@@ -27,7 +26,6 @@ public:
     char* cPtr;
     std::string* strPtr;
     bool *bPtr;
-    std::byte *btPtr;
 
     InnerClass* innerClassPtr;
     InnerClass innerClass;
@@ -68,7 +66,6 @@ public:
         copy->c = this->c;
         copy->str = this->str;
         copy->b = this->b;
-        copy->bt = this->bt;
         copy->sPtr = this->sPtr;
         copy->iPtr = this->iPtr;
         copy->lPtr = this->lPtr;
@@ -77,7 +74,6 @@ public:
         copy->cPtr = this->cPtr;
         copy->strPtr = this->strPtr;
         copy->bPtr = this->bPtr;
-        copy->btPtr = this->btPtr;
         copy->innerClassPtr = this->innerClassPtr;
         copy->innerClass = this->innerClass;
         copy->vec = this->vec;
@@ -95,7 +91,6 @@ public:
         AllFieldsDTO::declaredFields.emplace_back("c","char",5,"AllFieldsDTO",(int*)(&_allfieldsdto_->c) - (int*)_allfieldsdto_,0,0);
         AllFieldsDTO::declaredFields.emplace_back("str","string",8,"AllFieldsDTO",(int*)(&_allfieldsdto_->str) - (int*)_allfieldsdto_,0,0);
         AllFieldsDTO::declaredFields.emplace_back("b","bool",6,"AllFieldsDTO",(int*)(&_allfieldsdto_->b) - (int*)_allfieldsdto_,0,0);
-        AllFieldsDTO::declaredFields.emplace_back("bt","byte",7,"AllFieldsDTO",(int*)(&_allfieldsdto_->bt) - (int*)_allfieldsdto_,0,0);
         AllFieldsDTO::declaredFields.emplace_back("sPtr","short*",0,"AllFieldsDTO",(int*)(&_allfieldsdto_->sPtr) - (int*)_allfieldsdto_,1,0);
         AllFieldsDTO::declaredFields.emplace_back("iPtr","int*",1,"AllFieldsDTO",(int*)(&_allfieldsdto_->iPtr) - (int*)_allfieldsdto_,1,0);
         AllFieldsDTO::declaredFields.emplace_back("lPtr","long*",2,"AllFieldsDTO",(int*)(&_allfieldsdto_->lPtr) - (int*)_allfieldsdto_,1,0);
@@ -104,7 +99,6 @@ public:
         AllFieldsDTO::declaredFields.emplace_back("cPtr","char*",5,"AllFieldsDTO",(int*)(&_allfieldsdto_->cPtr) - (int*)_allfieldsdto_,1,0);
         AllFieldsDTO::declaredFields.emplace_back("strPtr","string*",8,"AllFieldsDTO",(int*)(&_allfieldsdto_->strPtr) - (int*)_allfieldsdto_,1,0);
         AllFieldsDTO::declaredFields.emplace_back("bPtr","bool*",6,"AllFieldsDTO",(int*)(&_allfieldsdto_->bPtr) - (int*)_allfieldsdto_,1,0);
-        AllFieldsDTO::declaredFields.emplace_back("btPtr","byte*",7,"AllFieldsDTO",(int*)(&_allfieldsdto_->btPtr) - (int*)_allfieldsdto_,1,0);
         AllFieldsDTO::declaredFields.emplace_back("innerClassPtr","InnerClass*",10,"AllFieldsDTO",(int*)(&_allfieldsdto_->innerClassPtr) - (int*)_allfieldsdto_,1,0);
         AllFieldsDTO::declaredFields.emplace_back("innerClass","InnerClass",10,"AllFieldsDTO",(int*)(&_allfieldsdto_->innerClass) - (int*)_allfieldsdto_,0,0);
         AllFieldsDTO::declaredFields.emplace_back("vec","vector<int>",9,"AllFieldsDTO",(int*)(&_allfieldsdto_->vec) - (int*)_allfieldsdto_,0,1);

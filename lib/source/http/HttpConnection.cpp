@@ -26,7 +26,7 @@ void HttpConnection::readDataFromSocket(){
         if (!errorCode){
             std::scoped_lock lock(processDataMut);
             wtLogTrace("Reading data from socket");
-            httpRequestParser.updateData(length);
+            httpRequestParser.dataReceived(length);
         }else{
             wtLogError("Error occurred while reading data from socket {}", errorCode.message().data());
         }

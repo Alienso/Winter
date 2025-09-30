@@ -15,7 +15,7 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0")
 endif (WIN32)
 if (UNIX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0 -fuse-ld=mold")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -g -O0")
 endif(UNIX)
 
 
@@ -52,7 +52,7 @@ file(GLOB_RECURSE GENERATED_SOURCES "${GENERATED_DIR}/*.cpp")
 target_sources(app PRIVATE ${GENERATED_SOURCES} )
 
 #Use this for rebuild with new files
-#add_dependencies(app run_preprocessor)
+add_dependencies(app run_preprocessor)
 
 target_include_directories(app PRIVATE ${GENERATED_DIR})
 target_include_directories(app PRIVATE include)

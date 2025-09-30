@@ -52,7 +52,7 @@ static int __init__ = ([]{
 })();
 
 //#include "loggerTests.h"
-//#include "httpRequestParseTests.h"
+#include "httpRequestParseTests.h"
 #include "deserializationTests.h"
 #include "serializationTests.h"
 #include "stringUtilsTests.h"

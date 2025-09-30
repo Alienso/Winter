@@ -18,14 +18,17 @@ struct HttpRequestParserProcessStatus{
 
 class HttpRequestParser{
 public:
-    HttpRequestParser(std::mutex& mutex);
+    explicit HttpRequestParser(std::mutex& mutex);
 
     void parseReceivedData(std::size_t newDataSize);
     [[nodiscard]] const HttpRequestParserProcessStatus& getStatus() const;
     [[nodiscard]] std::shared_ptr<HttpRequest>& getHttpRequest();
 
+    //For test purposes
+    void setTempRequestData(const std::string& requestStr);
+
 private:
-    void updateData(size_t length);
+    void dataReceived(size_t length);
     void handleBodyWithoutLimit(int i);
     void handleBodyWithLimit(int i);
 

@@ -6,14 +6,20 @@
 #define WINTER_HTTPREQUESTPARSETESTS_H
 
 #include "../vendor/include/catch.hpp"
-#include "../include/http/HttpRequest.h"
+#include "../include/http/HttpRequestParser.h"
 
-//TODO
-/*
-TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
+
+TEST_CASE("Parsing request line HttpRequest", "[HttpRequestParser::parseFromString]"){
+
+    std::mutex mutex;
+    HttpRequestParser httpRequestParser{mutex};
+
     SECTION("Parsing GET http request") {
         std::string requestLine = "GET /some/endpoint HTTP/1.1\n\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::GET);
         REQUIRE(request->getRequestHeaders().empty());
@@ -24,7 +30,10 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
 
     SECTION("Parsing POST http request") {
         std::string requestLine = "POST /some/endpoint HTTP/1.1\n\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::POST);
         REQUIRE(request->getRequestHeaders().empty());
@@ -34,7 +43,10 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
 
     SECTION("Parsing PATCH http 1.0 request") {
         std::string requestLine = "PATCH /some/endpoint HTTP/1.0\n\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::PATCH);
         REQUIRE(request->getRequestHeaders().empty());
@@ -45,7 +57,10 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
 
     SECTION("Parsing DELETE http 2.0 request") {
         std::string requestLine = "DELETE /some/endpoint HTTP/2.0\n\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::DELETE_);
         REQUIRE(request->getRequestHeaders().empty());
@@ -56,7 +71,10 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
 
     SECTION("Parsing single query parameter") {
         std::string requestLine = "GET /some/endpoint?value=true HTTP/1.1\n\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::GET);
         REQUIRE(request->getRequestHeaders().empty());
@@ -68,7 +86,10 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
 
     SECTION("Parsing multiple query parameter") {
         std::string requestLine = "GET /some/endpoint?value=true&limit=100 HTTP/1.1\n\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/some/endpoint");
         REQUIRE(request->getMethod() == HttpMethod::GET);
         REQUIRE(request->getRequestHeaders().empty());
@@ -81,9 +102,16 @@ TEST_CASE("Parsing request line HttpRequest", "[HttpRequest::parseFromString]"){
 }
 
 TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
+
+    std::mutex mutex;
+    HttpRequestParser httpRequestParser{mutex};
+
     SECTION("Parsing single http request header \\r\\n") {
         std::string requestLine = "GET /home HTTP/1.1\r\nContent-Type: application/json\r\n\r\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
 
         std::cout << "REQUEST BODY: " << request->getRequestBody() << '\n';
 
@@ -98,7 +126,10 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
 
     SECTION("Parsing single http request header \\n") {
         std::string requestLine = "GET /home HTTP/1.1\nContent-Type: application/json\r\n\r\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
         REQUIRE(request->getRequestHeaders().size() == 1);
@@ -110,7 +141,10 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
 
     SECTION("Parsing multiple http request header \\r\\n") {
         std::string requestLine = "GET /home HTTP/1.1\r\nContent-Type: application/json\r\nUser-Agent: PostmanRuntime/7.37.0\r\n\r\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
         REQUIRE(request->getRequestHeaders().size() == 2);
@@ -123,7 +157,10 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
 
     SECTION("Parsing multiple http request header \\n") {
         std::string requestLine = "GET /home HTTP/1.1\nContent-Type: application/json\nUser-Agent: PostmanRuntime/7.37.0\r\n\r\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
         REQUIRE(request->getRequestHeaders().size() == 2);
@@ -136,7 +173,10 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
 
     SECTION("Parsing multiple http request header without spaces") {
         std::string requestLine = "GET /home HTTP/1.1\nContent-Type:application/json\nUser-Agent:PostmanRuntime/7.37.0\r\n\r\n";
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestLine);
+        httpRequestParser.setTempRequestData(requestLine);
+        httpRequestParser.parseReceivedData(requestLine.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
         REQUIRE(request->getRequestHeaders().size() == 2);
@@ -148,16 +188,21 @@ TEST_CASE("Parsing httpRequest headers", "[HttpRequest::parseFromString]"){
     }
 }
 
-*/
-
 static std::string requestStr = "GET /home HTTP/1.1\r\nContent-Type: application/json\r\nUser-Agent: PostmanRuntime/7.37.0\r\nAccept: */*\r\nPostman-Token: 1009ba86-d675-4078-bbe0-804420a2bb69\r\nHost: localhost:8080\r\nAccept-Encoding: gzip, deflate, br\r\nConnection: keep-alive\r\nContent-Length: 142";
 static std::string requestBody = "{\n    \"number\": 10,\n    \"type\": \"someType\",\n    \"innerClass\":{\n        \"x\": 2,\n        \"y\": 3,\n        \"c\": \"a\"\n    },\n    \"values\": [1,2,3]\n}";
 
-/*
+
 TEST_CASE("Parsing httpRequest with body", "[HttpRequest::parseFromString]"){
 
+    std::mutex mutex;
+    HttpRequestParser httpRequestParser{mutex};
+
     SECTION("Parsing http request with body and body separator is \\r\\n\\r\\n") {
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestStr + "\r\n\r\n" + requestBody);
+        std::string finalRequestString = requestStr + "\r\n\r\n" + requestBody;
+        httpRequestParser.setTempRequestData(finalRequestString);
+        httpRequestParser.parseReceivedData(finalRequestString.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
         REQUIRE(request->getRequestHeaders().size() == 8);
@@ -167,7 +212,11 @@ TEST_CASE("Parsing httpRequest with body", "[HttpRequest::parseFromString]"){
     }
 
     SECTION("Parsing http request with body and body separator is \\n\\n") {
-        std::shared_ptr<HttpRequest> request = HttpRequest::parseFromString(requestStr + "\n\n" + requestBody);
+        std::string finalRequestString = requestStr + "\n\n" + requestBody;
+        httpRequestParser.setTempRequestData(finalRequestString);
+        httpRequestParser.parseReceivedData(finalRequestString.size());
+
+        std::shared_ptr<HttpRequest> request = httpRequestParser.getHttpRequest();
         REQUIRE(request->getUri().getPath() == "/home");
         REQUIRE(request->getMethod() == HttpMethod::GET);
         REQUIRE(request->getRequestHeaders().size() == 8);
@@ -176,6 +225,5 @@ TEST_CASE("Parsing httpRequest with body", "[HttpRequest::parseFromString]"){
         REQUIRE(request->getQueryParameters().empty());
     }
 }
- */
 
 #endif //WINTER_HTTPREQUESTPARSETESTS_H

@@ -273,9 +273,17 @@ void HttpRequestParser::parseRequestBody(HttpRequest &request, std::string_view 
     request.requestBody = body.substr(0, body.size());
 }
 
-void HttpRequestParser::updateData(size_t length) {
+void HttpRequestParser::dataReceived(size_t length) {
     tempRequestBuffer[length] = '\0';
     requestData.append((const char *)tempRequestBuffer);
+}
+
+void HttpRequestParser::setTempRequestData(const std::string &requestStr) {
+    if (requestStr.size() > sizeof(tempRequestBuffer) / sizeof(char)) {
+        std::cerr << "Request String is too long" << std::endl;
+        return;
+    }
+    memcpy(tempRequestBuffer, requestStr.c_str(), requestStr.size());
 }
 
 const HttpRequestParserProcessStatus& HttpRequestParser::getStatus() const {

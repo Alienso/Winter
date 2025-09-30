@@ -47,8 +47,6 @@ inline void fillPtrData(AllFieldsDTO& dto){
     dto.vecPtr = new std::vector<int>{1,2,3};
     auto* clazz = new InnerClass{5,2.5,"c"};
     dto.innerClassPtr = clazz;
-
-    dto.btPtr = nullptr;
 }
 
 inline void fillVectorFieldData(AllFieldsVecDTO& dto){
@@ -60,7 +58,6 @@ inline void fillVectorFieldData(AllFieldsVecDTO& dto){
     dto.c = {'a','b'};
     dto.b = {false, true};
     dto.str = {"Hello", "World"};
-    dto.bt = {};
 
     InnerClass clazz{5,2.5,"c"};
     InnerClass clazz2{1,0,"s"};
@@ -79,7 +76,6 @@ inline void fillVectorPtrData(AllFieldsVecDTO& dto){
     dto.cPtr = createVecPtr<char>({'a','b'});
     dto.bPtr = createVecPtr<bool>({false, true});
     dto.strPtr = createVecPtr<std::string>({"Hello", "World"});
-    dto.btPtr = {};
 
     InnerClass* clazz = new InnerClass{5,2.5,"c"};
     InnerClass* clazz2 = new InnerClass{1,0,"s"};

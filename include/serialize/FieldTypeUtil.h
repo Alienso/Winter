@@ -35,7 +35,6 @@ enum FieldType{
 };
 
 //TODO have map for this?
-//TODO check if field type starts with std::
 [[nodiscard]] inline FieldType convertToFieldType(const std::string& s){
     if (s == "int")
         return FIELD_TYPE_INT;
@@ -53,15 +52,13 @@ enum FieldType{
         return FIELD_TYPE_BOOL;
     if (s == "byte")
         return FIELD_TYPE_BYTE;
-    if (StringUtils::startsWith(s, "vector"))
+    if (StringUtils::startsWith(s, "std::vector") || StringUtils::startsWith(s, "vector"))
         return FIELD_TYPE_VECTOR;
-    if (StringUtils::startsWith(s, "string"))
+    if (StringUtils::startsWith(s, "std::string") || StringUtils::startsWith(s, "string"))
         return FIELD_TYPE_STRING;
     return FIELD_TYPE_OBJ;
 }
 
-
-//TODO check if field type starts with std::
 
 inline void getArraySubType(const std::string& s, std::string& type, bool* isPtr){
     size_t index;
