@@ -52,7 +52,7 @@ file(GLOB_RECURSE GENERATED_SOURCES "${GENERATED_DIR}/*.cpp")
 target_sources(app PRIVATE ${GENERATED_SOURCES} )
 
 #Use this for rebuild with new files
-add_dependencies(app run_preprocessor)
+#add_dependencies(app run_preprocessor)
 
 target_include_directories(app PRIVATE ${GENERATED_DIR})
 target_include_directories(app PRIVATE include)
