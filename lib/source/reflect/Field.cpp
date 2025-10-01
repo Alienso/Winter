@@ -189,7 +189,12 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
     }
 
     //all_types_helper types;
-    copyDetails copyDetails(source, sourceField, dest, destField, copyType);
+    CopyDetails copyDetails(source, sourceField, dest, destField, copyType);
+
+    if (destField.isVec) {
+        Field::copyVectorValue(source, sourceField, dest, destField, copyType);
+        return;
+    }
 
     switch (destField.type) {
         case FIELD_TYPE_SHORT:
@@ -235,10 +240,7 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
             }
             break;
         case FIELD_TYPE_VECTOR:
-            //auto* destVec = (vector<std::byte>*)destField.getAddress(dest);
-            //auto* sourceVec = (vector<std::byte>*)sourceField.getAddress(source);
-            //*destVec = *sourceVec;
-            *(std::vector<std::byte>*)destField.getAddress(dest) = *(std::vector<std::byte>*)sourceField.getAddress(source);
+            wtLogError("Field Type is VECTOR but special function is provided for this case");
             break;
         case FIELD_TYPE_OBJ: //call clone() here?
             if (sourceField.isPtr){
@@ -267,6 +269,58 @@ void Field::copyValue(Reflect *source, const Field &sourceField, Reflect *dest, 
             break;
         case FIELD_TYPE_ARRAY:
             break; //TODO
+        default:
+            wtLogError("Unknown type encountered: ", destField.type);
+    }
+}
+
+void Field::copyVectorValue(Reflect *source, const Field &sourceField, Reflect *dest, const Field &destField, CopyType copyType) {
+    if (sourceField.type != destField.type){
+        wtLogError("Source and Field types dont match!. Source: {}, Dest: {}", sourceField.type, destField.type);
+        return;
+    }
+
+    CopyDetails copyDetails(source, sourceField, dest, destField, copyType);
+    FieldTypeInfo fieldTypeInfoDest = getArraySubType(destField.typeStr);
+    FieldTypeInfo fieldTypeInfoSource = getArraySubType(sourceField.typeStr);
+
+    switch (fieldTypeInfoDest.fieldType) {
+        case FIELD_TYPE_SHORT:
+            handleVectorValueCopy<short>(copyDetails, fieldTypeInfoDest.isPtr, fieldTypeInfoSource.isPtr);
+            break;
+        case FIELD_TYPE_INT:
+            handleVectorValueCopy<int>(copyDetails, fieldTypeInfoDest.isPtr, fieldTypeInfoSource.isPtr);
+            break;
+        case FIELD_TYPE_LONG:
+            handleVectorValueCopy<long>(copyDetails, fieldTypeInfoDest.isPtr, fieldTypeInfoSource.isPtr);
+            break;
+        case FIELD_TYPE_FLOAT:
+            handleVectorValueCopy<float>(copyDetails, fieldTypeInfoDest.isPtr, fieldTypeInfoSource.isPtr);
+            break;
+        case FIELD_TYPE_DOUBLE:
+            handleVectorValueCopy<double>(copyDetails, fieldTypeInfoDest.isPtr, fieldTypeInfoSource.isPtr);
+            break;
+        case FIELD_TYPE_CHAR:
+            handleVectorValueCopy<char>(copyDetails, fieldTypeInfoDest.isPtr, fieldTypeInfoSource.isPtr);
+            break;
+        case FIELD_TYPE_BOOL:
+            copyVectorValueBool(copyDetails);
+            break;
+        case FIELD_TYPE_BYTE:
+            handleVectorValueCopy<std::byte>(copyDetails, fieldTypeInfoDest.isPtr, fieldTypeInfoSource.isPtr);
+            break;
+        case FIELD_TYPE_STRING: //TODO is this correct?
+            handleVectorValueCopy<std::string>(copyDetails, fieldTypeInfoDest.isPtr, fieldTypeInfoSource.isPtr);
+            break;
+        case FIELD_TYPE_VECTOR:
+            wtLogError("Copying of std::vectors inside of std::vector is not supported!");
+            break;
+        case FIELD_TYPE_OBJ: //TODO add call to clone() here?
+            handleVectorValueCopy<Reflect*>(copyDetails, fieldTypeInfoDest.isPtr, fieldTypeInfoSource.isPtr);
+            break;
+        case FIELD_TYPE_ARRAY:
+            wtLogError("Copying of arrays inside of std::vector is not supported!");
+            break;
         default:
             wtLogError("Unknown type encountered: ", destField.type);
     }

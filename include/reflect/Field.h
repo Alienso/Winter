@@ -52,6 +52,7 @@ public:
     [[nodiscard]] void** getPtr(void *object) const;
 
     static void copyValue(Reflect *source, const Field &sourceField, Reflect *dest, const Field &destField, CopyType copyType = COPY_TYPE_DEEP);
+    static void copyVectorValue(Reflect *source, const Field &sourceField, Reflect *dest, const Field &destField, CopyType copyType = COPY_TYPE_DEEP);
     static void copyObject(Reflect *source, Reflect *dest, CopyType copyType = COPY_TYPE_DEEP);
 
 
@@ -66,40 +67,132 @@ public:
     static Field INVALID;
 
 private:
-    typedef struct copyDetails{
+    typedef struct CopyDetails{
         Reflect *source;
         const Field &sourceField;
         Reflect *dest;
         const Field &destField;
         CopyType copyType;
 
-        copyDetails(Reflect *source_, const Field &sourceField_, Reflect *dest_, const Field &destField_, CopyType copyType_) :
+        CopyDetails(Reflect *source_, const Field &sourceField_, Reflect *dest_, const Field &destField_, CopyType copyType_) :
         source(source_), sourceField(sourceField_), dest(dest_), destField(destField_), copyType(copyType_) {}
-    } copyDetails;
+    } CopyDetails;
 
     template<typename T>
-    static void copyValue(copyDetails cp, T (Field::*getFunc)(void*) const, void (Field::*setFunc)(void*, T) const){
-        T copyValue;
-        if (cp.sourceField.isPtr)
-            copyValue = **((T **) cp.sourceField.getPtr(cp.source));
-        else
-            copyValue = ((cp.sourceField).*getFunc)(cp.source);
-
+    static void copyValue(CopyDetails& cp, T (Field::*getFunc)(void*) const, void (Field::*setFunc)(void*, T) const){
         if (cp.destField.isPtr) {
             if (cp.copyType == COPY_TYPE_DEEP){
                 if (cp.sourceField.isPtr) {
                     cp.destField.setPtr(cp.dest, *((T **) cp.sourceField.getPtr(cp.source)));
                 }else{
-                    wtLogError("Can not make DEEP copy of non pointer! FieldName: {}", cp.sourceField.name.data());
+                    wtLogError("Can not make DEEP copy of non pointer! FieldName: {}", cp.sourceField.name);
                 }
             }else {
                 auto *valuePtr = new T();
-                *valuePtr = copyValue;
+                if (cp.sourceField.isPtr)
+                    *valuePtr = **((T **) cp.sourceField.getPtr(cp.source));
+                else
+                    *valuePtr = ((cp.sourceField).*getFunc)(cp.source);
                 cp.destField.setPtr(cp.dest, valuePtr);
             }
         }
         else {
-            ((cp.destField).*setFunc)(cp.dest, copyValue);
+            if (cp.sourceField.isPtr)
+                ((cp.destField).*setFunc)(cp.dest, **((T **) cp.sourceField.getPtr(cp.source)));
+            else
+                ((cp.destField).*setFunc)(cp.dest, ((cp.sourceField).*getFunc)(cp.source));
+
+        }
+    }
+
+    static void handleVectorValueCopyObject(CopyDetails& copyDetails, bool isDestElemPtr, bool isSourceElemPtr){
+        if (!isDestElemPtr) {
+            wtLogError("Dest object must be a ptr");
+            return;
+        }
+        if (isSourceElemPtr){
+            copyVectorPtrValue<Reflect*>(copyDetails);
+        } else {
+            wtLogError("Copying from non pointer to pointer is currently not supported!");
+        }
+
+    }
+
+    template<typename T>
+    static void handleVectorValueCopy(CopyDetails& copyDetails, bool isDestElemPtr, bool isSourceElemPtr){
+        //TODO add support for other types
+        if (isDestElemPtr){
+            if (isSourceElemPtr){
+                copyVectorPtrValue<T>(copyDetails);
+            } else {
+                wtLogError("Copying from non pointer to pointer is currently not supported!");
+            }
+        }
+        else {
+            if (isSourceElemPtr){
+                wtLogError("Copying from pointer to non pointer is currently not supported!");
+            } else {
+                copyVectorValue<T>(copyDetails);
+            }
+        }
+    }
+
+    static void copyVectorValueBool(CopyDetails& cp){
+        std::vector<bool> *sourceVec;
+        std::vector<bool> *destVec;
+        if (cp.destField.isPtr)
+            destVec = *((std::vector<bool> **) cp.destField.getPtr(cp.dest));
+        else destVec = (std::vector<bool> *) cp.destField.getAddress(cp.dest);
+        if (cp.sourceField.isPtr)
+            sourceVec = *((std::vector<bool> **) cp.sourceField.getPtr(cp.source));
+        else sourceVec = (std::vector<bool> *) cp.sourceField.getAddress(cp.source);
+
+        if (cp.copyType == COPY_TYPE_DEEP && cp.destField.isPtr && !cp.sourceField.isPtr) {
+            wtLogError("Can not make DEEP copy of non pointer! FieldName: {}", cp.sourceField.name);
+        } else {
+            destVec->reserve(sourceVec->size());
+            for (bool val : *sourceVec)
+                destVec->push_back(val);
+        }
+    }
+
+    template<typename T>
+    static void copyVectorValue(CopyDetails& cp){
+        std::vector<T> *sourceVec;
+        std::vector<T> *destVec;
+        if (cp.destField.isPtr)
+            destVec = *((std::vector<T> **) cp.destField.getPtr(cp.dest));
+        else destVec = (std::vector<T> *) cp.destField.getAddress(cp.dest);
+        if (cp.sourceField.isPtr)
+            sourceVec = *((std::vector<T> **) cp.sourceField.getPtr(cp.source));
+        else sourceVec = (std::vector<T> *) cp.sourceField.getAddress(cp.source);
+
+        if (cp.copyType == COPY_TYPE_DEEP && cp.destField.isPtr && !cp.sourceField.isPtr) {
+            wtLogError("Can not make DEEP copy of non pointer! FieldName: {}", cp.sourceField.name);
+        } else {
+            destVec->reserve(sourceVec->size());
+            for (T& val : *sourceVec)
+                destVec->push_back(val);
+        }
+    }
+
+    template<typename T>
+    static void copyVectorPtrValue(CopyDetails& cp){
+        std::vector<T*> *sourceVec;
+        std::vector<T*> *destVec;
+        if (cp.destField.isPtr)
+            destVec = *((std::vector<T*> **) cp.destField.getPtr(cp.dest));
+        else destVec = (std::vector<T*> *) cp.destField.getAddress(cp.dest);
+        if (cp.sourceField.isPtr)
+            sourceVec = *((std::vector<T*> **) cp.sourceField.getPtr(cp.source));
+        else sourceVec = (std::vector<T*> *) cp.sourceField.getAddress(cp.source);
+
+        if (cp.copyType == COPY_TYPE_DEEP && cp.destField.isPtr && !cp.sourceField.isPtr) {
+            wtLogError("Can not make DEEP copy of non pointer! FieldName: {}", cp.sourceField.name);
+        } else {
+            destVec->reserve(sourceVec->size());
+            for (T* val : *sourceVec)
+                destVec->push_back(val);
         }
     }
 

@@ -34,6 +34,12 @@ enum FieldType{
     FIELD_TYPE_ARRAY,//11
 };
 
+struct FieldTypeInfo{
+    FieldTypeInfo(FieldType fieldType, bool  isPtr) : fieldType(fieldType), isPtr(isPtr){}
+    FieldType fieldType;
+    bool isPtr;
+};
+
 //TODO have map for this?
 [[nodiscard]] inline FieldType convertToFieldType(const std::string& s){
     if (s == "int")
@@ -92,11 +98,11 @@ inline void getArraySubType(const std::string& s, std::string& type, bool* isPtr
     *isPtr = false;
 }
 
-[[nodiscard]] inline FieldType getArraySubType(const std::string& s){
+[[nodiscard]] inline FieldTypeInfo getArraySubType(const std::string& s){
     std::string type;
     bool isPtr;
     getArraySubType(s, type, &isPtr);
-    return convertToFieldType(type);
+    return { convertToFieldType(type), isPtr };
 }
 
 [[nodiscard]] inline JsonFieldType getJsonFieldType(const std::string& s) {

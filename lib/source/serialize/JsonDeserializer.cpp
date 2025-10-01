@@ -88,9 +88,9 @@ Reflect* JsonDeserializer::deserialize(const std::string& s, Reflect* response){
             fieldValue = fieldValue.substr(1, fieldValue.size() - 2);
 
         if (fieldType == JSON_FIELD_TYPE_ARRAY) {
-            FieldType fieldSubType = getArraySubType(f->typeStr);
+            FieldTypeInfo fieldTypeInfo = getArraySubType(f->typeStr);
             JsonFieldType jsonFieldSubType = getJsonFieldSubType(fieldValue);
-            if (!areTypesCompatible(jsonFieldSubType, fieldSubType)) {
+            if (!areTypesCompatible(jsonFieldSubType, fieldTypeInfo.fieldType)) {
                 wtLogError("Incompatible vec sub types: {} and {} for field {}", jsonFieldSubType, expectedType, fieldName.data());
                 return response;
             }
@@ -218,17 +218,15 @@ void JsonDeserializer::setFieldValueArray(const std::string& fieldValue, const F
 }
 
 void JsonDeserializer::insertVectorData(const std::string& source, std::vector<std::byte> *dest, const std::string &typeStr){
-    /* TLDR we are doing a memcpy into dest vector*/
     std::vector<std::string>* vec = StringUtils::splitObjectArray(source);
     *dest = {};
     for(std::string& s : *vec){
         Reflect* r = deserialize(s, Reflect::getClassInstanceByName(typeStr));
-        /*dest->resize(currentSize + r->getClassSize());
-        memcpy((void*)(&dest[currentSize]), (const void*)(r), r->getClassSize());*/
-        std::byte buffer[r->getClassSize()];
+        auto* buffer = static_cast<std::byte *>(alloca(r->getClassSize() * sizeof(std::byte)));
         memcpy(buffer, (void*)r, r->getClassSize());
         dest->insert(dest->end(), &buffer[0], &buffer[r->getClassSize()]);
     }
+    delete vec;
 }
 
 
@@ -238,4 +236,5 @@ void JsonDeserializer::insertVectorPtrData(const std::string& source, std::vecto
         Reflect* r = deserialize(s, Reflect::getClassInstanceByName(typeStr));
         dest->push_back(r);
     }
+    delete vec;
 }

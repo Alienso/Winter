@@ -56,13 +56,13 @@ private:
     }
 
     template<typename U>
-    void parseArrayData(const std::string& source, U (*parseFunc)(std::string& val), U* dest, unsigned int* destSize) const{
+    void parseArrayData(const std::string& source, U (*parseFunc)(std::string& val), U** dest, unsigned int* destSize) const{
         std::vector<std::string>* vec = StringUtils::splitArray(source, ','); //TODO handle , in strings
-        dest = (U*)calloc(vec->size(), sizeof(U));
+        *dest = (U*)calloc(vec->size(), sizeof(U));
         *destSize = vec->size();
         for(size_t i=0; i<vec->size(); i++){
             U u = parseFunc((*vec)[i]);
-            dest[i] = u;
+            (*dest)[i] = u;
         }
     }
 
