@@ -38,11 +38,23 @@ include_directories(include/util)
 set(GENERATED_DIR ${CMAKE_BINARY_DIR}/generated)
 set(LIB_SOURCES_DIR ${CMAKE_SOURCE_DIR}/lib/source)
 
+if (NOT EXISTS ${GENERATED_DIR}/Component.cpp)
+    execute_process(
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/app/template/Component.cpp ${GENERATED_DIR}/Component.cpp
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/app/template/Reflect.cpp ${GENERATED_DIR}/Reflect.cpp
+            COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/app/template/Router.cpp ${GENERATED_DIR}/Router.cpp
+    )
+endif()
+
 add_custom_target(run_preprocessor
         COMMAND ${CMAKE_COMMAND} -E make_directory ${GENERATED_DIR}
         COMMAND ${CMAKE_BINARY_DIR}/bin/PreProcessor ${CMAKE_SOURCE_DIR}/app/source ${GENERATED_DIR}
         DEPENDS ${CMAKE_BINARY_DIR}/bin/PreProcessor
         COMMENT "Running PreProcessor..."
+)
+
+execute_process(
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/app/resources ${CMAKE_BINARY_DIR}/resources
 )
 
 add_executable(app ${CMAKE_SOURCE_DIR}/app/main.cpp)
